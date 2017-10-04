@@ -10,5 +10,27 @@ done
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
-DEBIAN_FRONTEND=noninteractive apt-get install -y xnest apache2 vim xfce4 firefox-esr tcpdump dsniff whois wireshark net-tools # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree
+DEBIAN_FRONTEND=noninteractive apt-get install -y bash-completion less leafpad mupdf xnest apache2 vim xfce4 firefox-esr tcpdump dsniff whois wireshark net-tools # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree
 apt-get clean
+
+# Localisation fr
+echo "Europe/Paris" > /etc/timezone
+ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
+dpkg-reconfigure -f noninteractive tzdata
+sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen
+echo 'LANG="fr_FR.UTF-8"'>/etc/default/locale
+dpkg-reconfigure --frontend=noninteractive locales
+update-locale LANG=fr_FR.UTF-8
+
+
+# Creation des utilisateurs
+usermod -p `mkpasswd --method=sha-512 root` root
+useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 debian` debian || true
+
+#login ssh avec mot de passe
+echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
+echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
+service ssh restart
+
