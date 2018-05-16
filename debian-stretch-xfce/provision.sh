@@ -10,7 +10,7 @@ done
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
-DEBIAN_FRONTEND=noninteractive apt-get install -y bash-completion less leafpad mupdf xnest apache2 vim xfce4 firefox-esr tcpdump dsniff whois wireshark net-tools # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree
+DEBIAN_FRONTEND=noninteractive apt-get install -y bash-completion less leafpad mupdf xnest apache2 vim xfce4 firefox-esr tcpdump dsniff whois wireshark net-tools xfce4-terminal # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree
 apt-get clean
 
 # Localisation fr
