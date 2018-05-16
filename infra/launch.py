@@ -2,12 +2,18 @@
 
 import lxc
 import sys
+import os
 
 master = "debian-stretch-xfce"
 backbone = "lxc-infra-backbone"
 firewall = "lxc-infra-firewall"
 
 containers = [backbone, firewall]
+
+lanbr = "lxclan"
+wanbr = "lxcwan"
+dmzbr = "lxcdmz"
+bridges = [lanbr, wanbr, dmzbr]
 
 def cloneAll():
     mastercontainer = lxc.Container(master)
@@ -21,7 +27,6 @@ def clone(container, mastercontainer):
     #        sys.exit(1)
     newclone = mastercontainer.clone(container,flags=lxc.LXC_CLONE_SNAPSHOT)
 
-
 def destroyAll():
     for container in containers:
         destroy(container)
@@ -30,6 +35,23 @@ def destroy(container):
     print ("Destroying " + container)
     c = lxc.Container(container)
     c.destroy()
+
+def customizeBackbone():
+    print ("Customizing backbone")
+    container = lxc.Container(backbone)
+    container.network[0].link = "lxclan"
+    container.save_config()
+
+def createBridges():
+    print("Creating bridges")
+    for bridge in bridges:
+        os.system("brctl addbr " + bridge)
+
+def deleteBridges():
+    print("Deleting bridges")
+    for bridge in bridges:
+        os.system("brctl delbr " + bridge)
+
 
 
 if __name__ == '__main__':
@@ -44,5 +66,3 @@ if __name__ == '__main__':
         cloneAll()
     elif (command == "destroy"):
         destroyAll()
-
-    
