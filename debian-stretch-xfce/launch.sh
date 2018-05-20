@@ -10,7 +10,8 @@ case $1 in
 	create)
 		cd $DIR
 		DIRNAME=`pwd`
-		cat $DIR/config > $DIR/config.tmp
+		echo "lxc.include = $HOME/.config/lxc/default.conf" > $DIR/config.tmp
+		cat $DIR/config >> $DIR/config.tmp
 		echo "lxc.mount.entry=$DIRNAME tmp/lxc none ro,bind,create=dir 0 0" >> $DIR/config.tmp 
 		lxc-create -t download -n $CNAME -f $DIR/config.tmp -- -d debian -r stretch -a amd64
 		lxc-start -n $CNAME

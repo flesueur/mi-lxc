@@ -4,47 +4,175 @@ import lxc
 import sys
 import os
 
-master = "debian-stretch-xfce"
-backbone = "lxc-infra-backbone"
-firewall = "lxc-infra-firewall"
+prefixc = "lxc-infra-"
+prefixbr = "lxc"
 
-containers = [backbone, firewall]
+# Containers
+masterc = prefixc+"master"
+backbonec = prefixc+"backbone"
+firewallc = prefixc+"firewall"
+homec = prefixc+"home"
+hackerc = prefixc+"hacker"
+dmzc = prefixc+"dmz"
+commercialc = prefixc+"commercial"
+filerc = prefixc+"filer"
+containers = [backbonec, firewallc,homec,hackerc,dmzc,commercialc,filerc]
 
-lanbr = "lxclan"
-wanbr = "lxcwan"
-dmzbr = "lxcdmz"
+# Bridges
+lxcbr = "lxcbr0"
+lanbr = prefixbr+"lan"
+wanbr = prefixbr+"wan"
+dmzbr = prefixbr+"dmz"
 bridges = [lanbr, wanbr, dmzbr]
 
-def cloneAll():
-    mastercontainer = lxc.Container(master)
-    for container in containers:
-        clone(container, mastercontainer)
+# Container connections
+nics = { backbonec: {'interfaces': [(lxcbr,'dhcp'), (wanbr,'10.0.0.1/24')],
+                     'gateway':'dhcp'},
+         homec: {'interfaces':[(wanbr,'10.0.0.3/24')],
+                 'gateway':'10.0.0.1'},
+         hackerc: {'interfaces':[(wanbr,'10.0.0.4/24')],
+                   'gateway':'10.0.0.1'},
+         firewallc: {'interfaces':[(wanbr,'10.0.0.2/24'), (lanbr,'192.168.0.1/24'), (dmzbr,'192.168.1.1/24')],
+                     'gateway':'10.0.0.1'},
+         dmzc: {'interfaces':[(dmzbr,'192.168.1.2/24')],
+                'gateway':'192.168.1.1'},
+         commercialc: {'interfaces':[(lanbr,'192.168.0.2/24')],
+                        'gateway':'192.168.0.1'},
+         filerc: {'interfaces':[(lanbr,'192.168.0.3/24')],
+                  'gateway':'192.168.0.1'}
+        }
+
+def getGateway(ipmask):
+    atoms = ipmask.split("/")[0].split('.')
+    res = atoms[0]+"."+atoms[1]+"."+atoms[2]+".1"
+    return res
+
+
+#########################
+
+def createMaster():
+    print("Creating master")
+    c = lxc.Container(masterc)
+    if c.defined:
+        print("Master container already exists, going on...", file=sys.stderr)
+        return c
+
+    if not c.create("download", lxc.LXC_CREATE_QUIET, {"dist": "debian",
+                                                   "release": "stretch",
+                                                   "arch": "amd64"}):
+                                                   print("Failed to create the container rootfs", file=sys.stderr)
+                                                   sys.exit(1)
+    configure(c)
+    provision(c)
+    return c
+
+# def destroyMaster():
+#     c = lxc.Container(master)
+#     if c.defined:
+#         print("Destroying master...")
+#         c.stop()
+#         if not c.destroy():
+#             print("Failed to destroy the master container", file=sys.stderr)
+
+########################
 
 def clone(container, mastercontainer):
-    print("Cloning " + container + " from " + master)
-    #if c.defined:
-    #        print("Container already exists", file=sys.stderr)
-    #        sys.exit(1)
+    print("Cloning " + container + " from " + mastercontainer.name)
     newclone = mastercontainer.clone(container,flags=lxc.LXC_CLONE_SNAPSHOT)
-
-def destroyAll():
-    for container in containers:
-        destroy(container)
+    return newclone
 
 def destroy(container):
     print ("Destroying " + container)
     c = lxc.Container(container)
-    c.destroy()
+    c.stop()
+    if not c.destroy():
+        print("Failed to destroy the container " + container, file=sys.stderr)
 
-def customizeBackbone():
-    print ("Customizing backbone")
-    container = lxc.Container(backbone)
-    container.network[0].link = "lxclan"
-    container.save_config()
+
+def configure(c):
+    #c = lxc.Container(master)
+    c.clear_config_item("lxc.network")
+    #c.network.remove(0)
+    c.network.add("veth")
+    c.network[0].link = lxcbr
+    c.network[0].flags = "up"
+    c.append_config_item("lxc.mount.entry", "/tmp/.X11-unix tmp/.X11-unix none ro,bind,create=dir 0 0")
+    c.append_config_item("lxc.mount.entry", "/mnt/documents/mcf/enseignement/lxc/infra/files mnt/lxc none ro,bind,create=dir 0 0")
+    c.save_config()
+
+def provision(c):
+    #c = lxc.Container(master)
+    folder = c.name[len(prefixc):]
+    c.start()
+    c.get_ips(timeout=30)
+    c.attach_wait(lxc.attach_run_command, ["/mnt/lxc/"+folder+"/pre-provision.sh"])
+    c.attach_wait(lxc.attach_run_command, ["/mnt/lxc/"+folder+"/provision.sh"])
+    c.stop()
+
+def configNet(c):
+    c.clear_config_item("lxc.network")
+    cnics = nics[c.name]['interfaces']
+    print("Configuring NICs of " + c.name + " to " + str(cnics))
+    c.clear_config_item("lxc.network")
+    i=0
+    for cnic in cnics:
+        k = cnic[0]
+        v = cnic[1]
+        c.network.add("veth")
+        c.network[i].link = k
+        if not (v == 'dhcp'):
+            c.append_config_item("lxc.network."+str(i)+".ipv4", v)
+            if (getGateway(v) == nics[c.name]['gateway']):
+                c.network[i].ipv4_gateway = getGateway(v)
+        #c.network[i].script_up = "upscript"
+        c.network[i].flags = "up"
+        i+=1
+    c.save_config()
+
+
+############################
+
+
+def createInfra():
+    mastercontainer = createMaster()
+    for container in containers:
+        newclone = clone(container, mastercontainer)
+        provision(newclone)
+        configNet(newclone)
+
+def destroyInfra():
+    for container in containers:
+        destroy(container)
+#    destroy(masterc)
+
+def startInfra():
+    for container in containers:
+        print ("Starting " + container)
+        c = lxc.Container(container)
+        c.start()
+
+def stopInfra():
+    for container in containers:
+        print ("Stopping " + container)
+        c = lxc.Container(container)
+        c.stop()
+
+def display(c):
+    #c.attach(lxc.attach_run_command, ["Xnest", "-sss", "-name", "Xnest", "-display", ":0", ":1"])
+    displaynum = containers.index(c.name)+2
+    print("Using display " + str(displaynum))
+    c.attach(lxc.attach_run_command, ["/bin/bash", "-c",
+                                        "killall Xnest ; \
+                                        Xnest -sss -name \"Xnest " +c.name+ "\" -display :0 :"+str(displaynum)+" & \
+                                        export DISPLAY=:"+str(displaynum)+" && \
+                                        setxkbmap fr && \
+                                        xfce4-session"])
+
+#################
 
 def createBridges():
     print("Creating bridges")
-    for bridge in bridges:
+    for bridge in bridges :
         os.system("brctl addbr " + bridge)
 
 def deleteBridges():
@@ -52,17 +180,38 @@ def deleteBridges():
     for bridge in bridges:
         os.system("brctl delbr " + bridge)
 
+###################
 
+def usage():
+    print("no argument given, usage with create, destroy, createmaster, destroymaster, addbridges, delbridges")
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print("no argument given")
+        usage()
         sys.exit(1)
 
 
     command = sys.argv[1]
 
     if (command == "create"):
-        cloneAll()
+        createInfra()
     elif (command == "destroy"):
-        destroyAll()
+        destroyInfra()
+    elif (command == "start"):
+        startInfra()
+    elif (command == "stop"):
+        stopInfra()
+    elif (command == "attach"):
+        lxc.Container(prefixc+sys.argv[2]).attach_wait(lxc.attach_run_shell)
+    elif (command == "display"):
+        display(lxc.Container(prefixc+sys.argv[2]))
+    elif (command == "createmaster"):
+        createMaster()
+    elif (command == "destroymaster"):
+        destroyMaster()
+    elif (command == "addbridges"):
+        createBridges()
+    elif (command == "delbridge"):
+        deleteBridges()
+    else:
+        usage()
