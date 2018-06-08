@@ -9,7 +9,7 @@
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
-DEBIAN_FRONTEND=noninteractive apt-get install -y syslog-ng openssh-server bash-completion less leafpad mupdf xnest apache2 vim xfce4 thunderbird firefox-esr tcpdump dsniff whois wireshark net-tools xfce4-terminal iptables iputils-ping # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree
+DEBIAN_FRONTEND=noninteractive apt-get install -y syslog-ng openssh-server bash-completion less leafpad mupdf xnest apache2 vim xfce4 thunderbird firefox-esr tcpdump dsniff whois wireshark net-tools xfce4-terminal iptables iputils-ping netcat nmap # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree
 apt-get clean
 
 # Localisation fr
