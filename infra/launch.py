@@ -104,9 +104,10 @@ def provision(c):
     #c = lxc.Container(master)
     folder = c.name[len(prefixc):]
     c.start()
-    c.get_ips(timeout=30)
-    c.attach_wait(lxc.attach_run_command, ["/mnt/lxc/"+folder+"/pre-provision.sh"])
-    c.attach_wait(lxc.attach_run_command, ["/mnt/lxc/"+folder+"/provision.sh"])
+    if not c.get_ips(timeout=30):
+        print("Container seems to have failed to start (no IP)")
+        sys.exit(1)
+    c.attach_wait(lxc.attach_run_command, ["bash", "/mnt/lxc/"+folder+"/provision.sh"])
     c.stop()
 
 def configNet(c):
@@ -161,12 +162,14 @@ def display(c):
     #c.attach(lxc.attach_run_command, ["Xnest", "-sss", "-name", "Xnest", "-display", ":0", ":1"])
     displaynum = containers.index(c.name)+2
     print("Using display " + str(displaynum))
-    c.attach(lxc.attach_run_command, ["/bin/bash", "-c",
+    c.attach(lxc.attach_run_command, ["/bin/su", "-l", "-c",
                                         "killall Xnest ; \
                                         Xnest -sss -name \"Xnest " +c.name+ "\" -display :0 :"+str(displaynum)+" & \
-                                        export DISPLAY=:"+str(displaynum)+" && \
-                                        setxkbmap fr && \
-                                        xfce4-session"])
+                                        export DISPLAY=:"+str(displaynum)+" ; \
+                                        while ! `setxkbmap fr` ; do sleep 1 ; done ; \
+                                        xfce4-session &  \
+                                        sleep 1 && setxkbmap fr",
+                                        "debian"])
 
 #################
 
@@ -174,16 +177,24 @@ def createBridges():
     print("Creating bridges")
     for bridge in bridges :
         os.system("brctl addbr " + bridge)
+        os.system("ifconfig " + bridge + " up")
+        os.system("iptables -A FORWARD -i " + bridge + " -o " + bridge + " -j ACCEPT")
+        os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
+
 
 def deleteBridges():
     print("Deleting bridges")
     for bridge in bridges:
+        os.system("ifconfig " + bridge + " down")
         os.system("brctl delbr " + bridge)
+        os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
+        os.system("iptables -D FORWARD -i " + bridge + " -o " + bridge + " -j ACCEPT")
+
 
 ###################
 
 def usage():
-    print("no argument given, usage with create, destroy, createmaster, destroymaster, addbridges, delbridges")
+    print("no argument given, usage with create, destroy, createmaster, destroymaster, addbridges, delbridges, start, stop, attach, display")
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
@@ -205,13 +216,15 @@ if __name__ == '__main__':
         lxc.Container(prefixc+sys.argv[2]).attach_wait(lxc.attach_run_shell)
     elif (command == "display"):
         display(lxc.Container(prefixc+sys.argv[2]))
+    elif (command == "provision"):
+        provision(lxc.Container(sys.argv[2]))
     elif (command == "createmaster"):
         createMaster()
     elif (command == "destroymaster"):
-        destroyMaster()
+        destroy(masterc)
     elif (command == "addbridges"):
         createBridges()
-    elif (command == "delbridge"):
+    elif (command == "delbridges"):
         deleteBridges()
     else:
         usage()
