@@ -194,7 +194,10 @@ def deleteBridges():
 ###################
 
 def usage():
-    print("no argument given, usage with create, destroy, createmaster, destroymaster, addbridges, delbridges, start, stop, attach, display")
+    print("No argument given, usage with create, destroy, createmaster, destroymaster, addbridges, delbridges, start, stop, attach <name>, display <name>\nNames are ", end='')
+    for container in containers:
+        print (container[len(prefixc):],end=', ')
+    print("\n")
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
@@ -216,8 +219,6 @@ if __name__ == '__main__':
         lxc.Container(prefixc+sys.argv[2]).attach_wait(lxc.attach_run_shell)
     elif (command == "display"):
         display(lxc.Container(prefixc+sys.argv[2]))
-    elif (command == "provision"):
-        provision(lxc.Container(sys.argv[2]))
     elif (command == "createmaster"):
         createMaster()
     elif (command == "destroymaster"):
