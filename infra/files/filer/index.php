@@ -1,0 +1,68 @@
+<html><head><title>Événements à venir</title></head>
+
+<body>
+
+Événements à venir :
+
+<form action="index.php" method="POST">
+Filtre : <input type=text name=filter value="<?php echo htmlentities($_POST["filter"]);?>"></input><input type=submit value="Filtrer"></input></form>
+
+
+<table border=1>
+<tr><th>Nom de la formation</th><th>Participants</th></tr>
+
+<?php
+
+$servername = "localhost";
+$username = "debian";
+$pass = "debian";
+$dbname = "debian";
+
+$conn = mysqli_connect($servername, $username, $pass, $dbname);
+
+$sql = "SELECT name,participants FROM events";
+
+if (isset($_POST["filter"])) {
+$sql = "SELECT name,participants FROM events WHERE name LIKE \"%".$_POST["filter"]."%\"";
+}
+
+$result = mysqli_query($conn,$sql);
+
+// echo mysqli_num_rows($result);
+
+while ($row = mysqli_fetch_array($result)) {
+echo "<tr><td>".$row[0]."</td><td>".$row[1]."</td></tr>";
+
+/*
+echo "<tr>";
+for ($i = 0; $i < sizeof($row)/2; $i++) {
+	echo "<td>$row[$i]</td>";
+}
+echo "</tr>\n";
+*/
+/*
+echo "<tr>";
+foreach ($row as $item) {
+	echo "<td>$item</td>";
+}
+echo "</tr>";
+echo sizeof($row);
+*/
+}
+
+
+?>
+</table>
+
+<br>
+<?php
+echo "Hints :<br> La requête SQL était : ".$sql;
+echo "<br>";
+if ($result) {
+	echo "Cette requête a été exécutée avec succès !";
+} else {
+	echo "Cette requête a échoué !";
+}
+?>
+</body>
+</html>
