@@ -1,4 +1,4 @@
-<html><head><title>Événements à venir</title></head>
+<html><head><meta charset="UTF-8"><title>Événements à venir</title></head>
 
 <body>
 
@@ -13,12 +13,8 @@ Filtre : <input type=text name=filter value="<?php echo htmlentities($_POST["fil
 
 <?php
 
-$servername = "localhost";
-$username = "debian";
-$pass = "debian";
-$dbname = "debian";
-
-$conn = mysqli_connect($servername, $username, $pass, $dbname);
+$dbname='/var/www/html/appli.db';
+$db=new SQLite3($dbname);
 
 $sql = "SELECT name,participants FROM events";
 
@@ -26,11 +22,11 @@ if (isset($_POST["filter"])) {
 $sql = "SELECT name,participants FROM events WHERE name LIKE \"%".$_POST["filter"]."%\"";
 }
 
-$result = mysqli_query($conn,$sql);
+$result = $db->query($sql);
 
 // echo mysqli_num_rows($result);
 
-while ($row = mysqli_fetch_array($result)) {
+while ($row = $result->fetchArray()) {
 echo "<tr><td>".$row[0]."</td><td>".$row[1]."</td></tr>";
 
 /*
