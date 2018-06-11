@@ -25,7 +25,7 @@ The network is composed of :
 
 # How to use it
 
-The 'debian-stretch-xfce' directory allows to create a single container and is included for illustration. MI-LXC sits in the 'infra' directory. The 'files' subdirectory contains files and scripts to provision the containers. The 'launch.py' script is used in the following way (as *root*, since it manipulates bridges and lxc commands)
+The 'debian-stretch-xfce' directory allows to create a single container and is included for illustration only. The 'files' subdirectory contains files and scripts to provision the containers. The 'launch.py' script is used in the following way (as *root*, since it manipulates bridges and lxc commands)
 
 * ./launch.py addbridges     # Create required network bridges on the host
 * ./launch.py create         # Creates a master container and then clones it to create all the containers
