@@ -19,6 +19,7 @@ The network is composed of :
 * a WAN (a PC used by the hacker and a random PC)
 * a DMZ (a server running HTTP, mail and DNS service for the company)
 * a LAN (a few PC on a LAN, among which an internal server)
+* a firewall
 * a backbone container (running mail and DNS service for WAN PC and routing to the real internet) 
 
 
