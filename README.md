@@ -20,7 +20,7 @@ The network is composed of :
 * a DMZ (a server running HTTP, mail and DNS service for the company)
 * a LAN (a few PC on a LAN, among which an internal server)
 * a firewall
-* a backbone container (running mail and DNS service for WAN PC and routing to the real internet) 
+* a backbone container (running mail and DNS service for WAN PC and routing to the real internet)
 
 
 # How to use it
@@ -30,8 +30,8 @@ The 'debian-stretch-xfce' directory allows to create a single container and is i
 * ./launch.py addbridges     # Create required network bridges on the host
 * ./launch.py create         # Creates a master container and then clones it to create all the containers
 * ./launch.py start          # Start the generated infrastructure  (stop to stop it)
-* ./launch.py attach <name>  # Shell access to the container <name>
-* ./launch.py display <name> # X11 access to the container <name>
+* `./launch.py attach <name>`  # Shell access to the container <name>
+* `./launch.py display <name>` # X11 access to the container <name>
 * ./launch.py                # Usage and list of container names
 
 
