@@ -27,12 +27,12 @@ The network is composed of :
 
 The 'debian-stretch-xfce' directory allows to create a single container and is included for illustration only. The 'files' subdirectory contains files and scripts to provision the containers. The 'launch.py' script is used in the following way (as *root*, since it manipulates bridges and lxc commands)
 
-* ./launch.py addbridges     # Create required network bridges on the host
-* ./launch.py create         # Creates a master container and then clones it to create all the containers
-* ./launch.py start          # Start the generated infrastructure  (stop to stop it)
-* `./launch.py attach <name>`  # Shell access to the container <name>
-* `./launch.py display <name>` # X11 access to the container <name>
-* ./launch.py                # Usage and list of container names
+* `./launch.py addbridges     # Create required network bridges on the host`
+* `./launch.py create         # Creates a master container and then clones it to create all the containers`
+* `./launch.py start          # Start the generated infrastructure  (stop to stop it)`
+* `./launch.py attach <name>  # Shell access to the container <name>`
+* `./launch.py display <name> # X11 access to the container <name>`
+* `./launch.py                # Usage and list of container names`
 
 
 # License
