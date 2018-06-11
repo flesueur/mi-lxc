@@ -97,14 +97,15 @@ def configure(c):
     c.network[0].link = lxcbr
     c.network[0].flags = "up"
     c.append_config_item("lxc.mount.entry", "/tmp/.X11-unix tmp/.X11-unix none ro,bind,create=dir 0 0")
-    c.append_config_item("lxc.mount.entry", "/mnt/documents/mcf/enseignement/lxc/infra/files mnt/lxc none ro,bind,create=dir 0 0")
+    filesdir=os.path.dirname(os.path.realpath(__file__))
+    c.append_config_item("lxc.mount.entry", filesdir + "/files mnt/lxc none ro,bind,create=dir 0 0")
     c.save_config()
 
 def provision(c):
     #c = lxc.Container(master)
     folder = c.name[len(prefixc):]
     c.start()
-    if not c.get_ips(timeout=30):
+    if not c.get_ips(timeout=60):
         print("Container seems to have failed to start (no IP)")
         sys.exit(1)
     c.attach_wait(lxc.attach_run_command, ["bash", "/mnt/lxc/"+folder+"/provision.sh"])
