@@ -27,6 +27,14 @@ The network is composed of :
 
 The 'debian-stretch-xfce' directory allows to create a single container and is included for illustration only. The `files` subdirectory contains files and scripts to provision the containers. The `launch.py` script is used in the following way (as *root*, since it manipulates bridges and lxc commands)
 
+## Prerequisite
+
+On Debian Strech, you need lxc (`apt-get install lxc`) and then to enable networking in the LXC configuration (`USE_LXC_BRIDGE ="true"` in `/etc/default/lxc-net`). Finally, you need to restart LXC networking (`service lxc-net restart`).
+
+On Kali 2018.2, you need lxc (`apt-get install lxc`) and then to enable networking in the LXC configuration (`USE_LXC_BRIDGE ="true"` in `/etc/default/lxc-net`). Finally, you need to restart LXC and AppArmor (`service lxc restart && service apparmor restart`). If you are using Kali as a live CD, you need some mounted storage (4GB should be ok) and then to configure LXC to use this space : create the `/etc/lxc/lxc.conf` with the content `lxc.lxcpath=/mnt` (location where you mounted your storage)
+
+## Usage
+
 * `./launch.py addbridges     # Create required network bridges on the host`
 * `./launch.py create         # Creates a master container and then clones it to create all the containers`
 * `./launch.py start          # Start the generated infrastructure  (stop to stop it)`
