@@ -162,11 +162,12 @@ def stopInfra():
 def display(c):
     #c.attach(lxc.attach_run_command, ["Xnest", "-sss", "-name", "Xnest", "-display", ":0", ":1"])
     displaynum = containers.index(c.name)+2
-    print("Using display " + str(displaynum))
+    hostdisplay = os.getenv("DISPLAY")
+    print("Using display " + str(displaynum) + " on " + str(hostdisplay))
     os.system("xhost local:")
     c.attach(lxc.attach_run_command, ["/bin/su", "-l", "-c",
                                         "killall Xnest ; \
-                                        Xnest -sss -name \"Xnest " +c.name+ "\" -display :0 :"+str(displaynum)+" & \
+                                        Xnest -sss -name \"Xnest " +c.name+ "\" -display " + hostdisplay +" :"+str(displaynum)+" & \
                                         export DISPLAY=:"+str(displaynum)+" ; \
                                         while ! `setxkbmap fr` ; do sleep 1 ; done ; \
                                         xfce4-session &  \
