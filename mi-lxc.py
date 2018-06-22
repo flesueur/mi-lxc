@@ -163,6 +163,7 @@ def display(c):
     #c.attach(lxc.attach_run_command, ["Xnest", "-sss", "-name", "Xnest", "-display", ":0", ":1"])
     displaynum = containers.index(c.name)+2
     print("Using display " + str(displaynum))
+    os.system("xhost local:")
     c.attach(lxc.attach_run_command, ["/bin/su", "-l", "-c",
                                         "killall Xnest ; \
                                         Xnest -sss -name \"Xnest " +c.name+ "\" -display :0 :"+str(displaynum)+" & \
