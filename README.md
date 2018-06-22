@@ -27,7 +27,7 @@ The network is composed of :
 
 The 'debian-stretch-xfce' directory allows to create a single container and is included for illustration only. The `files` subdirectory contains files and scripts to provision the containers. The `launch.py` script is used in the following way (as *root*, since it manipulates bridges and lxc commands)
 
-## Prerequisite
+## Prerequisites
 
 On Debian Strech, you need lxc (`apt-get install lxc`) and then to enable networking in the LXC configuration (`USE_LXC_BRIDGE ="true"` in `/etc/default/lxc-net`). Finally, you need to restart LXC networking (`service lxc-net restart`).
 
