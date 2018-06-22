@@ -108,7 +108,7 @@ def provision(c):
     if not c.get_ips(timeout=60):
         print("Container seems to have failed to start (no IP)")
         sys.exit(1)
-    c.attach_wait(lxc.attach_run_command, ["bash", "/mnt/lxc/"+folder+"/provision.sh"], lxc.LXC_ATTACH_CLEAR_ENV)
+    c.attach_wait(lxc.attach_run_command, ["bash", "/mnt/lxc/"+folder+"/provision.sh"]) #, lxc.LXC_ATTACH_CLEAR_ENV)
     c.stop()
 
 def configNet(c):
