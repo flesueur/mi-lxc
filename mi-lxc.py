@@ -108,7 +108,7 @@ def provision(c):
     if not c.get_ips(timeout=60):
         print("Container seems to have failed to start (no IP)")
         sys.exit(1)
-    c.attach_wait(lxc.attach_run_command, ["bash", "/mnt/lxc/"+folder+"/provision.sh"]) #, lxc.LXC_ATTACH_CLEAR_ENV)
+    c.attach_wait(lxc.attach_run_command, ["bash", "/mnt/lxc/"+folder+"/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
     c.stop()
 
 def configNet(c):
@@ -172,7 +172,7 @@ def display(c):
                                         while ! `setxkbmap fr` ; do sleep 1 ; done ; \
                                         xfce4-session &  \
                                         sleep 1 && setxkbmap fr",
-                                        "debian"])
+                                        "debian"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
 
 #################
 
@@ -219,7 +219,7 @@ if __name__ == '__main__':
     elif (command == "stop"):
         stopInfra()
     elif (command == "attach"):
-        lxc.Container(prefixc+sys.argv[2]).attach_wait(lxc.attach_run_shell)
+        lxc.Container(prefixc+sys.argv[2]).attach_wait(lxc.attach_run_shell, env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
     elif (command == "display"):
         display(lxc.Container(prefixc+sys.argv[2]))
     elif (command == "createmaster"):
