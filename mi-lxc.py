@@ -99,6 +99,11 @@ def configure(c):
     c.append_config_item("lxc.mount.entry", "/tmp/.X11-unix tmp/.X11-unix none ro,bind,create=dir 0 0")
     filesdir=os.path.dirname(os.path.realpath(__file__))
     c.append_config_item("lxc.mount.entry", filesdir + "/files mnt/lxc none ro,bind,create=dir 0 0")
+    try:  # AppArmor is installed and must be configured
+        c.get_config_item("lxc.apparmor.profile")
+        c.append_config_item("lxc.apparmor.profile", "unconfined")
+    except:  # AppArmor is not installed and must not be configured
+        pass
     c.save_config()
 
 def provision(c):
@@ -123,7 +128,10 @@ def configNet(c):
         c.network.add("veth")
         c.network[i].link = k
         if not (v == 'dhcp'):
-            c.append_config_item("lxc.network."+str(i)+".ipv4", v)
+            try:
+                c.network[i].ipv4_address = v
+            except:
+                c.append_config_item("lxc.network."+str(i)+".ipv4", v)
             if (getGateway(v) == nics[c.name]['gateway']):
                 c.network[i].ipv4_gateway = getGateway(v)
         #c.network[i].script_up = "upscript"
