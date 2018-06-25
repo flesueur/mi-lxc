@@ -137,7 +137,8 @@ def configNet(c):
             try:
                 c.network[i].ipv4_address = v
             except:
-                c.append_config_item("lxc.network."+str(i)+".ipv4", v)
+                #c.append_config_item("lxc.network."+str(i)+".ipv4", v)
+                c.append_config_item("lxc.network."+str(i)+".ipv4.address", v)
             if (getGateway(v) == nics[c.name]['gateway']):
                 c.network[i].ipv4_gateway = getGateway(v)
         #c.network[i].script_up = "upscript"
