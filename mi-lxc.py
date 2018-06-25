@@ -100,10 +100,16 @@ def configure(c):
     filesdir=os.path.dirname(os.path.realpath(__file__))
     c.append_config_item("lxc.mount.entry", filesdir + "/files mnt/lxc none ro,bind,create=dir 0 0")
     try:  # AppArmor is installed and must be configured
-        c.get_config_item("lxc.apparmor.profile")
+        c.get_config_item("lxc.apparmor.profile")   # may be aa_profile sometimes ?
         c.append_config_item("lxc.apparmor.profile", "unconfined")
     except:  # AppArmor is not installed and must not be configured
         pass
+    try:  # AppArmor is installed and must be configured
+        c.get_config_item("lxc.aa_profile")   # may be aa_profile sometimes ?
+        c.append_config_item("lxc.aa_profile", "unconfined")
+    except:  # AppArmor is not installed and must not be configured
+        pass
+
     c.save_config()
 
 def provision(c):
