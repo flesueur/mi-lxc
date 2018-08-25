@@ -4,6 +4,7 @@ import lxc
 import sys
 import os
 import json
+import argparse
 
 def getGlobals(data):
     global lxcbr,prefixc,prefixbr
@@ -62,7 +63,11 @@ nics = {}
 
 def getGateway(ipmask):
     atoms = ipmask.split("/")[0].split('.')
-    res = atoms[0]+"."+atoms[1]+"."+atoms[2]+".1"
+    mask = ipmask.split("/")[1]
+    if (mask == "24"):
+        res = atoms[0]+"."+atoms[1]+"."+atoms[2]+".1"
+    elif (mask == "16"):
+        res = atoms[0]+"."+atoms[1]+".0.1"
     return res
 
 
@@ -236,6 +241,13 @@ def usage():
     print("\n")
 
 if __name__ == '__main__':
+    # parser = argparse.ArgumentParser(description='Launches mini-internet')
+    # parser.add_argument('-c', type=str, help='config file')
+    # args = parser.parse_args()
+    #
+    # if args.c != None:
+    #     config = args.c
+
     json_data = open(config).read()
     data = json.loads(json_data)
     getGlobals(data)

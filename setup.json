@@ -12,8 +12,7 @@
       {"container":"firewall",
         "interfaces":[
         {"bridge":"wan", "address":"10.0.0.2/24"},
-        {"bridge":"lan", "address":"192.168.0.1/24"},
-        {"bridge":"dmz", "address":"192.168.1.1/24"}
+        {"bridge":"lan", "address":"192.168.0.1/16"}
         ],
         "gateway":"10.0.0.1"},
       {"container":"home",
@@ -28,17 +27,17 @@
         "gateway":"10.0.0.1"},
       {"container":"dmz",
         "interfaces":[
-          {"bridge":"dmz", "address":"192.168.1.2/24"}
+          {"bridge":"lan", "address":"192.168.1.2/16"}
         ],
-        "gateway":"192.168.1.1"},
+        "gateway":"192.168.0.1"},
       {"container":"commercial",
         "interfaces":[
-          {"bridge":"lan", "address":"192.168.0.2/24"}
+          {"bridge":"lan", "address":"192.168.0.2/16"}
         ],
         "gateway":"192.168.0.1"},
       {"container":"filer",
         "interfaces":[
-          {"bridge":"lan", "address":"192.168.0.3/24"}
+          {"bridge":"lan", "address":"192.168.0.3/16"}
         ],
         "gateway":"192.168.0.1"}
   ]
