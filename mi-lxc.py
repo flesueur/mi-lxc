@@ -3,44 +3,62 @@
 import lxc
 import sys
 import os
+import json
+
+def getGlobals(data):
+    global lxcbr,prefixc,prefixbr
+    lxcbr = data["nat-bridge"]
+    prefixc = data["prefix-containers"]
+    prefixbr = data["prefix-bridges"]
+    return
+
+def getContainers(data):
+    global containers,masterc
+    masterc = prefixc + "master"
+    for container in data["containers"]:
+        containers.append(prefixc+container["container"])
+    return
+
+def getBridges(data):
+    global bridges
+    for container in data["containers"]:
+        for interface in container["interfaces"]:
+            if interface["bridge"] != "nat-bridge":
+                bridges.add(prefixbr+interface["bridge"])
+    #for bridge in data["bridges"]:
+    #    bridges.add(prefixbr+bridge["bridge"])
+    return
+
+def getNics(data):
+    global nics
+    for container in data["containers"]:
+        cname = prefixc+container["container"]
+        gateway = container["gateway"]
+        interfaces = []
+        for interface in container["interfaces"]:
+            iface = interface["bridge"]
+            if iface == "nat-bridge":
+                iface = lxcbr
+            else:
+                iface = prefixbr + iface
+            interfaces.append((iface, interface["address"]))
+        nics[cname] = {'gateway' : container["gateway"], 'interfaces':interfaces}
+    return
+
+config = "setup.json"
 
 prefixc = "lxc-infra-"
 prefixbr = "lxc"
+lxcbr = "lxcbr0"
 
 # Containers
-masterc = prefixc+"master"
-backbonec = prefixc+"backbone"
-firewallc = prefixc+"firewall"
-homec = prefixc+"home"
-hackerc = prefixc+"hacker"
-dmzc = prefixc+"dmz"
-commercialc = prefixc+"commercial"
-filerc = prefixc+"filer"
-containers = [backbonec, firewallc,homec,hackerc,dmzc,commercialc,filerc]
+masterc = ""
+containers = []
 
 # Bridges
-lxcbr = "lxcbr0"
-lanbr = prefixbr+"lan"
-wanbr = prefixbr+"wan"
-dmzbr = prefixbr+"dmz"
-bridges = [lanbr, wanbr, dmzbr]
+bridges = set()
 
-# Container connections
-nics = { backbonec: {'interfaces': [(lxcbr,'dhcp'), (wanbr,'10.0.0.1/24')],
-                     'gateway':'dhcp'},
-         homec: {'interfaces':[(wanbr,'10.0.0.3/24')],
-                 'gateway':'10.0.0.1'},
-         hackerc: {'interfaces':[(wanbr,'10.0.0.4/24')],
-                   'gateway':'10.0.0.1'},
-         firewallc: {'interfaces':[(wanbr,'10.0.0.2/24'), (lanbr,'192.168.0.1/24'), (dmzbr,'192.168.1.1/24')],
-                     'gateway':'10.0.0.1'},
-         dmzc: {'interfaces':[(dmzbr,'192.168.1.2/24')],
-                'gateway':'192.168.1.1'},
-         commercialc: {'interfaces':[(lanbr,'192.168.0.2/24')],
-                        'gateway':'192.168.0.1'},
-         filerc: {'interfaces':[(lanbr,'192.168.0.3/24')],
-                  'gateway':'192.168.0.1'}
-        }
+nics = {}
 
 def getGateway(ipmask):
     atoms = ipmask.split("/")[0].split('.')
@@ -218,6 +236,19 @@ def usage():
     print("\n")
 
 if __name__ == '__main__':
+    json_data = open(config).read()
+    data = json.loads(json_data)
+    getGlobals(data)
+    getContainers(data)
+    getBridges(data)
+    getNics(data)
+
+#    print(containers)
+#    print(bridges)
+#    print(nics)
+
+
+
     if len(sys.argv) < 2:
         usage()
         sys.exit(1)
