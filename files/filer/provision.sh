@@ -18,5 +18,5 @@ apt-get update
 apt-get install -y libc6:i386
 
 # Disable DHCP and do DNS config
-sed -i "s/.*dhcp.*//" /etc/network/interfaces
-echo -e "domain target.virt\nsearch target.virt\nnameserver 192.168.1.2" > /etc/resolv.conf
+#sed -i "s/.*dhcp.*//" /etc/network/interfaces
+#echo -e "domain target.virt\nsearch target.virt\nnameserver 192.168.1.2" > /etc/resolv.conf

@@ -15,7 +15,8 @@
         {"bridge":"lan", "address":"192.168.0.1/24"},
         {"bridge":"dmz", "address":"192.168.1.1/24"}
         ],
-        "gateway":"10.0.0.1"},
+        "gateway":"10.0.0.1",
+        "templates":[{"template":"firewall"}]},
       {"container":"home",
         "interfaces":[
           {"bridge":"wan", "address":"10.0.0.3/24"}

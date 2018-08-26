@@ -15,31 +15,37 @@
         {"bridge":"lan", "address":"192.168.0.1/16"}
         ],
         "gateway":"10.0.0.1",
-        "templates":[{"template":"firewall"}]},
+        "templates":[{"template":"firewall"},
+                    {"template":"internal", "domain":"internet.virt", "ns":"10.0.0.1"}]},
       {"container":"home",
         "interfaces":[
           {"bridge":"wan", "address":"10.0.0.3/24"}
         ],
-        "gateway":"10.0.0.1"},
+        "gateway":"10.0.0.1",
+        "templates":[{"template":"internal", "domain":"internet.virt", "ns":"10.0.0.1"}]},
       {"container":"hacker",
         "interfaces":[
           {"bridge":"wan", "address":"10.0.0.4/24"}
         ],
-        "gateway":"10.0.0.1"},
+        "gateway":"10.0.0.1",
+        "templates":[{"template":"internal", "domain":"internet.virt", "ns":"10.0.0.1"}]},
       {"container":"dmz",
         "interfaces":[
           {"bridge":"lan", "address":"192.168.1.2/16"}
         ],
-        "gateway":"192.168.0.1"},
+        "gateway":"192.168.0.1",
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"}]},
       {"container":"commercial",
         "interfaces":[
           {"bridge":"lan", "address":"192.168.0.2/16"}
         ],
-        "gateway":"192.168.0.1"},
+        "gateway":"192.168.0.1",
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"}]},
       {"container":"filer",
         "interfaces":[
           {"bridge":"lan", "address":"192.168.0.3/16"}
         ],
-        "gateway":"192.168.0.1"}
+        "gateway":"192.168.0.1",
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"}]}
   ]
 }
