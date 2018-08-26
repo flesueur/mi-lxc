@@ -46,6 +46,18 @@ def getNics(data):
         nics[cname] = {'gateway' : container["gateway"], 'interfaces':interfaces}
     return
 
+def getMITemplates(data):
+    global mitemplates
+    for container in data["containers"]:
+        cname = prefixc+container["container"]
+        templates = []
+        if "templates" in container.keys():
+            for template in container["templates"]:
+                templates.append(template["template"])
+            mitemplates[cname] = templates
+    return
+
+
 config = "setup.json"
 
 prefixc = "lxc-infra-"
@@ -60,6 +72,8 @@ containers = []
 bridges = set()
 
 nics = {}
+
+mitemplates = {}
 
 def getGateway(ipmask):
     atoms = ipmask.split("/")[0].split('.')
@@ -142,6 +156,9 @@ def provision(c):
     if not c.get_ips(timeout=60):
         print("Container seems to have failed to start (no IP)")
         sys.exit(1)
+    if c.name in mitemplates.keys():
+        for template in mitemplates[c.name]:
+            c.attach_wait(lxc.attach_run_command, ["bash", "/mnt/lxc/templates/"+template+"/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
     c.attach_wait(lxc.attach_run_command, ["bash", "/mnt/lxc/"+folder+"/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
     c.stop()
 
@@ -254,10 +271,12 @@ if __name__ == '__main__':
     getContainers(data)
     getBridges(data)
     getNics(data)
+    getMITemplates(data)
 
 #    print(containers)
 #    print(bridges)
 #    print(nics)
+#    print(mitemplates)
 
 
 

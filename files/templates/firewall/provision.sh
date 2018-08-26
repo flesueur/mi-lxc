@@ -1,5 +1,5 @@
 #!/bin/bash
-# Firewall
+# Firewall template
 
 if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 
