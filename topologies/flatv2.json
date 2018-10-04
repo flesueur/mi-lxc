@@ -1,0 +1,81 @@
+{
+  "prefix-containers":"lxc-infra-",
+  "prefix-bridges":"lxc",
+  "nat-bridge":"lxcbr0",
+  "containers": [
+      {"container":"backbone",
+        "interfaces":[
+        {"bridge":"nat-bridge", "address":"dhcp"},
+        {"bridge":"wan", "address":"10.0.0.1/24"}
+        ],
+        "gateway":"dhcp"},
+      {"container":"firewall",
+        "interfaces":[
+        {"bridge":"wan", "address":"10.0.0.2/24"},
+        {"bridge":"lan", "address":"192.168.0.1/16"}
+        ],
+        "gateway":"10.0.0.1",
+        "templates":[{"template":"firewall"},
+                    {"template":"internal", "domain":"internet.virt", "ns":"10.0.0.1"}]},
+      {"container":"home",
+        "interfaces":[
+          {"bridge":"wan", "address":"10.0.0.3/24"}
+        ],
+        "gateway":"10.0.0.1",
+        "templates":[{"template":"internal", "domain":"internet.virt", "ns":"10.0.0.1"}]},
+      {"container":"hacker",
+        "interfaces":[
+          {"bridge":"wan", "address":"10.0.0.4/24"}
+        ],
+        "gateway":"10.0.0.1",
+        "templates":[{"template":"internal", "domain":"internet.virt", "ns":"10.0.0.1"}]},
+      {"container":"dmz",
+        "interfaces":[
+          {"bridge":"lan", "address":"192.168.1.2/16"}
+        ],
+        "gateway":"192.168.0.1",
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"}]},
+      {"container":"developpeur",
+        "interfaces":[
+          {"bridge":"lan", "address":"192.168.0.2/16"}
+        ],
+        "gateway":"192.168.0.1",
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"}]},
+      {"container":"filer",
+        "interfaces":[
+          {"bridge":"lan", "address":"192.168.0.3/16"}
+        ],
+        "gateway":"192.168.0.1",
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"}]},
+      {"container":"ldap",
+        "interfaces":[
+          {"bridge":"lan", "address":"192.168.0.4/16"}
+        ],
+        "gateway":"192.168.0.1",
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"}]},
+      {"container":"admin",
+        "interfaces":[
+          {"bridge":"lan", "address":"192.168.2.2/16"}
+        ],
+        "gateway":"192.168.0.1",
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"}]},
+      {"container":"dev",
+        "interfaces":[
+          {"bridge":"lan", "address":"192.168.0.5/16"}
+        ],
+        "gateway":"192.168.0.1",
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"}]},
+      {"container":"prod",
+        "interfaces":[
+          {"bridge":"lan", "address":"192.168.0.6/16"}
+        ],
+        "gateway":"192.168.0.1",
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"}]},
+      {"container":"backup",
+        "interfaces":[
+          {"bridge":"lan", "address":"192.168.0.7/16"}
+        ],
+        "gateway":"192.168.0.1",
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"}]}
+  ]
+}
