@@ -41,13 +41,17 @@ Usage
 -----
 
 
-* `./launch.py addbridges     # Create required network bridges on the host`
-* `./launch.py create         # Creates a master container and then clones it to create all the containers`
-* `./launch.py start          # Start the generated infrastructure  (stop to stop it)`
-* `./launch.py attach <name>  # Shell access to the container <name>`
-* `./launch.py display <name> # X11 access to the container <name>`
-* `./launch.py                # Usage and list of container names`
+* `./mi-lxc.py addbridges     # Create required network bridges on the host`
+* `./mi-lxc.py create         # Creates a master container and then clones it to create all the containers`
+* `./mi-lxc.py start          # Start the generated infrastructure  (stop to stop it)`
+* `./mi-lxc.py attach <name>  # Shell access to the container <name>`
+* `./mi-lxc.py display <name> # X11 access to the container <name>`
+* `./mi-lxc.py                # Usage and list of container names`
 
+Known problems
+--------------
+
+If you're on INSA-Lyon's eduroam, there is a blocked port which prevents the PGP integrity verification of the downloaded LXC template. You can execute `export DOWNLOAD_KEYSERVER="hkp://p80.pool.sks-keyservers.net:80"` at the beginning of your session to resolve it. You also need a large thermos of coffee, of course.
 
 # License
 This software is licensed under AGPLv3 : you can freely reuse it as long as you write you use it and you redistribute your modifications. Special licenses with (even) more liberties for public teaching activities can be discussed.
