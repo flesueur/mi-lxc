@@ -1,0 +1,68 @@
+/**
+ * Basic screen and print styles. These styles are needed for basic DokuWiki functions
+ * regardless of the used template. Templates can override them of course
+ */
+
+div.clearer {
+    clear: both;
+    font-size: 0;
+    line-height: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+/* one of the many clearfix versions */
+.group {
+    display: inline-block;
+}
+.group {
+    display: block;
+}
+.group:before,
+.group:after {
+    content: "";
+    display: table;
+}
+.group:after {
+    clear: both;
+}
+
+div.no {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+/* image alignment */
+.medialeft {
+    float: left;
+}
+.mediaright {
+    float: right;
+}
+.mediacenter {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* table cell alignment */
+.leftalign   { text-align: left;   }
+.centeralign { text-align: center; }
+.rightalign  { text-align: right;  }
+[dir=rtl] .leftalign   { text-align: left;   }
+[dir=rtl] .centeralign { text-align: center; }
+[dir=rtl] .rightalign  { text-align: right;  }
+
+/* underline */
+em.u {
+    font-style: normal;
+    text-decoration: underline;
+}
+em em.u {
+    font-style: italic;
+}

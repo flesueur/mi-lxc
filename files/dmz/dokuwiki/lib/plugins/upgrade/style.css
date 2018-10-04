@@ -1,0 +1,97 @@
+#plugin__upgrade {
+    margin: 0 auto;
+    height: 20em;
+    overflow: auto;
+}
+
+#plugin__upgrade_form {
+    display: block;
+    overflow: auto;
+    margin: 1em;
+    font-size: 120%;
+}
+
+#plugin__upgrade_careful {
+    float: right;
+    text-align: right;
+    margin-right: 1em;
+    color: red;
+}
+
+#plugin__upgrade_form {
+    clear: right;
+}
+
+#plugin__upgrade_form button {
+    float: right;
+    margin-left: 0.5em;
+}
+
+#plugin__upgrade_form button.careful {
+    opacity: 0.5;
+}
+
+/* based on http://cssdeck.com/labs/progress-bar */
+
+#plugin__upgrade_meter {
+    height: 20px;
+    position: relative;
+    margin: 3em 1em 1em 1em;
+}
+
+#plugin__upgrade_meter ol {
+    margin: 0;
+    padding: 0;
+    display: block;
+    height: 100%;
+    border-radius: 10px;
+    background-color: #ddd;
+    position: relative;
+    list-style: none;
+}
+#plugin__upgrade_meter ol li {
+    float: left;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+    width: 19%;
+    position: relative;
+    border-radius: 10px;
+}
+
+#plugin__upgrade_meter ol li span{
+    right:-0.5em;
+    display: block;
+    text-align: center;
+}
+#plugin__upgrade_meter ol li .step {
+    top: -0.4em;
+    padding: .2em 0;
+    border: 3px solid #ddd;
+    z-index: 99;
+    font-size: 1.25em;
+    color: #ddd;
+    width: 1.5em;
+    font-weight: 700;
+    position: absolute;
+    background-color: #fff;
+    border-radius: 50%;
+}
+#plugin__upgrade_meter ol li .stage {
+    color: #fff;
+    font-weight: 700;
+}
+
+#plugin__upgrade_meter ol li.active {
+    height: 20px;
+    background: #aaa;
+}
+
+#plugin__upgrade_meter ol li.active span.stage {
+    color: #000;
+}
+
+#plugin__upgrade_meter ol li.active span.step{
+    color: #000;
+    border: 3px solid __link__;
+}

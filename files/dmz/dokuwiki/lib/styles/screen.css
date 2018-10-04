@@ -1,0 +1,96 @@
+/**
+ * Basic screen styles. These styles are needed for basic DokuWiki functions
+ * regardless of the used template. Templates can override them of course
+ */
+
+/* messages with msg() */
+div.error,
+div.info,
+div.success,
+div.notify {
+    color: #000;
+    background-repeat: no-repeat;
+    background-position: 8px 50%;
+    border: 1px solid;
+    font-size: 90%;
+    margin: 0 0 0.5em;
+    padding: 0.4em;
+    padding-left: 32px;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+[dir=rtl] div.error,
+[dir=rtl] div.info,
+[dir=rtl] div.success,
+[dir=rtl] div.notify {
+    background-position: 99% 50%;
+    padding-left: .4em;
+    padding-right: 32px;
+}
+
+div.error {
+    background-color: #fcc;
+    background-image: url(../images/error.png);
+    border-color: #ebb;
+}
+
+div.info {
+    background-color: #ccf;
+    background-image: url(../images/info.png);
+    border-color: #bbe;
+}
+
+div.success {
+    background-color: #cfc;
+    background-image: url(../images/success.png);
+    border-color: #beb;
+}
+
+div.notify {
+    background-color: #ffc;
+    background-image: url(../images/notify.png);
+    border-color: #eeb;
+}
+
+/* modal windows */
+.JSpopup,
+#link__wiz {
+    position: absolute;
+    background-color: #fff;
+    color: #000;
+    z-index: 20;
+    overflow: hidden;
+}
+
+#link__wiz .ui-dialog-content {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* media manager popup toggle buttons */
+
+#media__popup_content button.button {
+    border: 1px outset;
+}
+
+#media__popup_content button.selected {
+    border-style: inset;
+}
+
+/* hide something accessibly
+   (e.g. for screen readers or to keep access keys working) */
+.a11y {
+    position: absolute !important;
+    left: -99999em !important;
+    top: auto !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+}
+[dir=rtl] .a11y {
+    left: auto !important;
+    right: -99999em !important;
+}
+
+@import "geshi.less";

@@ -1,0 +1,7 @@
+base   upgrade
+author Andreas Gohr
+email  andi@splitbrain.org
+date   2018-06-07
+name   DokuWiki Upgrade Plugin
+desc   Automatically upgrade your DokuWiki install to the most recent stable release
+url    http://www.dokuwiki.org/plugin:upgrade

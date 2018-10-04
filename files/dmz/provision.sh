@@ -26,7 +26,12 @@ cp /mnt/lxc/dmz/ossec.list /etc/apt/sources.list.d/
 #wget -q -O /tmp/key https://www.atomicorp.com/RPM-GPG-KEY.art.txt
 #apt-key add /tmp/key
 apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-unauthenticated ossec-hids-server
+DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-unauthenticated ossec-hids-server  php7.0-mbstring php7.0
+
+# Install de dokuwiki
+rm /var/www/html/index.html
+cp -ar /mnt/lxc/dmz/dokuwiki/* /var/www/html/
+chown -R www-data /var/www/html/* 
 
 # Disable DHCP and do DNS config
 #sed -i "s/.*dhcp.*//" /etc/network/interfaces
