@@ -5,7 +5,9 @@ if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 
 # systemctl set-default graphical.target
 
-# DEBIAN_FRONTEND=noninteractive apt-get install -y thunderbird
+DEBIAN_FRONTEND=noninteractive apt-get install -y python3
+DEBIAN_FRONTEND=noninteractive apt-get install -y python3-requests
+
 
 tar zxvf /mnt/lxc/hacker/thunderbird.tar.gz -C /home/debian/
 

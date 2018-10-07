@@ -19,3 +19,9 @@ rm /usr/bin/nmap
 # Disable DHCP and do DNS config
 #sed -i "s/.*dhcp.*//" /etc/network/interfaces
 #echo -e "domain target.virt\nsearch target.virt\nnameserver 192.168.1.2" > /etc/resolv.conf
+
+# NIS client
+#DEBIAN_FRONTEND=noninteractive apt-get install -y nis
+#echo "target" > /etc/defaultdomain
+#echo "ypserver 192.168.1.2" >> /etc/yp.conf
+#sed -i -e 's/compat/compat nis/' /etc/nsswitch.conf

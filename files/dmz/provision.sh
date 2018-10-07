@@ -20,7 +20,7 @@ sed -i -e 's/mynetworks = /mynetworks = 192.168.0.0\/16 /' /etc/postfix/main.cf
 
 useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 commercial` commercial || true
 addgroup commercial mail
-useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 @password` insa || true
+#useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 @password` insa || true
 
 cp /mnt/lxc/dmz/ossec.list /etc/apt/sources.list.d/
 #wget -q -O /tmp/key https://www.atomicorp.com/RPM-GPG-KEY.art.txt
@@ -31,7 +31,14 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-unauthenticated ossec-
 # Install de dokuwiki
 rm /var/www/html/index.html
 cp -ar /mnt/lxc/dmz/dokuwiki/* /var/www/html/
-chown -R www-data /var/www/html/* 
+chown -R www-data /var/www/html/*
+
+# NIS server
+#DEBIAN_FRONTEND=noninteractive apt-get install -y nis
+#echo "target.virt" > /etc/defaultdomain
+#domainname target.virt
+#sed -i -e 's/NISSERVER=false/NISSERVER=master/' /etc/default/nis
+#make -C /var/yp
 
 # Disable DHCP and do DNS config
 #sed -i "s/.*dhcp.*//" /etc/network/interfaces
