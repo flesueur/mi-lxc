@@ -12,7 +12,10 @@ useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 adminadmin` -g employees
 
 
 # NIS server
+DEBIAN_FRONTEND=noninteractive apt-get install -d -y nis
+mv /etc/resolv.conf /etc/resolv.conf.bak
 DEBIAN_FRONTEND=noninteractive apt-get install -y nis
+mv /etc/resolv.conf.bak /etc/resolv.conf
 echo "target.virt" > /etc/defaultdomain
 domainname target.virt
 sed -i -e 's/NISSERVER=false/NISSERVER=master/' /etc/default/nis

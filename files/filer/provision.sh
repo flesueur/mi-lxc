@@ -38,5 +38,5 @@ chgrp 1001 /home/shared
 chmod 770 /home/shared
 
 cp -ar /mnt/lxc/filer/shared/ /home/
-chown -R 1002  /home/shared/dev
+chown -R 1002:1001  /home/shared/dev
 chmod 760 /home/shared/dev/deploy.sh

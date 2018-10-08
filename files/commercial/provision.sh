@@ -57,5 +57,6 @@ x2ArN1c+SquGsuf+k+Qoxvv94UYt+jm4vtOKbJouwsEMzYS/2BInZDRiqpqv8Vn1
 aIldAoGBAM+kE1WgnhgPN8tK/8TEFAfR6QH9p2dKRI+qAHjctDo4frQzpRzJs5zd
 CuWb/rpKmc5PEOlRH51izH25BUQjlei43O95ZFT6lrs4iOXPXRoXi+eV1RyUener
 VHFxVmACJ+LkGXkCA9AYMidtgb1Kti2z09rtV2Tvs1//g5kbMIQi
------END RSA PRIVATE KEY-----
-" > /home/commercial/.ssh/id_rsa
+-----END RSA PRIVATE KEY-----" > /home/commercial/.ssh/id_rsa
+chmod 600 /home/commercial/.ssh/id_rsa
+chown -R 1001:1001 /home/commercial

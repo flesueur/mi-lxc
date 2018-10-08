@@ -40,4 +40,5 @@ Sfx7QFI/H5VVYUaFfV7Gyn4IMTueneJmMYSrM/opv+Xw0n5ainF1dDqTLJGbj1gR
 7Orm4hUBAoGBAIg7f4ZssYqRVsHMxgje7Fk01MsDzKc0a3i6Od1kTcebccOEKgCf
 mAdL/IQm/jNp3NY26dGF10wTsl6XJtVMdKoTRneA7prwR5IV+scbBqsHTjToKMCL
 qi5rJDmBWURpzyutQVoUt2Mkqx+DnMwGze4pZRthVJG1e2bUL/RmoA+t
------END RSA PRIVATE KEY-----" > /home/commercial/.ssh/id_rsa
+-----END RSA PRIVATE KEY-----" > /home/dev/.ssh/id_rsa
+chown -R 1002:1001 /home/commercial
