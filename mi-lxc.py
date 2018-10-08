@@ -156,13 +156,25 @@ def provision(c):
     if not c.get_ips(timeout=60):
         print("Container seems to have failed to start (no IP)")
         sys.exit(1)
-    c.attach_wait(lxc.attach_run_command, ["bash", "/mnt/lxc/"+folder+"/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+
     if c.name in mitemplates.keys():
         for template in mitemplates[c.name]:
-            args = []
-            for arg in template:
-                args.append(arg+"="+template[arg])
-            c.attach_wait(lxc.attach_run_command, ["env"]+args+["bash", "/mnt/lxc/templates/"+template["template"]+"/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+            if (template["template"] != "internal"):
+                args = []
+                for arg in template:
+                    args.append(arg+"="+template[arg])
+                c.attach_wait(lxc.attach_run_command, ["env"]+args+["bash", "/mnt/lxc/templates/"+template["template"]+"/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+
+    c.attach_wait(lxc.attach_run_command, ["bash", "/mnt/lxc/"+folder+"/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+
+    if c.name in mitemplates.keys():
+        for template in mitemplates[c.name]:
+            if (template["template"] == "internal"):
+                args = []
+                for arg in template:
+                    args.append(arg+"="+template[arg])
+                c.attach_wait(lxc.attach_run_command, ["env"]+args+["bash", "/mnt/lxc/templates/"+template["template"]+"/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+
     c.stop()
 
 def configNet(c):

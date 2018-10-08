@@ -3,10 +3,11 @@
 
 if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 
-useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 commercial` commercial || true
+groupadd employees
+useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 commercial` -g employees commercial || true
 addgroup commercial mail
-useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 devdev` dev || true
-useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 adminadmin` admin || true
+useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 devdev` -g employees dev || true
+useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 adminadmin` -g employees admin || true
 
 
 

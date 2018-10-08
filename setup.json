@@ -15,67 +15,67 @@
         {"bridge":"lan", "address":"192.168.0.1/16"}
         ],
         "gateway":"10.0.0.1",
-        "templates":[{"template":"firewall"},
-                    {"template":"internal", "domain":"internet.virt", "ns":"10.0.0.1"}]},
+        "templates":[{"template":"firewall", "order":"before"},
+                    {"template":"internal", "domain":"internet.virt", "ns":"10.0.0.1", "order":"after"}]},
       {"container":"home",
         "interfaces":[
           {"bridge":"wan", "address":"10.0.0.3/24"}
         ],
         "gateway":"10.0.0.1",
-        "templates":[{"template":"internal", "domain":"internet.virt", "ns":"10.0.0.1"}]},
+        "templates":[{"template":"internal", "domain":"internet.virt", "ns":"10.0.0.1", "order":"after"}]},
       {"container":"hacker",
         "interfaces":[
           {"bridge":"wan", "address":"10.0.0.4/24"}
         ],
         "gateway":"10.0.0.1",
-        "templates":[{"template":"internal", "domain":"internet.virt", "ns":"10.0.0.1"}]},
+        "templates":[{"template":"internal", "domain":"internet.virt", "ns":"10.0.0.1", "order":"after"}]},
       {"container":"dmz",
         "interfaces":[
           {"bridge":"lan", "address":"192.168.1.2/16"}
         ],
         "gateway":"192.168.0.1",
-        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"}]},
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2", "order":"after"}]},
         {"container":"nis",
           "interfaces":[
             {"bridge":"lan", "address":"192.168.2.2/16"}
           ],
           "gateway":"192.168.0.1",
-          "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"}]},
+          "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2", "order":"after"}]},
       {"container":"commercial",
         "interfaces":[
           {"bridge":"lan", "address":"192.168.0.2/16"}
         ],
         "gateway":"192.168.0.1",
-        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"},
-                      {"template":"nisclient", "domain":"target.virt", "nisserver":"192.168.2.2"},
-                      {"template":"sshfs"}]},
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2", "order":"after"},
+                      {"template":"nisclient", "domain":"target.virt", "nisserver":"192.168.2.2", "order":"before"},
+                      {"template":"sshfs", "order":"before"}]},
       {"container":"dev",
         "interfaces":[
           {"bridge":"lan", "address":"192.168.0.3/16"}
         ],
         "gateway":"192.168.0.1",
-        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"},
-                      {"template":"nisclient", "domain":"target.virt", "nisserver":"192.168.2.2"}]},
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2", "order":"after"},
+                      {"template":"nisclient", "domain":"target.virt", "nisserver":"192.168.2.2", "order":"before"}]},
       {"container":"admin",
         "interfaces":[
           {"bridge":"lan", "address":"192.168.0.4/16"}
         ],
         "gateway":"192.168.0.1",
-        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"},
-                      {"template":"nisclient", "domain":"target.virt", "nisserver":"192.168.2.2"}]},
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2", "order":"after"},
+                      {"template":"nisclient", "domain":"target.virt", "nisserver":"192.168.2.2", "order":"before"}]},
       {"container":"intranet",
         "interfaces":[
           {"bridge":"lan", "address":"192.168.0.5/16"}
         ],
         "gateway":"192.168.0.1",
-        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"},
-                      {"template":"nisclient", "domain":"target.virt", "nisserver":"192.168.2.2"}]},
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2", "order":"after"},
+                      {"template":"nisclient", "domain":"target.virt", "nisserver":"192.168.2.2", "order":"before"}]},
       {"container":"filer",
         "interfaces":[
           {"bridge":"lan", "address":"192.168.0.6/16"}
         ],
         "gateway":"192.168.0.1",
-        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2"},
-                      {"template":"nisclient", "domain":"target.virt", "nisserver":"192.168.2.2"}]}
+        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2", "order":"after"},
+                      {"template":"nisclient", "domain":"target.virt", "nisserver":"192.168.2.2", "order":"before"}]}
   ]
 }
