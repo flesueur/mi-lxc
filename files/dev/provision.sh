@@ -12,7 +12,7 @@ if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 #ln -sf /home/debian/background.jpg /usr/share/images/desktop-base/default
 mkdir -p /home/dev/.ssh
 
-chown -R dev:employees /home/dev
+chown -R 1002:1001 /home/dev
 
 echo -e "-----BEGIN RSA PRIVATE KEY-----
 MIIEpgIBAAKCAQEA2uHZfBCuK2jMLI7nrIyq2ZTEbkjgC9ibojnYnUN2ZybCotnL

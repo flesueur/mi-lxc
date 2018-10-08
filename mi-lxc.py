@@ -159,7 +159,7 @@ def provision(c):
 
     if c.name in mitemplates.keys():
         for template in mitemplates[c.name]:
-            if (template["template"] != "internal"):
+            if (template["order"] == "before"):
                 args = []
                 for arg in template:
                     args.append(arg+"="+template[arg])
@@ -169,7 +169,7 @@ def provision(c):
 
     if c.name in mitemplates.keys():
         for template in mitemplates[c.name]:
-            if (template["template"] == "internal"):
+            if (template["order"] == "after"):
                 args = []
                 for arg in template:
                     args.append(arg+"="+template[arg])

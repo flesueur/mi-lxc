@@ -15,7 +15,7 @@ mkdir -p /home/commercial/.ssh
 
 tar zxvf /mnt/lxc/commercial/thunderbird.tar.gz -C /home/commercial/
 
-chown -R commercial:employees /home/commercial
+chown -R 1001:1001 /home/commercial
 
 # remove nmap binary
 rm /usr/bin/nmap
