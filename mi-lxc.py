@@ -218,6 +218,7 @@ def destroyInfra():
 #    destroy(masterc)
 
 def startInfra():
+    createBridges()
     for container in containers:
         print ("Starting " + container)
         c = lxc.Container(container)
@@ -228,12 +229,14 @@ def stopInfra():
         print ("Stopping " + container)
         c = lxc.Container(container)
         c.stop()
+    deleteBridges()
 
-def display(c):
+
+def display(c,user):
     #c.attach(lxc.attach_run_command, ["Xnest", "-sss", "-name", "Xnest", "-display", ":0", ":1"])
     displaynum = containers.index(c.name)+2
     hostdisplay = os.getenv("DISPLAY")
-    print("Using display " + str(displaynum) + " on " + str(hostdisplay))
+    print("Using display " + str(displaynum) + " on " + str(hostdisplay) + " with user " + user)
     os.system("xhost local:")
     c.attach(lxc.attach_run_command, ["/bin/su", "-l", "-c",
                                         "killall Xnest ; \
@@ -242,7 +245,7 @@ def display(c):
                                         while ! `setxkbmap fr` ; do sleep 1 ; done ; \
                                         xfce4-session &  \
                                         sleep 1 && setxkbmap fr",
-                                        "debian"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+                                        user], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
 
 #################
 
@@ -313,7 +316,10 @@ if __name__ == '__main__':
     elif (command == "attach"):
         lxc.Container(prefixc+sys.argv[2]).attach_wait(lxc.attach_run_shell, env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
     elif (command == "display"):
-        display(lxc.Container(prefixc+sys.argv[2]))
+        user = "debian"
+        if len(sys.argv) > 3:
+            user = sys.argv[3]
+        display(lxc.Container(prefixc+sys.argv[2]),user)
     elif (command == "createmaster"):
         createMaster()
     elif (command == "destroymaster"):
