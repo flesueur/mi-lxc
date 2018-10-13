@@ -1,7 +1,0 @@
-lxc.network.type = veth
-lxc.network.link = lxcbr0
-lxc.network.flags = up
-
-lxc.mount.entry=/tmp/.X11-unix tmp/.X11-unix none ro,bind,create=dir 0 0
-#lxc.mount.entry=DIR tmp/lxc none ro,bind,create=dir 0 0
-
