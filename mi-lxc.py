@@ -270,7 +270,7 @@ def deleteBridges():
 ###################
 
 def usage():
-    print("No argument given, usage with create, destroy, createmaster, destroymaster, addbridges, delbridges, start, stop, attach <name>, display <name>\nNames are ", end='')
+    print("No argument given, usage with create, destroy, createmaster, destroymaster, addbridges, delbridges, start, stop, attach <name>, display <name> [<user>|debian]\nNames are ", end='')
     for container in containers:
         print (container[len(prefixc):],end=', ')
     print("\n")
@@ -325,8 +325,10 @@ if __name__ == '__main__':
     elif (command == "destroymaster"):
         destroy(masterc)
     elif (command == "addbridges"):
-        createBridges()
+        print("not used anymore, you can directly start the infrastructure")
+        #createBridges()
     elif (command == "delbridges"):
-        deleteBridges()
+        print("not used anymore, bridges are deleted when the infrastructure stops")
+        #deleteBridges()
     else:
         usage()
