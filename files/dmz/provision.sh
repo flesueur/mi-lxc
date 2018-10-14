@@ -3,6 +3,8 @@
 
 if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 
+sed -i -e 's/127.0.1.1.*$/127.0.1.1\tlxc-infra-dmz/' /etc/hosts
+
 # DEBIAN_FRONTEND=noninteractive apt-get install -y thunderbird
 
 DEBIAN_FRONTEND=noninteractive apt-get install -y unbound postfix dovecot-imapd proftpd apt-transport-https wget
