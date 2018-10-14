@@ -8,9 +8,17 @@ cp /vagrant/files/lxc-net /etc/default/lxc-net
 
 # MAJ et install
 apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-`uname -r` curl dkms
+# guest utils
+VERSION=`curl https://download.virtualbox.org/virtualbox/LATEST-STABLE.TXT`
+curl https://download.virtualbox.org/virtualbox/$VERSION/VBoxGuestAdditions_$VERSION.iso -o /tmp/vbox.iso
+mount -o loop /tmp/vbox.iso /mnt
+/mnt/VBoxLinuxAdditions.run
+
+# MAJ et install
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
-DEBIAN_FRONTEND=noninteractive apt-get install -y curl git lxc python3-lxc apache2 vim xfce4 lightdm firefox-esr gnome-terminal firmware-atheros firmware-misc-nonfree tcpdump dsniff whois postgresql wireshark dkms net-tools zerofree # keyboard-configuration  wireshark
+DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-4.9.0-7-amd64 linux-headers-amd64 curl git lxc python3-lxc apache2 vim xfce4 lightdm firefox-esr gnome-terminal firmware-atheros firmware-misc-nonfree tcpdump dsniff whois postgresql wireshark dkms net-tools zerofree # keyboard-configuration  wireshark
 apt-get clean
 
 
@@ -37,11 +45,7 @@ useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 debian` debian || true
 echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
 sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
 
-# guest utils et reboot
-VERSION=`curl https://download.virtualbox.org/virtualbox/LATEST-STABLE.TXT`
-curl https://download.virtualbox.org/virtualbox/$VERSION/VBoxGuestAdditions_$VERSION.iso -o /tmp/vbox.iso
-mount -o loop /tmp/vbox.iso /mnt
-/mnt/VBoxLinuxAdditions.run
+
 
 #/vagrant/files/VBoxLinuxAdditions.run
 

@@ -1,2 +1,8 @@
 config.tmp
 __pycache__
+.vagrant
+VBoxLinuxAdditions.run
+notes
+*.bak
+mkcert
+launch.sh

@@ -42,7 +42,7 @@ Vagrant.configure("2") do |config|
   #  vb.gui = true
   #
   #   # Customize the amount of memory on the VM:
-    vb.memory = "512"
+    vb.memory = "2048"
     vb.cpus="1"
     vb.name = "debian-vagrant-stretch-amd64"
     vb.customize ["modifyvm", :id, "--vram", "16"]
