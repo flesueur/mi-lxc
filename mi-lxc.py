@@ -2,9 +2,10 @@
 
 import lxc
 import sys
-import os
+import os,subprocess
 import json
 import argparse
+import re
 
 def getGlobals(data):
     global lxcbr,prefixc,prefixbr
@@ -334,5 +335,14 @@ if __name__ == '__main__':
         os.system("lxc-info -n " + prefixc+sys.argv[2] + "|grep Link")
     elif (command == "addnic"):
         os.system("lxc-device -n " + prefixc+sys.argv[2] + " add " + sys.argv[3] + " " + sys.argv[4])
+    elif (command == "switchnic"):
+        output = str(subprocess.check_output("lxc-info -n " + prefixc+sys.argv[2] , shell=True))
+        veth = re.search(r"Link:\s*(\S*)\\n",output).group(1)
+        output = subprocess.check_output("brctl show" , shell=True).decode('ascii')
+        myre = re.compile(r".*\s+(\S+)\s+8000.*?"+veth,re.M|re.S)
+        brfrom = myre.search(output).group(1)
+        print("Switching " + veth + " from " + brfrom + " to " + sys.argv[3])
+        os.system("brctl delif " + brfrom + " " + veth)
+        os.system("brctl addif " + sys.argv[3] + " " + veth)
     else:
         usage()
