@@ -11,7 +11,7 @@ if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
-DEBIAN_FRONTEND=noninteractive apt-get install -y syslog-ng openssh-server bash-completion less leafpad mupdf xnest apache2 vim xfce4 thunderbird midori tcpdump dsniff whois wireshark net-tools xfce4-terminal iptables iputils-ping netcat nmap socat curl wget unzip # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree
+DEBIAN_FRONTEND=noninteractive apt-get install -y nft ftp syslog-ng openssh-server bash-completion less leafpad mupdf xnest apache2 vim xfce4 thunderbird midori tcpdump dsniff whois wireshark net-tools xfce4-terminal iptables iputils-ping netcat nmap socat curl wget unzip # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree
 apt-get clean
 # firefox-esr epiphany-browser
 

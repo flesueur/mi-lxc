@@ -49,6 +49,9 @@ sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_c
 
 #/vagrant/files/VBoxLinuxAdditions.run
 
+# autorisation du routing
+echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+sysctl -p
 service lxc restart
 cd /root
 git clone https://github.com/flesueur/mi-lxc
