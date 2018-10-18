@@ -332,5 +332,7 @@ if __name__ == '__main__':
         #deleteBridges()
     elif (command == "shownics"):
         os.system("lxc-info -n " + prefixc+sys.argv[2] + "|grep Link")
+    elif (command == "addnic"):
+        os.system("lxc-device -n " + prefixc+sys.argv[2] + " add " + sys.argv[3] + " " + sys.argv[4])
     else:
         usage()
