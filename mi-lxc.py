@@ -315,8 +315,11 @@ if __name__ == '__main__':
     elif (command == "stop"):
         stopInfra()
     elif (command == "attach"):
+        user = "root"
+        if len(sys.argv) > 3:
+            user = sys.argv[3]
         #lxc.Container(prefixc+sys.argv[2]).attach_wait(lxc.attach_run_shell, env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
-        lxc.Container(prefixc+sys.argv[2]).attach_wait(lxc.attach_run_command, ["env","TERM="+os.getenv("TERM"),"/bin/su", "-"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+        lxc.Container(prefixc+sys.argv[2]).attach_wait(lxc.attach_run_command, ["env","TERM="+os.getenv("TERM"),"/bin/su", "-", user], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
     elif (command == "display"):
         user = "debian"
         if len(sys.argv) > 3:
