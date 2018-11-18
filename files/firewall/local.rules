@@ -1,0 +1,8 @@
+# Copyright 2005 Sourcefire, Inc. All Rights Reserved.
+# These rules are licensed under the GNU General Public License.
+# Please see the file LICENSE in this directory for more details.
+# $Id: community-web-misc.rules,v 1.45 2007/04/20 13:28:50 akirk Exp $
+
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS any (msg:"COMMUNITY WEB-MISC Test Script Access"; flow:to_server,established; uricontent:"/test"; nocase; pcre:"/test\.(pl|php|cgi|asp|jsp)/Ui"; classtype:web-application-activity; sid:100000121; rev:1;)
+alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"test eicar"; content:"EICAR"; sid:1001;)
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (msg:"WEB-IIS CodeRed v2 root.exe access"; flow:to_server,established; uricontent:"/root.exe"; nocase; reference:url,www.cert.org/advisories/CA-2001-19.html; classtype:web-application-attack; sid:1256; rev:8;)

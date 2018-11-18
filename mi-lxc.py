@@ -6,6 +6,7 @@ import os,subprocess
 import json
 import argparse
 import re
+import time
 
 def getGlobals(data):
     global lxcbr,prefixc,prefixbr
@@ -166,6 +167,7 @@ def provision(c):
     #                 args.append(arg+"="+template[arg])
     #             c.attach_wait(lxc.attach_run_command, ["env"]+args+["bash", "/mnt/lxc/templates/"+template["template"]+"/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
 
+    #time.sleep(2)
     c.attach_wait(lxc.attach_run_command, ["bash", "/mnt/lxc/"+folder+"/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
 
     if c.name in mitemplates.keys():

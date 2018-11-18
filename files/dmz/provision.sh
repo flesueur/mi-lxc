@@ -7,7 +7,7 @@ sed -i -e 's/127.0.1.1.*$/127.0.1.1\tlxc-infra-dmz/' /etc/hosts
 
 # DEBIAN_FRONTEND=noninteractive apt-get install -y thunderbird
 
-DEBIAN_FRONTEND=noninteractive apt-get install -y unbound postfix dovecot-imapd proftpd apt-transport-https wget
+DEBIAN_FRONTEND=noninteractive apt-get install -y unbound postfix dovecot-imapd proftpd apt-transport-https wget libprelude2 libprelude-dev build-essential  php7.0-mbstring php7.0
 
 cp /mnt/lxc/dmz/dns.conf /etc/unbound/unbound.conf.d/
 
@@ -24,16 +24,35 @@ useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 commercial` commercial |
 addgroup commercial mail
 #useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 @password` insa || true
 
-cp /mnt/lxc/dmz/ossec.list /etc/apt/sources.list.d/
+#cp /mnt/lxc/dmz/ossec.list /etc/apt/sources.list.d/
 #wget -q -O /tmp/key https://www.atomicorp.com/RPM-GPG-KEY.art.txt
 #apt-key add /tmp/key
-apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-unauthenticated ossec-hids-server  php7.0-mbstring php7.0
+#apt-get update
+#DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-unauthenticated ossec-hids-server
+#sed -i -e 's/<rule id="31151" level="10" frequency="12" timeframe="90">/<rule id="31151" level="5" frequency="12" timeframe="90">/' /var/ossec/rules/web_rules.xml # deactivate active-response/firewall block when multiple http forbidden
+#sed -i -e 's/\/var\/www\/logs\/access_log/\/var\/log\/apache2\/access.log/' /var/ossec/etc/ossec.conf
+#sed -i -e 's/\/var\/www\/logs\/error_log/\/var\/log\/apache2\/error.log/' /var/ossec/etc/ossec.conf
+#sed -i -e 's/<\/global>/<prelude_output>yes<\/prelude_output><prelude_profile>OSSEC-DMZ<\/prelude_profile><prelude_log_level>0<\/prelude_log_level><\/global>/' /var/ossec/etc/ossec.conf
+
 
 # Install de dokuwiki
 rm /var/www/html/index.html
 cp -ar /mnt/lxc/dmz/dokuwiki/* /var/www/html/
 chown -R www-data /var/www/html/*
+
+# Install de OSSEC avec support prelude
+cd /tmp
+wget https://github.com/ossec/ossec-hids/archive/3.1.0.tar.gz
+tar zxvf 3.1.0.tar.gz
+cd ossec-hids-3.1.0
+cp /mnt/lxc/dmz/preloaded-vars.conf etc/
+USE_PRELUDE=yes ./install.sh
+
+sed -i -e 's/<rule id="31151" level="10" frequency="12" timeframe="90">/<rule id="31151" level="5" frequency="12" timeframe="90">/' /var/ossec/rules/web_rules.xml # deactivate active-response/firewall block when multiple http forbidden
+sed -i -e 's/\/var\/www\/logs\/access_log/\/var\/log\/apache2\/access.log/' /var/ossec/etc/ossec.conf
+sed -i -e 's/\/var\/www\/logs\/error_log/\/var\/log\/apache2\/error.log/' /var/ossec/etc/ossec.conf
+sed -i -e 's/<\/global>/<prelude_output>no<\/prelude_output>\n<prelude_profile>OSSEC-DMZ<\/prelude_profile>\n<prelude_log_level>0<\/prelude_log_level>\n<\/global>/' /var/ossec/etc/ossec.conf
+sed -i -e 's/server-addr = 127.0.0.1/server-addr = 192.168.0.1/' /etc/prelude/default/client.conf
 
 # NIS server
 #DEBIAN_FRONTEND=noninteractive apt-get install -y nis

@@ -8,3 +8,11 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y prewikka prelude-manager prelu
 
 PASS=`grep -e "^pass =" /etc/prelude-manager/prelude-manager.conf | cut -d'=' -f2`
 sed -i "s/pass: prelude/pass:$PASS/" /etc/prewikka/prewikka.conf
+
+sed -i "s/botcc.rules/local.rules/" /etc/suricata/suricata.yaml
+#rm /etc/suricata/rules/*
+cp /mnt/lxc/firewall/local.rules /etc/suricata/rules/
+sed -i -e 's/    HOME_NET:.*$/    HOME_NET: "[192.168.0.0\/16]"/' /etc/suricata/suricata.yaml
+
+sed -i -e "s/RUN=no/RUN=yes/" /etc/default/prelude-manager
+echo "listen = 192.168.0.1" >> /etc/prelude-manager/prelude-manager.conf
