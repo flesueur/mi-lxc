@@ -1,8 +1,9 @@
 #!/bin/bash
-# Filer
-
+# intranet
+set -e
 if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 
+apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y libapache2-mod-php php-sqlite3 sqlite3
 
 cp /mnt/lxc/intranet/index.php.sqlite /var/www/html/index.php

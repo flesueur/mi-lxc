@@ -93,7 +93,14 @@ def createMaster():
     print("Creating master")
     c = lxc.Container(masterc)
     if c.defined:
-        print("Master container already exists, going on...", file=sys.stderr)
+        print("Master container already exists, updating...", file=sys.stderr)
+        c.start()
+        if not c.get_ips(timeout=60):
+            print("Container seems to have failed to start (no IP)")
+            sys.exit(1)
+        c.attach_wait(lxc.attach_run_command, ["bash", "/mnt/lxc/master/update.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+        c.stop()
+        print("Master container updated !", file=sys.stderr)
         return c
 
     if not c.create("download", lxc.LXC_CREATE_QUIET, {"dist": "debian",
@@ -168,7 +175,12 @@ def provision(c):
     #             c.attach_wait(lxc.attach_run_command, ["env"]+args+["bash", "/mnt/lxc/templates/"+template["template"]+"/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
 
     #time.sleep(2)
-    c.attach_wait(lxc.attach_run_command, ["bash", "/mnt/lxc/"+folder+"/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+    ret=c.attach_wait(lxc.attach_run_command, ["bash", "/mnt/lxc/"+folder+"/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+    if ret > 255:
+        print("No Provisioning script for " + folder)
+    if ret != 0 and ret <= 255:
+        print("Provisioning of " + folder + " failed (" + str(ret) + ")")
+        exit(0)
 
     if c.name in mitemplates.keys():
         for template in mitemplates[c.name]:
@@ -176,7 +188,10 @@ def provision(c):
             args = []
             for arg in template:
                 args.append(arg+"="+template[arg])
-            c.attach_wait(lxc.attach_run_command, ["env"]+args+["bash", "/mnt/lxc/templates/"+template["template"]+"/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+            ret=c.attach_wait(lxc.attach_run_command, ["env"]+args+["bash", "/mnt/lxc/templates/"+template["template"]+"/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+            if ret != 0 and ret != 127:
+                print("Provisioning of " + folder + " failed")
+                exit(0)
 
     c.stop()
 
@@ -211,9 +226,13 @@ def configNet(c):
 def createInfra():
     mastercontainer = createMaster()
     for container in containers:
-        newclone = clone(container, mastercontainer)
-        provision(newclone)
-        configNet(newclone)
+        c = lxc.Container(container)
+        if c.defined:
+            print("Container " + container + " already exists", file=sys.stderr)
+        else:
+            newclone = clone(container, mastercontainer)
+            provision(newclone)
+            configNet(newclone)
 
 def destroyInfra():
     for container in containers:

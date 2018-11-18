@@ -1,8 +1,9 @@
 #!/bin/bash
 # BACKBONE
-
+set -e
 if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 
+apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y unbound postfix dovecot-imapd
 
 cp /mnt/lxc/backbone/interfaces /etc/network/interfaces.d/backbone

@@ -1,8 +1,9 @@
 #!/bin/bash
-# Internal template
-
+# sshfs template
+set -e
 if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 
+apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y sshfs libpam-mount
 
 echo -e "#!/bin/bash\nmknod -m 666 /dev/fuse c 10 229\nexit 0" > /etc/rc.local

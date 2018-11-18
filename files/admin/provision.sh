@@ -1,6 +1,6 @@
 #!/bin/bash
 # Dev
-
+set -e
 if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 
 # systemctl set-default graphical.target

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Firewall template
-
+set -e
 if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 
 # DEBIAN_FRONTEND=noninteractive apt-get install -y thunderbird

@@ -1,8 +1,9 @@
 #!/bin/bash
-# BACKBONE
-
+# Firewall
+set -e
 if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 
+apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y mariadb-server
 DEBIAN_FRONTEND=noninteractive apt-get install -y prewikka prelude-manager prelude-correlator suricata
 

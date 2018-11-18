@@ -1,12 +1,13 @@
 #!/bin/bash
 # DMZ
-
+set -e
 if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 
 sed -i -e 's/127.0.1.1.*$/127.0.1.1\tlxc-infra-dmz/' /etc/hosts
 
 # DEBIAN_FRONTEND=noninteractive apt-get install -y thunderbird
 
+apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y unbound postfix dovecot-imapd proftpd apt-transport-https wget libprelude2 libprelude-dev build-essential  php7.0-mbstring php7.0
 
 cp /mnt/lxc/dmz/dns.conf /etc/unbound/unbound.conf.d/

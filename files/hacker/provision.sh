@@ -1,10 +1,11 @@
 #!/bin/bash
 # Hacker
-
+set -e
 if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 
 # systemctl set-default graphical.target
 
+apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y python3
 DEBIAN_FRONTEND=noninteractive apt-get install -y python3-requests
 

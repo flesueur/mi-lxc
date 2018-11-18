@@ -1,6 +1,6 @@
 #!/bin/bash
-# DMZ
-
+# NIS
+set -e
 if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 
 groupadd employees
@@ -12,6 +12,7 @@ useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 adminadmin` -g employees
 
 
 # NIS server
+apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -d -y nis
 mv /etc/resolv.conf /etc/resolv.conf.bak
 DEBIAN_FRONTEND=noninteractive apt-get install -y nis

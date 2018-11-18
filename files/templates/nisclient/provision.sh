@@ -1,11 +1,12 @@
 #!/bin/bash
-# Firewall template
-
+# nisclient template
+set -e
 if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 
 # DEBIAN_FRONTEND=noninteractive apt-get install -y thunderbird
 
 # NIS client
+apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -d -y nis
 mv /etc/resolv.conf /etc/resolv.conf.bak
 DEBIAN_FRONTEND=noninteractive apt-get install -y nis
