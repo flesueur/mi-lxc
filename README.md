@@ -2,7 +2,13 @@
 
 MI-LXC uses LXC to simulate a small-scale internet-like environment. I use this environment for (infosec) practical work (intrusion, firewall, IDS, etc.). The small memory footprint of LXC combined with differential images allows to run it on modest hardware.
 
-It is based on the infrastructure-as-code principle, these scripts programmatically generate the target environment.
+It is based on the infrastructure-as-code principle: these scripts programmatically generate the target environment.
+
+Example practical work using this environment (in french) :
+
+* [Intrusion scenario](https://github.com/flesueur/srs/blob/master/tp1-intrusion.md)
+* [Firewall](https://github.com/flesueur/srs/blob/master/tp2-firewall.md)
+* [IDS](https://github.com/flesueur/srs/blob/master/tp3-ids.md)
 
 # Features and composition
 
