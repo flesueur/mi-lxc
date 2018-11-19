@@ -53,6 +53,8 @@ sed -i -e 's/<rule id="31151" level="10" frequency="12" timeframe="90">/<rule id
 sed -i -e 's/\/var\/www\/logs\/access_log/\/var\/log\/apache2\/access.log/' /var/ossec/etc/ossec.conf
 sed -i -e 's/\/var\/www\/logs\/error_log/\/var\/log\/apache2\/error.log/' /var/ossec/etc/ossec.conf
 sed -i -e 's/<\/global>/<prelude_output>no<\/prelude_output>\n<prelude_profile>OSSEC-DMZ<\/prelude_profile>\n<prelude_log_level>0<\/prelude_log_level>\n<\/global>/' /var/ossec/etc/ossec.conf
+sed -i -e 's/<frequency>79200<\/frequency>/<frequency>60<\/frequency>/' /var/ossec/etc/ossec.conf
+sed -i -e 's/<directories check_all="yes">/<directories check_all="yes" realtime="no">/' /var/ossec/etc/ossec.conf
 sed -i -e 's/server-addr = 127.0.0.1/server-addr = 192.168.0.1/' /etc/prelude/default/client.conf
 
 # NIS server

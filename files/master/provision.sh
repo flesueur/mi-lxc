@@ -5,7 +5,7 @@
 #echo Waiting for IP
 #sleep 1
 #done
-
+set -e
 if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 
 apt-get update
@@ -28,7 +28,7 @@ update-locale LANG=fr_FR.UTF-8
 
 # Creation des utilisateurs
 usermod -p `mkpasswd --method=sha-512 root` root
-useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 debian` debian || true
+grep -q debian /etc/passwd || useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 debian` debian
 
 #login ssh avec mot de passe
 echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config

@@ -16,4 +16,5 @@ cp /mnt/lxc/firewall/local.rules /etc/suricata/rules/
 sed -i -e 's/    HOME_NET:.*$/    HOME_NET: "[192.168.0.0\/16]"/' /etc/suricata/suricata.yaml
 
 sed -i -e "s/RUN=no/RUN=yes/" /etc/default/prelude-manager
+sed -i -e "s/RUN=no/RUN=yes/" /etc/default/prelude-correlator
 echo "listen = 192.168.0.1" >> /etc/prelude-manager/prelude-manager.conf

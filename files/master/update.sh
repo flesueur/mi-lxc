@@ -5,7 +5,7 @@
 #echo Waiting for IP
 #sleep 1
 #done
-
+set -e
 if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
 
 apt-get update

@@ -98,7 +98,13 @@ def createMaster():
         if not c.get_ips(timeout=60):
             print("Container seems to have failed to start (no IP)")
             sys.exit(1)
-        c.attach_wait(lxc.attach_run_command, ["bash", "/mnt/lxc/master/update.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+        ret=c.attach_wait(lxc.attach_run_command, ["bash", "/mnt/lxc/master/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+        if ret > 255:
+            print("No update script for master")
+        if ret != 0 and ret <= 255:
+            print("Updating of master failed (" + str(ret) + ")")
+            c.stop()
+            exit(1)
         c.stop()
         print("Master container updated !", file=sys.stderr)
         return c
@@ -180,7 +186,9 @@ def provision(c):
         print("No Provisioning script for " + folder)
     if ret != 0 and ret <= 255:
         print("Provisioning of " + folder + " failed (" + str(ret) + ")")
-        exit(0)
+        c.stop()
+        c.destroy()
+        exit(1)
 
     if c.name in mitemplates.keys():
         for template in mitemplates[c.name]:
@@ -191,7 +199,9 @@ def provision(c):
             ret=c.attach_wait(lxc.attach_run_command, ["env"]+args+["bash", "/mnt/lxc/templates/"+template["template"]+"/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
             if ret != 0 and ret != 127:
                 print("Provisioning of " + folder + " failed")
-                exit(0)
+                c.stop()
+                c.destroy()
+                exit(1)
 
     c.stop()
 
@@ -330,7 +340,10 @@ if __name__ == '__main__':
     if (command == "create"):
         createInfra()
     elif (command == "destroy"):
-        destroyInfra()
+        if len(sys.argv) > 2:
+            destroy(prefixc+sys.argv[2])
+        else:
+            destroyInfra()
     elif (command == "start"):
         startInfra()
     elif (command == "stop"):
