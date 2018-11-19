@@ -1,3 +1,0 @@
-====== Popularity Feedback ======
-
-The data has been sent succesfully.

@@ -1,7 +1,0 @@
-<IfModule mod_authz_host>
-    Require all denied
-</IfModule>
-<IfModule !mod_authz_host>
-    Order allow,deny
-    Deny from all
-</IfModule>

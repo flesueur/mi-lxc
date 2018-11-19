@@ -37,9 +37,24 @@ addgroup commercial mail
 
 
 # Install de dokuwiki
-rm /var/www/html/index.html
-cp -ar /mnt/lxc/dmz/dokuwiki/* /var/www/html/
+rm -f /var/www/html/index.html
+#cp -ar /mnt/lxc/dmz/dokuwiki/* /var/www/html/
+wget https://github.com/splitbrain/dokuwiki/archive/release_stable_2018-04-22a.tar.gz -O /tmp/dokuwiki.tar.gz
+tar zxf /tmp/dokuwiki.tar.gz -C /var/www/html --strip 1
+echo "sh      application/x-sh" >> /var/www/html/conf/mime.conf
+PASS=`mkpasswd -5 superman`
+echo "admin:$PASS:admin:admin@target.virt:admin,user" >> /var/www/html/conf/users.auth.php
+echo "* @ALL  1" > /var/www/html/conf/acl.auth.php
+echo "* @user  8" >> /var/www/html/conf/acl.auth.php
+cp /mnt/lxc/dmz/doku/local.php /var/www/html/conf/
+cp /mnt/lxc/dmz/doku/start.txt /var/www/html/data/pages/
 chown -R www-data /var/www/html/*
+
+# Seulement dans htmlold/conf: acl.auth.php
+# Seulement dans htmlold/conf: local.php
+# Seulement dans htmlold/conf: plugins.local.php
+# Seulement dans htmlold/conf: users.auth.php
+
 
 # Install de OSSEC avec support prelude
 cd /tmp
