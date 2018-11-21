@@ -17,4 +17,5 @@ sed -i -e 's/    HOME_NET:.*$/    HOME_NET: "[192.168.0.0\/16]"/' /etc/suricata/
 
 sed -i -e "s/RUN=no/RUN=yes/" /etc/default/prelude-manager
 sed -i -e "s/RUN=no/RUN=yes/" /etc/default/prelude-correlator
+sed -i -e "s/RUN=no/RUN=yes/" /etc/default/suricata
 echo "listen = 192.168.0.1" >> /etc/prelude-manager/prelude-manager.conf
