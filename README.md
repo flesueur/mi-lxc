@@ -56,7 +56,7 @@ Usage
 <!-- * `./mi-lxc.py addbridges     # Create required network bridges on the host` -->
 * `./mi-lxc.py create         # Creates a master container and then clones it to create all the containers`
 * `./mi-lxc.py start          # Start the generated infrastructure  (stop to stop it)`
-* `./mi-lxc.py attach [user@]<name> [command]  # Shell access to the container <name> with user <user>. root is used if no [user] is specified. If [command] is specified, runs the command in the container and exits.`
+* `./mi-lxc.py attach [user@]<name> [command]  # Executes [command] in the container <name> as user [user]. [command] and [user] are optional; if not specified, user is root and command is an interactive shell.`
 * `./mi-lxc.py display <name> # X11 access to the container <name>. You can also specify a username at the end of the line (default: debian)`
 * `./mi-lxc.py                # Usage and list of container names`
 
