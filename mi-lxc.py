@@ -302,7 +302,7 @@ def deleteBridges():
 ###################
 
 def usage():
-    print("No argument given, usage with create, destroy, createmaster, destroymaster, addbridges, delbridges, start, stop, attach <name>, display <name> [<user>|debian], shownics <name>.\nNames are ", end='')
+    print("No argument given, usage with create, destroy, createmaster, destroymaster, addbridges, delbridges, start, stop, attach [user@]<name> [command], display <name> [<user>|debian], shownics <name>.\nNames are ", end='')
     for container in containers:
         print (container[len(prefixc):],end=', ')
     print("\n")
@@ -349,11 +349,21 @@ if __name__ == '__main__':
     elif (command == "stop"):
         stopInfra()
     elif (command == "attach"):
-        user = "root"
+        user_container = sys.argv[2].split("@")
+        if len(user_container) == 2:
+            user = user_container[0]
+            container = user_container[1]
+        else:
+            user = "root"
+            container = user_container[0]
+
         if len(sys.argv) > 3:
-            user = sys.argv[3]
-        #lxc.Container(prefixc+sys.argv[2]).attach_wait(lxc.attach_run_shell, env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
-        lxc.Container(prefixc+sys.argv[2]).attach_wait(lxc.attach_run_command, ["env","TERM="+os.getenv("TERM"),"/bin/su", "-", user], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+            command = " ".join(sys.argv[3:])
+            run_command = ["env","TERM="+os.getenv("TERM"),"/bin/su", "-c", command, "-", user]
+        else:
+            run_command = ["env","TERM="+os.getenv("TERM"),"/bin/su", "-", user]
+
+        lxc.Container(prefixc+container).attach_wait(lxc.attach_run_command, run_command, env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
     elif (command == "display"):
         user = "debian"
         if len(sys.argv) > 3:
