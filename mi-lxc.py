@@ -111,7 +111,8 @@ def createMaster():
 
     if not c.create("download", lxc.LXC_CREATE_QUIET, {"dist": "debian",
                                                    "release": "stretch",
-                                                   "arch": "amd64"}):
+                                                   "arch": "amd64",
+                                                   "no-validate": "true"}):
                                                    print("Failed to create the container rootfs", file=sys.stderr)
                                                    sys.exit(1)
     configure(c)
