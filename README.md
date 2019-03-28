@@ -63,8 +63,6 @@ Usage
 Known problems
 --------------
 
-If you're on INSA-Lyon's eduroam, there is a blocked port which prevents the PGP integrity verification of the downloaded LXC template. In that case, creation of the master container will fail (timeout). To debug it, you can try `lxc-create -t download -n lxc-test -- -d debian -r stretch -a amd64`: if it does not work then you need the following workaround (to delete the test container : `lxc-destroy -n lxc-test`). You can execute `export DOWNLOAD_KEYSERVER="hkp://pgp.mit.edu:80"` (you can also try `̀hkp://p80.pool.sks-keyservers.net:80`) at the beginning of your session to resolve it. You also need a large thermos of coffee, of course.
-
 If network seems to be stalled during provisioning (especially when you destroy then create), you can try `service lxc-net restart` before creating containers. It recreates the LXC bridge and seems to flush some problematic caches (ARP ?).
 
 # License
