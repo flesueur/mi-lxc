@@ -162,7 +162,7 @@ def configure(c):
         "lxc.mount.entry", "/tmp/.X11-unix tmp/.X11-unix none ro,bind,create=dir 0 0")
     filesdir = os.path.dirname(os.path.realpath(__file__))
     c.append_config_item(
-        "lxc.mount.entry", filesdir + "/files mnt/lxc none ro,bind,create=dir 0 0")
+        "lxc.mount.entry", filesdir.replace(" ", "\\040") + "/files mnt/lxc none ro,bind,create=dir 0 0")
     try:  # AppArmor is installed and must be configured
         c.get_config_item("lxc.apparmor.profile")
         # may be aa_profile sometimes ?
@@ -298,7 +298,7 @@ def display(c, user):
     os.system("xhost local:")
     c.attach(lxc.attach_run_command, ["/bin/su", "-l", "-c",
                                       "killall Xnest ; \
-                                        Xnest -sss -name \"Xnest " + c.name + "\" -display " + hostdisplay + " :" + str(displaynum) + " & \
+                                        Xnest -name \"Xnest " + c.name + "\" -display " + hostdisplay + " :" + str(displaynum) + " & \
                                         export DISPLAY=:" + str(displaynum) + " ; \
                                         while ! `setxkbmap fr` ; do sleep 1 ; done ; \
                                         xfce4-session &  \
