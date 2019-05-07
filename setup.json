@@ -2,6 +2,7 @@
   "prefix-containers":"lxc-infra-",
   "prefix-bridges":"lxc",
   "nat-bridge":"lxcbr0",
+  "comment":"This is an example of a flat network",
   "master":{
     "backend":"lxc",
     "template":"download",

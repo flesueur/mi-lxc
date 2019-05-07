@@ -3,6 +3,12 @@
   "prefix-bridges":"lxc",
   "nat-bridge":"lxcbr0",
   "comment":"This is an example of a flat network",
+  "master":{
+    "backend":"lxc",
+    "template":"download",
+    "parameters":{"dist": "debian", "release": "stretch", "arch": "amd64", "no-validate": "true"},
+    "name":"debian"
+  },
   "containers": [
       {"container":"backbone",
         "interfaces":[
