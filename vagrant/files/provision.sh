@@ -8,12 +8,14 @@ cp /vagrant/files/lxc-net /etc/default/lxc-net
 
 # MAJ et install
 apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-`uname -r` curl dkms
+DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-`uname -r` curl dkms apt-cacher-ng
 # guest utils
 VERSION=`curl https://download.virtualbox.org/virtualbox/LATEST-STABLE.TXT`
 curl https://download.virtualbox.org/virtualbox/$VERSION/VBoxGuestAdditions_$VERSION.iso -o /tmp/vbox.iso
 mount -o loop /tmp/vbox.iso /mnt
 /mnt/VBoxLinuxAdditions.run
+
+echo "Acquire::http::Proxy \"http://127.0.0.1:3142\";" > /etc/apt/apt.conf.d/01proxy;  # utilisation de apt-cacher-ng
 
 # MAJ et install
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
@@ -53,6 +55,7 @@ sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_c
 echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 sysctl -p
 service lxc restart
+iptables -A INPUT -p tcp --dport 3142 -i lxcbr0 -j ACCEPT # pour le proxy APT
 cd /root
 git clone https://github.com/flesueur/mi-lxc
 cd mi-lxc
