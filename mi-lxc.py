@@ -6,7 +6,7 @@ import os
 import subprocess
 import json
 import re
-
+#from termcolor import colored
 
 def getGlobals(data):
     global lxcbr, prefixc, prefixbr
@@ -197,15 +197,21 @@ def provision(c):
     # env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
 
     # time.sleep(2)
-    ret = c.attach_wait(lxc.attach_run_command, [
+    filesdir = os.path.dirname(os.path.realpath(__file__)).replace(" ", "\\040") + "/files/" + folder + "/provision.sh"
+    if os.path.isfile(filesdir):
+        ret = c.attach_wait(lxc.attach_run_command, [
                         "bash", "/mnt/lxc/" + folder + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
-    if ret > 255:
+        if ret != 0:
+            print("\033[31mProvisioning of " + folder + " failed (" + str(ret) + "), exiting...\033[0m")
+            c.stop()
+            c.destroy()
+            exit(1)
+    else:
+#        ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["http_proxy=http://"+proxy] +[
+#                        "bash", "/mnt/lxc/" + folder + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+    #if ret > 255:
         print("No Provisioning script for " + folder)
-    if ret != 0 and ret <= 255:
-        print("Provisioning of " + folder + " failed (" + str(ret) + ")")
-        c.stop()
-        c.destroy()
-        exit(1)
+
 
     if c.name in mitemplates.keys():
         for template in mitemplates[c.name]:
@@ -215,8 +221,8 @@ def provision(c):
                 args.append(arg + "=" + template[arg])
             ret = c.attach_wait(lxc.attach_run_command, ["env"] + args + [
                                 "bash", "/mnt/lxc/templates/" + template["template"] + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
-            if ret != 0 and ret != 127:
-                print("Provisioning of " + folder + " failed")
+            if ret != 0: # and ret != 127:
+                print("\033[31mProvisioning of " + folder + "/" + template["template"] + " failed (" + str(ret) + "), exiting...\033[0m")
                 c.stop()
                 c.destroy()
                 exit(1)

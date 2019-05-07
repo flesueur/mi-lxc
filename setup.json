@@ -2,6 +2,12 @@
   "prefix-containers":"lxc-infra-",
   "prefix-bridges":"lxc",
   "nat-bridge":"lxcbr0",
+  "master":{
+    "backend":"lxc",
+    "template":"download",
+    "parameters":{"dist": "debian", "release": "stretch", "arch": "amd64", "no-validate": "true"},
+    "name":"debian"
+  },
   "containers": [
       {"container":"backbone",
         "interfaces":[
