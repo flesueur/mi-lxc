@@ -6,6 +6,7 @@ import os
 import subprocess
 import json
 import re
+
 #from termcolor import colored
 
 def getGlobals(data):
@@ -336,9 +337,43 @@ def deleteBridges():
 
 #
 
+def printgraph():
+    import networkx as nx
+    import matplotlib.pyplot as plt
+    G = nx.Graph()
+    containernodes = []
+    bridgenodes = []
+    for c in containers:
+        G.add_node(c,label=c, color='green')
+        containernodes.append(c)
+
+    for bridge in bridges:
+        G.add_node(bridge,label=bridge, color='red')
+        bridgenodes.append(bridge)
+
+    for container in containers:
+        global nics
+        for nic in nics[container]['interfaces']:
+            #print("container " + container + " linked to " + str(nic[0]))
+            G.add_edge(container,nic[0],ip=nic[1])
+
+    pos = nx.spring_layout(G)
+    node_labels = nx.get_node_attributes(G,'label')
+    nx.draw_networkx_labels(G, pos, labels = node_labels)
+    edge_labels = nx.get_edge_attributes(G,'ip')
+    nx.draw_networkx_edge_labels(G, pos, labels = edge_labels)
+    #print(edge_labels)
+
+
+    nx.draw(G,pos,node_color='red',nodelist=containernodes)
+    nx.draw(G,pos,node_color='green',nodelist=bridgenodes)
+
+    plt.show()
+
+
 def usage():
     print(
-        "No argument given, usage with create, destroy, createmaster, destroymaster, addbridges, delbridges, start, stop, attach [user@]<name> [command], display <name> [<user>|debian], shownics <name>.\nNames are ", end='')
+        "No argument given, usage with create, destroy, createmaster, destroymaster, addbridges, delbridges, start, stop, attach [user@]<name> [command], display <name> [<user>|debian], shownics <name>, print.\nNames are ", end='')
     for container in containers:
         print(container[len(prefixc):], end=', ')
     print("\n")
@@ -431,5 +466,7 @@ if __name__ == '__main__':
         print("Switching " + veth + " from " + brfrom + " to " + sys.argv[3])
         os.system("brctl delif " + brfrom + " " + veth)
         os.system("brctl addif " + sys.argv[3] + " " + veth)
+    elif (command == "print"):
+        printgraph()
     else:
         usage()
