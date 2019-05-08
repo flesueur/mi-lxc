@@ -20,7 +20,7 @@ echo "Acquire::http::Proxy \"http://127.0.0.1:3142\";" > /etc/apt/apt.conf.d/01p
 # MAJ et install
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
-DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pygraphviz imagemagick linux-headers-4.9.0-7-amd64 linux-headers-amd64 curl git lxc python3-lxc apache2 vim xfce4 lightdm firefox-esr gnome-terminal firmware-atheros firmware-misc-nonfree tcpdump dsniff whois postgresql wireshark dkms net-tools zerofree # keyboard-configuration  wireshark
+DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pygraphviz python3-pil imagemagick linux-headers-4.9.0-7-amd64 linux-headers-amd64 curl git lxc python3-lxc apache2 vim xfce4 lightdm firefox-esr gnome-terminal firmware-atheros firmware-misc-nonfree tcpdump dsniff whois postgresql wireshark dkms net-tools zerofree # keyboard-configuration  wireshark
 apt-get clean
 
 
