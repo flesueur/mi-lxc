@@ -346,20 +346,16 @@ def printgraph():
     G2.node_attr['style'] = "filled"
 
     for c in containers:
-        G2.add_node(c)
-        node = G2.get_node(c)
-        node.attr['color'] = 'red'
+        G2.add_node(c[len(prefixc):], color='red', shape='box')
 
     for bridge in bridges:
-        G2.add_node(bridge)
-        node = G2.get_node(bridge)
-        node.attr['color'] = 'green'
-        node.attr['shape'] = 'box'
+        G2.add_node(bridge[len(prefixbr):], color='green')
 
     for container in containers:
         global nics
         for nic in nics[container]['interfaces']:
-            G2.add_edge(container,nic[0])
+            G2.add_edge(container[len(prefixc):],nic[0][len(prefixbr):])
+            #G2.add_edge(container,nic[0], label = nic[1])  # with IPs
 
     #G2.write("test.dot")
     #G2.draw("test.png", prog="neato")
