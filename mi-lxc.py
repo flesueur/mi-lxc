@@ -338,37 +338,34 @@ def deleteBridges():
 #
 
 def printgraph():
-    import networkx as nx
-    import matplotlib.pyplot as plt
-    G = nx.Graph()
-    containernodes = []
-    bridgenodes = []
+    import pygraphviz as pgv
+    import tempfile
+    from PIL import Image
+    G2 = pgv.AGraph()
+    G2.graph_attr['overlap'] = "false"
+    G2.node_attr['style'] = "filled"
+
     for c in containers:
-        G.add_node(c,label=c, color='green')
-        containernodes.append(c)
+        G2.add_node(c)
+        node = G2.get_node(c)
+        node.attr['color'] = 'red'
 
     for bridge in bridges:
-        G.add_node(bridge,label=bridge, color='red')
-        bridgenodes.append(bridge)
+        G2.add_node(bridge)
+        node = G2.get_node(bridge)
+        node.attr['color'] = 'green'
+        node.attr['shape'] = 'box'
 
     for container in containers:
         global nics
         for nic in nics[container]['interfaces']:
-            #print("container " + container + " linked to " + str(nic[0]))
-            G.add_edge(container,nic[0],ip=nic[1])
+            G2.add_edge(container,nic[0])
 
-    pos = nx.spring_layout(G)
-    node_labels = nx.get_node_attributes(G,'label')
-    nx.draw_networkx_labels(G, pos, labels = node_labels)
-    edge_labels = nx.get_edge_attributes(G,'ip')
-    nx.draw_networkx_edge_labels(G, pos, labels = edge_labels)
-    #print(edge_labels)
-
-
-    nx.draw(G,pos,node_color='red',nodelist=containernodes)
-    nx.draw(G,pos,node_color='green',nodelist=bridgenodes)
-
-    plt.show()
+    #G2.write("test.dot")
+    #G2.draw("test.png", prog="neato")
+    fout = tempfile.NamedTemporaryFile(suffix=".png")
+    G2.draw(fout.name, prog="neato", format="png")
+    Image.open(fout.name).show()
 
 
 def usage():
