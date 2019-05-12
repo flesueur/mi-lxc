@@ -53,11 +53,15 @@ sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_c
 
 # autorisation du routing
 echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+# fs.inotify.max_queued_events = 16384
+# fs.inotify.max_user_instances = 128
+# fs.inotify.max_user_watches = 8192
+echo -e "fs.inotify.max_queued_events=1048576\nfs.inotify.max_user_instances=1048576\nfs.inotify.max_user_watches=1048576" >> /etc/sysctl.conf
 sysctl -p
 service lxc restart
 iptables -A INPUT -p tcp --dport 3142 -i lxcbr0 -j ACCEPT # pour le proxy APT
 cd /root
-git clone https://github.com/flesueur/mi-lxc
+#git clone https://github.com/flesueur/mi-lxc
 cd mi-lxc
 ./mi-lxc.py create
 
