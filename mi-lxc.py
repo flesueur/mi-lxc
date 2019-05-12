@@ -225,7 +225,7 @@ def provision(c):
             if ret != 0: # and ret != 127:
                 print("\033[31mProvisioning of " + folder + "/" + template["template"] + " failed (" + str(ret) + "), exiting...\033[0m")
                 c.stop()
-                c.destroy()
+                #c.destroy()
                 exit(1)
 
     c.stop()
@@ -355,12 +355,12 @@ def printgraph():
         global nics
         for nic in nics[container]['interfaces']:
             G2.add_edge(container[len(prefixc):],nic[0][len(prefixbr):])
-            #G2.add_edge(container,nic[0], label = nic[1])  # with IPs
+            G2.add_edge(container[len(prefixc):],nic[0][len(prefixbr):], label = nic[1])  # with IPs
 
     #G2.write("test.dot")
     #G2.draw("test.png", prog="neato")
-    fout = tempfile.NamedTemporaryFile(suffix=".png")
-    G2.draw(fout.name, prog="neato", format="png")
+    fout = tempfile.NamedTemporaryFile(suffix=".png", delete=True)
+    G2.draw(fout.name, prog="sfdp", format="png")
     Image.open(fout.name).show()
 
 
