@@ -14,7 +14,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y netcat
 echo "Acquire::http::Proxy-Auto-Detect \"/usr/local/sbin/detect_proxy.sh\";" > /etc/apt/apt.conf.d/01proxy;
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
-DEBIAN_FRONTEND=noninteractive apt-get install -y nftables ftp syslog-ng openssh-server bash-completion less leafpad mupdf xnest apache2 vim xfce4 thunderbird firefox-esr tcpdump dsniff whois wireshark net-tools xfce4-terminal iptables iputils-ping netcat nmap socat curl wget unzip # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree
+DEBIAN_FRONTEND=noninteractive apt-get install -y traceroute nftables ftp syslog-ng openssh-server bash-completion less leafpad mupdf xnest apache2 vim xfce4 thunderbird firefox-esr tcpdump dsniff whois wireshark net-tools xfce4-terminal iptables iputils-ping netcat nmap socat curl wget unzip # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree
 apt-get clean
 # firefox-esr epiphany-browser midori
 
