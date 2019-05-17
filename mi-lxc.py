@@ -395,6 +395,9 @@ if __name__ == '__main__':
         usage()
         sys.exit(1)
 
+    if os.geteuid() != 0:
+        exit("You need to have root privileges to run this script.\nExiting.")
+
     command = sys.argv[1]
 
     if (command == "create"):
