@@ -21,6 +21,7 @@ echo -e "server:
 	root-hints: root.hints
 " > /etc/unbound/unbound.conf.d/root.conf
 
+# no DNSSEC validation for now
 sed -i "s/auto/\#auto/" /etc/unbound/unbound.conf.d/root-auto-trust-anchor-file.conf
 
 # Be an open dns resolver -- TO CHANGE LATER
