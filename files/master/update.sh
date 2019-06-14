@@ -1,12 +1,9 @@
 #!/bin/bash
 
-#while [ ! `ip addr show dev eth0 | grep "inet "` ]
-#do
-#echo Waiting for IP
-#sleep 1
-#done
 set -e
-if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
+if [ -z $MILXCGUARD ] ; then exit 1; fi
+DIR=`dirname $0`
+cd `dirname $0`
 
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade

@@ -84,25 +84,11 @@ def createMaster():
     print("Creating master")
     c = lxc.Container(masterc)
     if c.defined:
-        return c
-        print("Master container already exists, updating...", file=sys.stderr)
-        c.start()
-        if not c.get_ips(timeout=60):
-            print("Container seems to have failed to start (no IP)")
-            sys.exit(1)
-        ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["MILXCGUARD=TRUE"] + [
-                            "bash", "/mnt/lxc/master/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
-        if ret > 255:
-            print("No update script for master")
-        if ret != 0 and ret <= 255:
-            print("Updating of master failed (" + str(ret) + ")")
-            c.stop()
-            exit(1)
-        c.stop()
-        print("Master container updated !", file=sys.stderr)
+        print("Master container already exists", file=sys.stdout)
         return c
 
-    if not c.create("download", lxc.LXC_CREATE_QUIET, {"dist": "debian",
+    # can add flags=LXC_CREATE_QUIET to reduce verbosity
+    if not c.create(template="download", args= {"dist": "debian",
                                                        "release": "stretch",
                                                        "arch": "amd64",
                                                        "no-validate": "true"}):
@@ -110,6 +96,33 @@ def createMaster():
         sys.exit(1)
     configure(c)
     provision(c)
+    return c
+
+def updateMaster():
+    print("Updating master")
+    c = lxc.Container(masterc)
+    if c.defined:
+        print("Master container exists, updating...", file=sys.stdout)
+        filesdir = os.path.dirname(os.path.realpath(__file__)) + "/files/master/update.sh"
+        if not os.path.isfile(filesdir):
+            print("\033[31mNo update script for master !\033[0m", file=sys.stderr)
+            c.stop()
+            exit(1)
+
+        c.start()
+        if not c.get_ips(timeout=60):
+            print("Container seems to have failed to start (no IP)", file=sys.stderr)
+            sys.exit(1)
+
+        ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["MILXCGUARD=TRUE"] + [
+                        "bash", "/mnt/lxc/master/update.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+        if ret != 0:
+            print("\033[31mUpdating of master failed (" + str(ret) + "), exiting...\033[0m", file=sys.stderr)
+            c.stop()
+            exit(1)
+
+        c.stop()
+        print("Master container updated !", file=sys.stdout)
     return c
 
 
@@ -173,7 +186,8 @@ def provision(c):
     # env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
 
     # time.sleep(2)
-    filesdir = os.path.dirname(os.path.realpath(__file__)).replace(" ", "\\040") + "/files/" + folder + "/provision.sh"
+    #filesdir = os.path.dirname(os.path.realpath(__file__)).replace(" ", "\\040") + "/files/" + folder + "/provision.sh"
+    filesdir = os.path.dirname(os.path.realpath(__file__)) + "/files/" + folder + "/provision.sh"
     if os.path.isfile(filesdir):
         ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["MILXCGUARD=TRUE"] + [
                         "bash", "/mnt/lxc/" + folder + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
@@ -351,7 +365,7 @@ def printgraph():
 
 def usage():
     print(
-        "No argument given, usage with create, destroy, destroymaster, start, stop, attach [user@]<name> [command], display [user@]<name>, print.\nNames are ", end='')
+        "No argument given, usage with create, destroy, destroymaster, updatemaster, start, stop, attach [user@]<name> [command], display [user@]<name>, print.\nNames are ", end='')
     for container in containers:
         print(container[len(prefixc):], end=', ')
     print("\n")
@@ -424,8 +438,8 @@ if __name__ == '__main__':
             user = "debian"
             container = user_container[0]
         display(lxc.Container(prefixc + container), user)
-    elif (command == "createmaster"):
-        createMaster()
+    elif (command == "updatemaster"):
+        updateMaster()
     elif (command == "destroymaster"):
         destroy(masterc)
     elif (command == "print"):
