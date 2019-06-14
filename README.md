@@ -39,7 +39,7 @@ The `files` subdirectory contains files and scripts to provision the containers.
 
 ## Installation on Linux
 
-First, you can install `apt-cacher-ng` on your host (port 3142) to speed up the creation of the containers. This proxy is detected in ![files/master/detect_proxy.sh](https://github.com/flesueur/mi-lxc/blob/master/files/master/detecy_proxy.sh).
+First (optionally !), you can install `apt-cacher-ng` on your host (port 3142) to speed up the creation of the containers. This proxy is detected in ![files/master/detect_proxy.sh](https://github.com/flesueur/mi-lxc/blob/master/files/master/detecy_proxy.sh).
 
 On Debian Strech, you need lxc (`apt-get install lxc`) and then to enable networking in the LXC configuration (`USE_LXC_BRIDGE="true"` in `/etc/default/lxc-net`). Finally, you need to restart LXC networking (`service lxc-net restart`).
 
