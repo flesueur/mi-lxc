@@ -10,6 +10,9 @@ Example practical work using this environment (in french) :
 * [Firewall](https://github.com/flesueur/srs/blob/master/tp2-firewall.md)
 * [IDS](https://github.com/flesueur/srs/blob/master/tp3-ids.md)
 
+![Topology](https://github.com/flesueur/mi-lxc/blob/master/topologie.png)
+
+
 # Features and composition
 
 Features :
@@ -22,11 +25,12 @@ Features :
 
 The example network is composed of :
 
-* a WAN (a PC used by the hacker and a random PC)
-* a DMZ (a server running HTTP, mail and DNS service for the company)
-* a LAN (a few PC on a LAN, among which some clients, an intranet, a filer and a NIS server)
-* a firewall
-* a backbone container (running mail and DNS service for WAN PC and routing to the real internet)
+* some transit/ISP routed through BGP to simulate a core network
+* an alternative DNS root, allowing to resolve real TLD + a custom ".milxc" TLD (the .milxc registry is maintained inside MI-LXC)
+* some residential ISP clients (hacker and a random PC), using mail adresses \@isp-a.milxc
+* a target organization, owning its own AS number, running classical services (HTTP, mail, DNS, filer, NIS, clients, etc.) for target.milxc domain
+
+The "IANA-type" numbering (AS numbers, IP space, TLDs) is described in ![MI-IANA.txt](https://github.com/flesueur/mi-lxc/blob/master/MI-IANA.txt)
 
 
 # How to use it
@@ -57,7 +61,7 @@ Usage
 * `./mi-lxc.py create         # Creates a master container and then clones it to create all the containers`
 * `./mi-lxc.py start          # Start the generated infrastructure  (stop to stop it)`
 * `./mi-lxc.py attach [user@]<name> [command]  # Executes [command] in the container <name> as user [user]. [command] and [user] are optional; if not specified, user is root and command is an interactive shell.`
-* `./mi-lxc.py display <name> # X11 access to the container <name>. You can also specify a username at the end of the line (default: debian)`
+* `./mi-lxc.py display [user@]<name> # X11 access to the container <name>. You can also specify a username at the end of the line (default: debian)`
 * `./mi-lxc.py                # Usage and list of container names`
 
 Known problems
