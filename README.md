@@ -33,7 +33,7 @@ The example network is composed of :
 The "IANA-type" numbering (AS numbers, IP space, TLDs) is described in ![MI-IANA.txt](https://github.com/flesueur/mi-lxc/blob/master/MI-IANA.txt)
 
 
-# How to use it
+# How to use
 
 The `files` subdirectory contains files and scripts to provision the containers. The `mi-lxc.py` script generates and uses containers (as *root*, since it manipulates bridges and lxc commands). The topology is defined in `setup.json` (not yet documented)
 
@@ -63,11 +63,17 @@ Usage
 * `./mi-lxc.py attach [user@]<name> [command]  # Executes [command] in the container <name> as user [user]. [command] and [user] are optional; if not specified, user is root and command is an interactive shell.`
 * `./mi-lxc.py display [user@]<name> # X11 access to the container <name>. You can also specify a username at the end of the line (default: debian)`
 * `./mi-lxc.py                # Usage and list of container names`
+* `./mi-lxc.py destroy && ./mi-lxc.py destroymaster   # Destroys everything (master container and all linked containers)`
+
 
 Known problems
 --------------
 
 If network seems to be stalled during provisioning (especially when you destroy then create), you can try `service lxc-net restart` before creating containers. It recreates the LXC bridge and seems to flush some problematic caches (ARP ?).
+
+# How to extend
+
+The topology is described in `setup.json` and the address space in `MI-IANA.txt`. You can either extend an existing AS (typically, Target) or create a new AS. In this second case, you can duplicate Target and then connect it to some transit operator under a new AS number (all BGP-related configuration is specified in `setup.json`)
 
 # License
 This software is licensed under AGPLv3 : you can freely reuse it as long as you write you use it and you redistribute your modifications. Special licenses with (even) more liberties for public teaching activities can be discussed.
