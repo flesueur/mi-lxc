@@ -8,8 +8,6 @@ import json
 import re
 import ipaddress
 
-#from termcolor import colored
-
 def getGlobals(data):
     global lxcbr, prefixc, prefixbr
     lxcbr = data["nat-bridge"]
@@ -32,8 +30,6 @@ def getBridges(data):
         for interface in container["interfaces"]:
             if interface["bridge"] != "nat-bridge":
                 bridges.add(prefixbr + interface["bridge"])
-    # for bridge in data["bridges"]:
-    #    bridges.add(prefixbr+bridge["bridge"])
     return
 
 
@@ -41,7 +37,6 @@ def getNics(data):
     global nics
     for container in data["containers"]:
         cname = prefixc + container["container"]
-        # gateway = container["gateway"]
         interfaces = []
         for interface in container["interfaces"]:
             iface = interface["bridge"]
@@ -85,18 +80,6 @@ nics = {}
 mitemplates = {}
 
 
-# def getGateway(ipmask):
-#     atoms = ipmask.split("/")[0].split('.')
-#     mask = ipmask.split("/")[1]
-#     if (mask == "24"):
-#         res = atoms[0] + "." + atoms[1] + "." + atoms[2] + ".1"
-#     elif (mask == "16"):
-#         res = atoms[0] + "." + atoms[1] + ".0.1"
-#     return res
-
-
-#
-
 def createMaster():
     print("Creating master")
     c = lxc.Container(masterc)
@@ -128,16 +111,6 @@ def createMaster():
     configure(c)
     provision(c)
     return c
-
-# def destroyMaster():
-#     c = lxc.Container(master)
-#     if c.defined:
-#         print("Destroying master...")
-#         c.stop()
-#         if not c.destroy():
-#             print("Failed to destroy the master container", file=sys.stderr)
-
-#
 
 
 def clone(container, mastercontainer):
