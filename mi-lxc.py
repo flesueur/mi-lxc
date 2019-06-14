@@ -378,7 +378,7 @@ def printgraph():
 
 def usage():
     print(
-        "No argument given, usage with create, destroy, createmaster, destroymaster, addbridges, delbridges, start, stop, attach [user@]<name> [command], display <name> [<user>|debian], shownics <name>, print.\nNames are ", end='')
+        "No argument given, usage with create, destroy, destroymaster, start, stop, attach [user@]<name> [command], display [user@]<name>, print.\nNames are ", end='')
     for container in containers:
         print(container[len(prefixc):], end=', ')
     print("\n")
@@ -443,37 +443,18 @@ if __name__ == '__main__':
         lxc.Container(prefixc + container).attach_wait(
             lxc.attach_run_command, run_command, env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
     elif (command == "display"):
-        user = "debian"
-        if len(sys.argv) > 3:
-            user = sys.argv[3]
-        display(lxc.Container(prefixc + sys.argv[2]), user)
+        user_container = sys.argv[2].split("@")
+        if len(user_container) == 2:
+            user = user_container[0]
+            container = user_container[1]
+        else:
+            user = "debian"
+            container = user_container[0]
+        display(lxc.Container(prefixc + container), user)
     elif (command == "createmaster"):
         createMaster()
     elif (command == "destroymaster"):
         destroy(masterc)
-    elif (command == "addbridges"):
-        print("not used anymore, you can directly start the infrastructure")
-        # createBridges()
-    elif (command == "delbridges"):
-        print(
-            "not used anymore, bridges are deleted when the infrastructure stops")
-        # deleteBridges()
-    elif (command == "shownics"):
-        os.system("lxc-info -n " + prefixc + sys.argv[2] + "|grep Link")
-    elif (command == "addnic"):
-        os.system("lxc-device -n " + prefixc + sys.argv[
-                  2] + " add " + sys.argv[3] + " " + sys.argv[4])
-    elif (command == "switchnic"):
-        output = str(subprocess.check_output(
-            "lxc-info -n " + prefixc + sys.argv[2], shell=True))
-        veth = re.search(r"Link:\s*(\S*)\\n", output).group(1)
-        output = subprocess.check_output(
-            "brctl show", shell=True).decode('ascii')
-        myre = re.compile(r".*\s+(\S+)\s+8000.*?" + veth, re.M | re.S)
-        brfrom = myre.search(output).group(1)
-        print("Switching " + veth + " from " + brfrom + " to " + sys.argv[3])
-        os.system("brctl delif " + brfrom + " " + veth)
-        os.system("brctl addif " + sys.argv[3] + " " + veth)
     elif (command == "print"):
         printgraph()
     else:
