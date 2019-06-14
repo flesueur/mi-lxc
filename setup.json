@@ -1,8 +1,8 @@
 {
-  "prefix-containers":"lxc-infra-",
-  "prefix-bridges":"lxc",
+  "prefix-containers":"mi-",
+  "prefix-bridges":"mi-",
   "nat-bridge":"lxcbr0",
-  "comment":"This is an example of a flat network",
+  "comment":"An interconnected network of different AS with internety services",
   "master":{
     "backend":"lxc",
     "template":"download",
@@ -10,128 +10,153 @@
     "name":"debian"
   },
   "containers": [
-    {"container":"backbone",
+    {"container":"transit-a",
       "interfaces":[
       {"bridge":"nat-bridge", "address":"dhcp"},
-      {"bridge":"wan", "address":"10.0.0.1/24"}
+      {"bridge":"transit-a", "address":"10.180.0.1/24"}
       ],
-      "gateway":"dhcp"},
-    {"container":"firewall",
-      "interfaces":[
-      {"bridge":"wan", "address":"10.0.0.2/24"},
-      {"bridge":"lan", "address":"192.168.0.1/16"}
-      ],
-      "gateway":"10.0.0.1",
-      "templates":[{"template":"firewall", "order":"before"},
-                  {"template":"internal", "domain":"internet.virt", "ns":"10.0.0.1", "order":"after"}]},
-    {"container":"home",
-      "interfaces":[
-        {"bridge":"wan", "address":"10.0.0.3/24"}
-      ],
-      "gateway":"10.0.0.1",
-      "templates":[{"template":"internal", "domain":"internet.virt", "ns":"10.0.0.1", "order":"after"}]},
-    {"container":"hacker",
-      "interfaces":[
-        {"bridge":"wan", "address":"10.0.0.4/24"}
-      ],
-      "gateway":"10.0.0.1",
-      "templates":[{"template":"internal", "domain":"internet.virt", "ns":"10.0.0.1", "order":"after"}]},
-    {"container":"dmz",
-      "interfaces":[
-        {"bridge":"lan", "address":"192.168.1.2/16"}
-      ],
-      "gateway":"192.168.0.1",
-      "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2", "order":"after"}]},
-      {"container":"nis",
+      "gateway":"dhcp",
+      "templates":[{"template":"bgprouter", "asn":"30", "neighbors":"10.180.0.10 as 10;10.180.0.20 as 5;10.180.0.30 as 7;10.180.0.40 as 8; 10.180.0.2 as 31"}]},
+      {"container":"transit-b",
         "interfaces":[
-          {"bridge":"lan", "address":"192.168.2.2/16"}
+        {"bridge":"transit-b", "address":"10.181.0.1/24"},
+        {"bridge":"transit-a", "address":"10.180.0.2/24"}
         ],
-        "gateway":"192.168.0.1",
-        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.1.2", "order":"after"}]},
-    {"container":"commercial",
+        "gateway":"None",
+        "templates":[{"template":"bgprouter", "asn":"31", "neighbors":"10.180.0.1 as 30;10.181.0.20 as 5;10.181.0.10 as 20;10.181.0.30 as 7"},
+                    {"template":"internal", "domain":"target.milxc", "ns":"10.10.10.10"}]},
+    {"container":"target-firewall",
       "interfaces":[
-        {"bridge":"lan", "address":"192.168.0.2/16"}
+      {"bridge":"transit-a", "address":"10.180.0.10/24"},
+      {"bridge":"target-lan", "address":"10.100.0.1/16"}
       ],
-      "gateway":"192.168.0.1",
-      "templates":[{"template":"sshfs", "order":"before"},
-                    {"template":"nisclient", "domain":"target.virt", "nisserver":"192.168.2.2", "order":"before"},
-                    {"template":"internal", "domain":"target.virt", "ns":"192.168.1.2", "order":"after"}]},
-    {"container":"dev",
+      "gateway":"None",
+      "templates":[{"template":"bgprouter", "asn":"10", "asdev":"eth1", "neighbors":"10.180.0.1 as 30"},
+                  {"template":"resolverns", "root":"10.10.0.10"},
+                  {"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
+    {"container":"target-dmz",
       "interfaces":[
-        {"bridge":"lan", "address":"192.168.0.3/16"}
+        {"bridge":"target-lan", "address":"10.100.1.2/16"}
       ],
-      "gateway":"192.168.0.1",
-      "templates":[{"template":"sshfs", "order":"before"},
-                    {"template":"nisclient", "domain":"target.virt", "nisserver":"192.168.2.2", "order":"before"},
-                  {"template":"internal", "domain":"target.virt", "ns":"192.168.1.2", "order":"after"}]},
-    {"container":"admin",
-      "interfaces":[
-        {"bridge":"lan", "address":"192.168.0.4/16"}
-      ],
-      "gateway":"192.168.0.1",
-      "templates":[{"template":"sshfs", "order":"before"},
-                    {"template":"nisclient", "domain":"target.virt", "nisserver":"192.168.2.2", "order":"before"},
-                    {"template":"internal", "domain":"target.virt", "ns":"192.168.1.2", "order":"after"}]},
-    {"container":"intranet",
-      "interfaces":[
-        {"bridge":"lan", "address":"192.168.0.5/16"}
-      ],
-      "gateway":"192.168.0.1",
-      "templates":[{"template":"nisclient", "domain":"target.virt", "nisserver":"192.168.2.2", "order":"before"},
-                  {"template":"internal", "domain":"target.virt", "ns":"192.168.1.2", "order":"after"}]},
-    {"container":"filer",
-      "interfaces":[
-        {"bridge":"lan", "address":"192.168.0.6/16"}
-      ],
-      "gateway":"192.168.0.1",
-      "templates":[{"template":"nisclient", "domain":"target.virt", "nisserver":"192.168.2.2", "order":"before"},
-                    {"template":"internal", "domain":"target.virt", "ns":"192.168.1.2", "order":"after"}]},
-      {"container":"transit1",
-                        "interfaces":[
-                        {"bridge":"wan", "address":"10.0.0.10/24"},
-                        {"bridge":"transpac", "address":"10.0.1.10/24"}
-                        ],
-                        "gateway":"10.0.0.1",
-                        "templates":[{"template":"firewall", "order":"before"},
-                                    {"template":"bgprouter", "asn":"1", "neighbors":"10.0.1.11 as 3;10.0.1.14 as 4;10.0.0.1 as 10"}]},
-      {"container":"transit2",
-                        "interfaces":[
-                        {"bridge":"wan", "address":"10.0.0.20/24"},
-                        {"bridge":"transat", "address":"10.0.2.20/24"}
-                        ],
-                        "gateway":"10.0.0.1",
-                        "templates":[{"template":"firewall", "order":"before"},
-                                    {"template":"bgprouter", "asn":"2", "asdev":"eth0", "neighbors":"10.0.2.21 as 3;10.0.0.1 as 10"}]},
-      {"container":"ecorp",
-                        "interfaces":[
-                        {"bridge":"transpac", "address":"10.0.1.11/24"},
-                        {"bridge":"transat", "address":"10.0.2.21/24"},
-                        {"bridge":"transfar", "address":"10.0.3.1/24"},
-                        {"bridge":"ecorplan", "address":"192.168.10.1/24"}
-                        ],
-                        "gateway":"none",
-                        "templates":[{"template":"firewall", "order":"before"},
-                                    {"template":"bgprouter", "asn":"3", "asdev":"eth3", "neighbors":"10.0.1.10 as 1;10.0.2.20 as 2;10.0.3.11 as 4"}]},
-      {"container":"dmz-ecorp",
+      "gateway":"10.100.0.1",
+      "templates":[{"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
+      {"container":"target-nis",
         "interfaces":[
-          {"bridge":"ecorplan", "address":"192.168.10.2/24"}
+          {"bridge":"target-lan", "address":"10.100.2.2/16"}
         ],
-        "gateway":"192.168.10.1",
-        "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.10.2", "order":"after"}]},
-      {"container":"faraway",
+        "gateway":"10.100.0.1",
+        "templates":[{"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
+    {"container":"target-commercial",
+      "interfaces":[
+        {"bridge":"target-lan", "address":"10.100.0.2/16"}
+      ],
+      "gateway":"10.100.0.1",
+      "templates":[{"template":"sshfs"},
+                    {"template":"nisclient", "domain":"target.milxc", "nisserver":"10.100.2.2"},
+                    {"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
+    {"container":"target-dev",
+      "interfaces":[
+        {"bridge":"target-lan", "address":"10.100.0.3/16"}
+      ],
+      "gateway":"10.100.0.1",
+      "templates":[{"template":"sshfs"},
+                    {"template":"nisclient", "domain":"target.milxc", "nisserver":"10.100.2.2"},
+                  {"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
+    {"container":"target-admin",
+      "interfaces":[
+        {"bridge":"target-lan", "address":"10.100.0.4/16"}
+      ],
+      "gateway":"10.100.0.1",
+      "templates":[{"template":"sshfs"},
+                    {"template":"nisclient", "domain":"target.milxc", "nisserver":"10.100.2.2"},
+                    {"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
+    {"container":"target-intranet",
+      "interfaces":[
+        {"bridge":"target-lan", "address":"10.100.0.5/16"}
+      ],
+      "gateway":"10.100.0.1",
+      "templates":[{"template":"nisclient", "domain":"target.milxc", "nisserver":"10.100.2.2"},
+                  {"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
+    {"container":"target-filer",
+      "interfaces":[
+        {"bridge":"target-lan", "address":"10.100.0.6/16"}
+      ],
+      "gateway":"10.100.0.1",
+      "templates":[{"template":"nisclient", "domain":"target.milxc", "nisserver":"10.100.2.2"},
+                    {"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
+      {"container":"isp-a",
                         "interfaces":[
-                        {"bridge":"transfar", "address":"10.0.3.11/24"},
-                        {"bridge":"transpac", "address":"10.0.1.14/24"},
-                        {"bridge":"farawaylan", "address":"192.168.20.1/24"}
+                        {"bridge":"transit-b", "address":"10.181.0.10/24"},
+                        {"bridge":"isp-a", "address":"10.150.0.1/24"},
+                        {"bridge":"isp-a-infra", "address":"10.150.1.1/24"}
                         ],
-                        "gateway":"none",
-                        "templates":[{"template":"firewall", "order":"before"},
-                                    {"template":"bgprouter", "asn":"4", "asdev":"eth2", "neighbors":"10.0.1.10 as 1;10.0.3.1 as 3"}]},
-        {"container":"dmz-faraway",
+                        "gateway":"None",
+                        "templates":[{"template":"bgprouter", "asn":"20", "asdev":"eth1;eth2", "neighbors":"10.181.0.1 as 31"},
+                                    {"template":"internal", "domain":"isp-a.milxc", "ns":"10.10.10.10"}]},
+        {"container":"isp-a-infra",
           "interfaces":[
-            {"bridge":"farawaylan", "address":"192.168.20.2/24"}
+            {"bridge":"isp-a-infra", "address":"10.150.1.2/24"}
           ],
-          "gateway":"192.168.20.1",
-          "templates":[{"template":"internal", "domain":"target.virt", "ns":"192.168.20.2", "order":"after"}]}
+          "gateway":"10.150.1.1",
+          "templates":[
+            {"template":"mailserver"},
+            {"template":"internal", "domain":"isp-a.milxc", "ns":"10.10.10.10"}]},
+          {"container":"home",
+            "interfaces":[
+              {"bridge":"isp-a", "address":"10.150.0.3/24"}
+            ],
+            "gateway":"10.150.0.1",
+            "templates":[{"template":"internal", "domain":"isp-a.milxc", "ns":"10.10.10.10"}]},
+          {"container":"hacker",
+            "interfaces":[
+              {"bridge":"isp-a", "address":"10.150.0.4/24"}
+            ],
+            "gateway":"10.150.0.1",
+            "templates":[{"template":"internal", "domain":"isp-a.milxc", "ns":"10.10.10.10"}]},
+            {"container":"ns-root-o-router",
+                              "interfaces":[
+                              {"bridge":"transit-b", "address":"10.181.0.20/24"},
+                              {"bridge":"ns-root-o", "address":"10.10.0.1/24"}
+                              ],
+                              "gateway":"None",
+                              "templates":[{"template":"bgprouter", "asn":"5", "asdev":"eth1", "neighbors":"10.181.0.1 as 31"},
+                                        {"template":"internal", "domain":"ns-root-o.milxc", "ns":"10.10.10.10"}]},
+          {"container":"ns-root-o-rootns",
+                            "interfaces":[
+                            {"bridge":"ns-root-o", "address":"10.10.0.10/24"}
+                            ],
+                            "gateway":"10.10.0.1",
+                            "templates":[{"template":"rootns"},
+                                        {"template":"internal", "domain":"ns-root-o.milxc", "ns":"10.10.10.10"}]},
+          {"container":"opendns-router",
+                            "interfaces":[
+                            {"bridge":"transit-a", "address":"10.180.0.30/24"},
+                            {"bridge":"transit-b", "address":"10.181.0.30/24"},
+                            {"bridge":"opendns", "address":"10.10.10.1/24"}
+                            ],
+                            "gateway":"None",
+                            "templates":[{"template":"bgprouter", "asn":"7", "asdev":"eth2", "neighbors":"10.180.0.1 as 30;10.181.0.1 as 31"},
+                                      {"template":"internal", "domain":"opendns.milxc", "ns":"10.10.10.10"}]},
+          {"container":"opendns-resolver",
+                            "interfaces":[
+                            {"bridge":"opendns", "address":"10.10.10.10/24"}
+                            ],
+                            "gateway":"10.10.10.1",
+                            "templates":[{"template":"resolverns", "root":"10.10.0.10"},
+                                    {"template":"internal", "domain":"opendns.milxc", "ns":"10.10.10.10"}]},
+          {"container":"reg-milxc-router",
+                            "interfaces":[
+                            {"bridge":"transit-a", "address":"10.180.0.40/24"},
+                            {"bridge":"reg-milxc", "address":"10.10.20.1/24"}
+                            ],
+                            "gateway":"None",
+                            "templates":[{"template":"bgprouter", "asn":"8", "asdev":"eth1", "neighbors":"10.180.0.1 as 30"},
+                                      {"template":"internal", "domain":"reg.milxc", "ns":"10.10.10.10"}]},
+          {"container":"reg-milxc-ns",
+                            "interfaces":[
+                            {"bridge":"reg-milxc", "address":"10.10.20.10/24"}
+                            ],
+                            "gateway":"10.10.20.1",
+                            "templates":[{"template":"internal", "domain":"reg.milxc", "ns":"10.10.10.10"}]}
   ]
 }

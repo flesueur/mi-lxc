@@ -6,7 +6,9 @@
 #sleep 1
 #done
 set -e
-if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
+if [ -z $MILXCGUARD ] ; then exit 1; fi
+DIR=`dirname $0`
+cd `dirname $0`
 
 cp /mnt/lxc/master/detect_proxy.sh /usr/local/sbin/
 apt-get update
@@ -14,7 +16,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y netcat
 echo "Acquire::http::Proxy-Auto-Detect \"/usr/local/sbin/detect_proxy.sh\";" > /etc/apt/apt.conf.d/01proxy;
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
-DEBIAN_FRONTEND=noninteractive apt-get install -y traceroute nftables ftp syslog-ng openssh-server bash-completion less leafpad mupdf xnest apache2 vim xfce4 thunderbird firefox-esr tcpdump dsniff whois wireshark net-tools xfce4-terminal iptables iputils-ping netcat nmap socat curl wget unzip # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree
+DEBIAN_FRONTEND=noninteractive apt-get install -y dnsutils traceroute nftables ftp syslog-ng openssh-server bash-completion less leafpad mupdf xnest apache2 vim xfce4 thunderbird firefox-esr tcpdump dsniff whois wireshark net-tools xfce4-terminal iptables iputils-ping netcat nmap socat curl wget unzip # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree
 apt-get clean
 # firefox-esr epiphany-browser midori
 

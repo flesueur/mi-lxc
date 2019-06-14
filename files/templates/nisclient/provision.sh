@@ -1,7 +1,9 @@
 #!/bin/bash
 # nisclient template
 set -e
-if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
+if [ -z $MILXCGUARD ] ; then exit 1; fi
+DIR=`dirname $0`
+cd `dirname $0`
 
 # DEBIAN_FRONTEND=noninteractive apt-get install -y thunderbird
 

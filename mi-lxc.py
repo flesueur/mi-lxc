@@ -6,6 +6,7 @@ import os
 import subprocess
 import json
 import re
+import ipaddress
 
 #from termcolor import colored
 
@@ -84,14 +85,14 @@ nics = {}
 mitemplates = {}
 
 
-def getGateway(ipmask):
-    atoms = ipmask.split("/")[0].split('.')
-    mask = ipmask.split("/")[1]
-    if (mask == "24"):
-        res = atoms[0] + "." + atoms[1] + "." + atoms[2] + ".1"
-    elif (mask == "16"):
-        res = atoms[0] + "." + atoms[1] + ".0.1"
-    return res
+# def getGateway(ipmask):
+#     atoms = ipmask.split("/")[0].split('.')
+#     mask = ipmask.split("/")[1]
+#     if (mask == "24"):
+#         res = atoms[0] + "." + atoms[1] + "." + atoms[2] + ".1"
+#     elif (mask == "16"):
+#         res = atoms[0] + "." + atoms[1] + ".0.1"
+#     return res
 
 
 #
@@ -100,12 +101,13 @@ def createMaster():
     print("Creating master")
     c = lxc.Container(masterc)
     if c.defined:
+        return c
         print("Master container already exists, updating...", file=sys.stderr)
         c.start()
         if not c.get_ips(timeout=60):
             print("Container seems to have failed to start (no IP)")
             sys.exit(1)
-        ret = c.attach_wait(lxc.attach_run_command, [
+        ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["MILXCGUARD=TRUE"] + [
                             "bash", "/mnt/lxc/master/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
         if ret > 255:
             print("No update script for master")
@@ -200,7 +202,7 @@ def provision(c):
     # time.sleep(2)
     filesdir = os.path.dirname(os.path.realpath(__file__)).replace(" ", "\\040") + "/files/" + folder + "/provision.sh"
     if os.path.isfile(filesdir):
-        ret = c.attach_wait(lxc.attach_run_command, [
+        ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["MILXCGUARD=TRUE"] + [
                         "bash", "/mnt/lxc/" + folder + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
         if ret != 0:
             print("\033[31mProvisioning of " + folder + " failed (" + str(ret) + "), exiting...\033[0m")
@@ -217,7 +219,7 @@ def provision(c):
     if c.name in mitemplates.keys():
         for template in mitemplates[c.name]:
             # if (template["order"] == "after"):
-            args = []
+            args = ["MILXCGUARD=TRUE"]
             for arg in template:
                 args.append(arg + "=" + template[arg])
             ret = c.attach_wait(lxc.attach_run_command, ["env"] + args + [
@@ -225,7 +227,7 @@ def provision(c):
             if ret != 0: # and ret != 127:
                 print("\033[31mProvisioning of " + folder + "/" + template["template"] + " failed (" + str(ret) + "), exiting...\033[0m")
                 c.stop()
-                #c.destroy()
+                c.destroy()
                 exit(1)
 
     c.stop()
@@ -249,8 +251,13 @@ def configNet(c):
                 # c.append_config_item("lxc.network."+str(i)+".ipv4", v)
                 c.append_config_item(
                     "lxc.network." + str(i) + ".ipv4.address", v)
-            if (getGateway(v) == nics[c.name]['gateway']):
-                c.network[i].ipv4_gateway = getGateway(v)
+            #if (getGateway(v) == nics[c.name]['gateway']):
+            #    c.network[i].ipv4_gateway = getGateway(v)
+            try:
+                if ipaddress.ip_address(nics[c.name]['gateway']) in ipaddress.ip_network(v,strict=False):
+                    c.network[i].ipv4_gateway = nics[c.name]['gateway']
+            except ValueError:  #gateway is not a valid address, no gateway to set
+                pass
         # c.network[i].script_up = "upscript"
         c.network[i].flags = "up"
         i += 1
@@ -346,16 +353,21 @@ def printgraph():
     G2.node_attr['style'] = "filled"
 
     for c in containers:
-        G2.add_node(c[len(prefixc):], color='red', shape='box')
+        G2.add_node("c"+c, color='red', shape='box', label=c[len(prefixc):])
 
     for bridge in bridges:
-        G2.add_node(bridge[len(prefixbr):], color='green')
+        G2.add_node("b"+bridge, color='green', label=bridge[len(prefixbr):])
 
     for container in containers:
         global nics
         for nic in nics[container]['interfaces']:
-            G2.add_edge(container[len(prefixc):],nic[0][len(prefixbr):])
-            G2.add_edge(container[len(prefixc):],nic[0][len(prefixbr):], label = nic[1])  # with IPs
+            # if nic[0] == lxcbr:
+            #     nicname = lxcbr
+            # else:
+            #     nicname = nic[0]
+
+#            G2.add_edge(container[len(prefixc):],nicname)
+            G2.add_edge("c"+container,"b"+nic[0], label = nic[1])  # with IPs
 
     #G2.write("test.dot")
     #G2.draw("test.png", prog="neato")

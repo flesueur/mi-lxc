@@ -1,7 +1,9 @@
 #!/bin/bash
 # sshfs template
 set -e
-if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
+if [ -z $MILXCGUARD ] ; then exit 1; fi
+DIR=`dirname $0`
+cd `dirname $0`
 
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y sshfs libpam-mount
@@ -11,6 +13,6 @@ chmod +x /etc/rc.local
 
 echo "user_allow_other" >> /etc/fuse.conf
 
-cp /mnt/lxc/templates/sshfs/pam_mount.conf.xml /etc/security/
+cp pam_mount.conf.xml /etc/security/
 
 # avec clés SSH

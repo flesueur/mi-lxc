@@ -1,10 +1,15 @@
 #!/bin/bash
-# Firewall template
+# BGP router template
 set -e
-if [ -z `hostname | grep lxc-infra` ] ; then exit 1; fi
+if [ -z $MILXCGUARD ] ; then exit 1; fi
+DIR=`dirname $0`
+cd `dirname $0`
 
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y bird traceroute
+
+echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+
 
 # get iface name from internal ip
 #iface=`ip route get $asip | awk '{ print $3; exit }'`
@@ -15,7 +20,11 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y bird traceroute
 sed -i "s/router id/router id $asn; #/" /etc/bird/bird.conf
 sed -i "s/\#.*export all/\texport all/" /etc/bird/bird.conf
 if [ ! -z $asdev ]
- then echo "protocol direct {   interface \"$asdev\"; } " >> /etc/bird/bird.conf
+ then
+ IFS=';'
+ for i in $asdev; do
+   echo "protocol direct {   interface \"$i\"; } " >> /etc/bird/bird.conf
+ done
 fi
 IFS=';'
 for i in $neighbors; do
@@ -29,10 +38,6 @@ protocol bgp {
 done
 
 service bird restart
-
-# Disable DHCP and do DNS config
-sed -i "s/.*dhcp.*//" /etc/network/interfaces
-> /etc/resolv.conf
 
 # iptables -t nat -A POSTROUTING -o eth2 ! -d 10.0.0.0/16 -j SNAT --to 192.168.10.1
 # birdc show route all
