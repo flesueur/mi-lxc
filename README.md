@@ -39,6 +39,8 @@ The `files` subdirectory contains files and scripts to provision the containers.
 
 ## Installation on Linux
 
+First, you can install `apt-cacher-ng` on your host (port 3142) to speed up the creation of the containers. This proxy is detected in ![files/master/detect_proxy.sh](https://github.com/flesueur/mi-lxc/blob/master/files/master/detecy_proxy.sh).
+
 On Debian Strech, you need lxc (`apt-get install lxc`) and then to enable networking in the LXC configuration (`USE_LXC_BRIDGE="true"` in `/etc/default/lxc-net`). Finally, you need to restart LXC networking (`service lxc-net restart`).
 
 On Ubuntu Bionic (2018.04 LTS), you first need to enable the multiverse repository. Then you need to install lxc-utils and python3-lxc (`apt-get install lxc-utils python3-lxc`). You may need to restart lxc-net or apparmor. If you are using Ubuntu as a live CD, you need some mounted storage (4GB should be ok) and then to configure LXC to use this space : create the `/etc/lxc/lxc.conf` with the content `lxc.lxcpath=/mnt` (location where you mounted your storage)
