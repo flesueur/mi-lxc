@@ -30,13 +30,13 @@ The example network is composed of :
 * some residential ISP clients (hacker and a random PC), using mail adresses \@isp-a.milxc
 * a target organization, owning its own AS number, running classical services (HTTP, mail, DNS, filer, NIS, clients, etc.) for target.milxc domain
 
-The "IANA-type" numbering (AS numbers, IP space, TLDs) is described in ![MI-IANA.txt](https://github.com/flesueur/mi-lxc/blob/master/MI-IANA.txt)
-
 A few things you can do and observe :
 
 * You can http `dmz.target.milxc` from `hacker`. Packets will go through the core BGP network, where you should be able to observe them or alter the routes
 * You can query the DNS entry `smtp.target.milxc` from `hacker`. `hacker` will ask the resolver at `isp-a-infra`, which will recursively resolve from the DNS root `ns-root-o`, then from `reg-milxc` and finally from `target-dmz`
 * You can send an email from `hacker@isp-a.milxc` (or another forged address...), using claws-mail on `hacker`, to `commercial@target.milxc`, which can be read using claws-mail on `target-commercial` (with X11 sessions in both containers)
+
+The "IANA-type" numbering (AS numbers, IP space, TLDs) is described in ![MI-IANA.txt](https://github.com/flesueur/mi-lxc/blob/master/MI-IANA.txt). There is currently no cryptography deployed anywhere (no HTTPS, no IMAPS, no DNSSEC, etc.). This will probably be added at some point but in the meantime, deploying this is part of the expected work from students.
 
 # How to use
 
