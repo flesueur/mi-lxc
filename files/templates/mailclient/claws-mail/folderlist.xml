@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<folderlist>
+    <folder type="imap" sort="0" collapsed="0" account_id="1" name="$mailname@$domainname">
+        <folderitem last_change="0" last_sync="0" uidnext="0" last_seen="0" order="0" watched="0" ignore="0" locked="0" forwarded="0" replied="0" total="0" marked="0" unreadmarked="0" unread="0" new="0" mtime="0" sort_type="descending" sort_key="date" hidereadthreads="0" hidedelmsgs="0" hidereadmsgs="0" threaded="1" thread_collapsed="0" collapsed="0" path="Trash" name="Trash" type="trash" />
+        <folderitem last_change="0" last_sync="0" uidnext="0" last_seen="0" order="0" watched="0" ignore="0" locked="0" forwarded="0" replied="0" total="0" marked="0" unreadmarked="0" unread="0" new="0" mtime="0" sort_type="descending" sort_key="date" hidereadthreads="0" hidedelmsgs="0" hidereadmsgs="0" threaded="1" thread_collapsed="0" collapsed="0" path="Queue" name="Queue" type="queue" />
+        <folderitem last_change="0" last_sync="0" uidnext="0" last_seen="0" order="0" watched="0" ignore="0" locked="0" forwarded="0" replied="0" total="0" marked="0" unreadmarked="0" unread="0" new="0" mtime="0" sort_type="descending" sort_key="date" hidereadthreads="0" hidedelmsgs="0" hidereadmsgs="0" threaded="1" thread_collapsed="0" collapsed="0" path="Sent" name="Sent" type="outbox" />
+        <folderitem last_change="0" last_sync="0" uidnext="0" last_seen="0" order="0" watched="0" ignore="0" locked="0" forwarded="0" replied="0" total="0" marked="0" unreadmarked="0" unread="0" new="0" mtime="0" sort_type="descending" sort_key="date" hidereadthreads="0" hidedelmsgs="0" hidereadmsgs="0" threaded="1" thread_collapsed="0" collapsed="0" path="Drafts" name="Drafts" type="draft" />
+        <folderitem last_change="0" last_sync="0" uidnext="0" last_seen="0" order="0" watched="0" ignore="0" locked="0" forwarded="0" replied="0" total="0" marked="0" unreadmarked="0" unread="0" new="0" mtime="0" sort_type="descending" sort_key="date" hidereadthreads="0" hidedelmsgs="0" hidereadmsgs="0" threaded="1" thread_collapsed="0" collapsed="0" path="INBOX" name="INBOX" type="inbox" />
+    </folder>
+</folderlist>

@@ -54,6 +54,7 @@
       "gateway":"10.100.0.1",
       "templates":[{"template":"sshfs"},
                     {"template":"nisclient", "domain":"target.milxc", "nisserver":"10.100.2.2"},
+                    {"template":"mailclient", "domain":"target.milxc", "mailname":"commercial", "password":"commercial"},
                     {"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
     {"container":"target-dev",
       "interfaces":[
@@ -113,7 +114,8 @@
               {"bridge":"isp-a", "address":"10.150.0.4/24"}
             ],
             "gateway":"10.150.0.1",
-            "templates":[{"template":"internal", "domain":"isp-a.milxc", "ns":"10.10.10.10"}]},
+            "templates":[{"template":"mailclient", "domain":"isp-a.milxc", "mailname":"hacker", "password":"hacker"},
+                    {"template":"internal", "domain":"isp-a.milxc", "ns":"10.10.10.10"}]},
             {"container":"ns-root-o-router",
                               "interfaces":[
                               {"bridge":"transit-b", "address":"10.181.0.20/24"},

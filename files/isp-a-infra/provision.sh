@@ -8,6 +8,8 @@ cd `dirname $0`
 # Hacker's mail account hacker@isp-a.milxc
 useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 hacker` hacker || true
 addgroup hacker mail
+#mkdir /home/hacker/mail
+#touch /home/hacker/mail/Drafts /home/hacker/mail/Queue /home/hacker/mail/Sent /home/hacker/mail/Trash
 
 
 # manage isp-a.milxc zone

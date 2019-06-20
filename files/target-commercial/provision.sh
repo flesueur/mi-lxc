@@ -7,7 +7,6 @@ cd `dirname $0`
 
 # systemctl set-default graphical.target
 
-# DEBIAN_FRONTEND=noninteractive apt-get install -y thunderbird
 
 
 #cp -ar /mnt/lxc/commercial/homedir/* /home/debian/
@@ -15,22 +14,10 @@ cd `dirname $0`
 mkdir /home/commercial
 mkdir -p /home/commercial/.ssh
 
-tar zxvf thunderbird.tar.gz -C /home/commercial/
-
 chown -R 1001:1001 /home/commercial
 
 # remove nmap binary
 rm /usr/bin/nmap
-
-# Disable DHCP and do DNS config
-#sed -i "s/.*dhcp.*//" /etc/network/interfaces
-#echo -e "domain target.virt\nsearch target.virt\nnameserver 192.168.1.2" > /etc/resolv.conf
-
-# NIS client
-#DEBIAN_FRONTEND=noninteractive apt-get install -y nis
-#echo "target" > /etc/defaultdomain
-#echo "ypserver 192.168.1.2" >> /etc/yp.conf
-#sed -i -e 's/compat/compat nis/' /etc/nsswitch.conf
 
 
 echo -e "-----BEGIN RSA PRIVATE KEY-----

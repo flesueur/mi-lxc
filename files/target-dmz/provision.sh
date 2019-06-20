@@ -25,6 +25,9 @@ cp dns.conf /etc/unbound/unbound.conf.d/
 
 useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 commercial` commercial || true
 addgroup commercial mail
+#mkdir /home/commercial/mail
+#touch /home/commercial/mail/Drafts /home/commercial/mail/Queue /home/commercial/mail/Sent /home/commercial/mail/Trash
+
 #useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 @password` insa || true
 
 #cp /mnt/lxc/dmz/ossec.list /etc/apt/sources.list.d/

@@ -1,0 +1,94 @@
+[AccountTemplate]
+#you can use $DEFAULTDOMAIN here
+#domain must be defined before the variables that use it
+#by default, domain is extracted from the hostname
+#domain=
+
+#you can use $USERNAME for name (this is the default)
+#name=
+
+#you can use $LOGIN, $NAME_MAIL and $DOMAIN here 
+#$NAME_MAIL is the name without uppercase and with dots instead
+#of spaces
+#the default is $NAME_MAIL@$DOMAIN
+#email=
+
+#you can use $DOMAIN here
+#the default organization is empty
+#organization=
+
+#you can use $DOMAIN here 
+#the default is smtp.$DOMAIN
+#smtpserver=
+
+#Whether to use smtp authentication
+#the default is 0 (no)
+#smtpauth=
+
+#SMTP username
+#you can use $LOGIN, $NAME_MAIL, $DOMAIN or $EMAIL here
+#the default is empty (same as reception username)
+#smtpuser=
+
+#SMTP password
+#the default is empty (same as reception password)
+#smtppass=
+
+#recvtype can be:
+#0 for pop3
+#3  for imap
+#5  for a local mbox file
+#recvtype=
+
+#you can use $DOMAIN here 
+#the default is {pop,imap}.$DOMAIN
+#recvserver=
+
+#you can use $LOGIN, $NAME_MAIL, $DOMAIN or $EMAIL here
+#default is $LOGIN
+#recvuser=
+
+#default is empty
+#recvpass=
+
+#imap dir if imap (relative to the home on the server)
+#default is empty
+#imapdir=
+
+#show subscribed folders only, if imap
+#default is TRUE
+#subsonly=
+
+#mbox file if local
+#you can use $LOGIN here
+#default is /var/mail/$LOGIN
+#mboxfile=
+
+#mailbox name if pop3 or local
+#relative path from the user's home
+#default is "Mail"
+#mailbox=
+
+#whether to use encryption on SMTP connections
+#default is 0, 1 is SSL/TLS, 2 is STARTTLS
+#smtpssl=
+
+#whether to use encryption on POP3 or IMAP connections
+#default is 0, 1 is SSL/TLS, 2 is STARTTLS
+#recvssl=
+
+#SSL/TLS client certificate path for SMTP
+#default is empty (no certificate)
+#smtpssl_cert=
+
+#SSL/TLS client certificate path for POP/IMAP
+#default is empty (no certificate)
+#recvssl_cert=
+
+#SSL/TLS client certificate password for SMTP
+#default is empty (no password)
+#smtpssl_cert_pass=
+
+#SSL/TLS client certificate password for POP/IMAP
+#default is empty (no password)
+#recvssl_cert_pass=

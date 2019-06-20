@@ -24,3 +24,10 @@ if [ -z $mynetworks ] ; then
 else
   sed -i -e "s/mynetworks = /mynetworks = $mynetworks /" /etc/postfix/main.cf
 fi
+
+for i in `ls /home`; do
+  mkdir -p /home/$i/mail
+  touch /home/$i/mail/Drafts /home/$i/mail/Queue /home/$i/mail/Sent /home/$i/mail/Trash
+  echo -e "Trash\nDrafts\nQueue\nSent" >> /home/$i/mail/.subscriptions
+  chown -R $i /home/$i/mail
+done
