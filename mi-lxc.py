@@ -262,8 +262,7 @@ def createInfra():
     for container in containers:
         c = lxc.Container(container)
         if c.defined:
-            print("Container " + container +
-                  " already exists", file=sys.stderr)
+            print("Container " + container + " already exists", file=sys.stderr)
         else:
             flushArp()
             newclone = clone(container, mastercontainer)
@@ -282,7 +281,11 @@ def startInfra():
     for container in containers:
         print("Starting " + container)
         c = lxc.Container(container)
-        c.start()
+        if c.defined:
+            c.start()
+        else:
+            print("Container " + container + " does not exist ! You need to run \"./mi-lxc.py create\"", file=sys.stderr)
+            exit(1)
 
 
 def stopInfra():
@@ -371,9 +374,13 @@ def printgraph():
 def usage():
     print(
         "No argument given, usage with create, destroy, destroymaster, updatemaster, start, stop, attach [user@]<name> [command], display [user@]<name>, print.\nNames are ", end='')
+    print(listContainers())
+
+def listContainers():
+    str = ""
     for container in containers:
-        print(container[len(prefixc):], end=', ')
-    print("\n")
+        str += container[len(prefixc):] + ', '
+    return str
 
 if __name__ == '__main__':
     # parser = argparse.ArgumentParser(description='Launches mini-internet')
@@ -409,7 +416,11 @@ if __name__ == '__main__':
         createInfra()
     elif (command == "destroy"):
         if len(sys.argv) > 2:
-            destroy(prefixc + sys.argv[2])
+            container = sys.argv[2]
+            if (prefixc + container) in containers:
+                destroy(prefixc + container)
+            else:
+                print("Unexisting container " + container + ", valid containers are " + listContainers(), file=sys.stderr)
         else:
             destroyInfra()
     elif (command == "start"):
@@ -417,6 +428,9 @@ if __name__ == '__main__':
     elif (command == "stop"):
         stopInfra()
     elif (command == "attach"):
+        if len(sys.argv) < 3:
+            usage()
+            sys.exit(1)
         user_container = sys.argv[2].split("@")
         if len(user_container) == 2:
             user = user_container[0]
@@ -433,9 +447,20 @@ if __name__ == '__main__':
             run_command = [
                 "env", "TERM=" + os.getenv("TERM"), "/bin/su", "-", user]
 
-        lxc.Container(prefixc + container).attach_wait(
-            lxc.attach_run_command, run_command, env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+        if (prefixc + container) in containers:
+            lxccontainer = lxc.Container(prefixc + container)
+            if lxccontainer.running:
+                lxccontainer.attach_wait(lxc.attach_run_command, run_command, env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+            else:
+                print("Container " + container + " is not running. You need to run \"./mi-lxc.py start\" before attaching to a container", file=sys.stderr)
+                exit(1)
+        else:
+            print("Unexisting container " + container + ", valid containers are " + listContainers(), file=sys.stderr)
+            exit(1)
     elif (command == "display"):
+        if len(sys.argv) < 3:
+            usage()
+            sys.exit(1)
         user_container = sys.argv[2].split("@")
         if len(user_container) == 2:
             user = user_container[0]
@@ -443,7 +468,17 @@ if __name__ == '__main__':
         else:
             user = "debian"
             container = user_container[0]
-        display(lxc.Container(prefixc + container), user)
+
+        if (prefixc + container) in containers:
+            lxccontainer = lxc.Container(prefixc + container)
+            if lxccontainer.running:
+                display(lxccontainer, user)
+            else:
+                print("Container " + container + " is not running. You need to run \"./mi-lxc.py start\" before attaching to a container", file=sys.stderr)
+                exit(1)
+        else:
+            print("Unexisting container " + container + ", valid containers are " + listContainers(), file=sys.stderr)
+            exit(1)
     elif (command == "updatemaster"):
         updateMaster()
     elif (command == "destroymaster"):
