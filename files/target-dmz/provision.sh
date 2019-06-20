@@ -10,17 +10,17 @@ sed -i -e 's/127.0.1.1.*$/127.0.1.1\tlxc-infra-dmz/' /etc/hosts
 # DEBIAN_FRONTEND=noninteractive apt-get install -y thunderbird
 
 apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y unbound postfix dovecot-imapd proftpd apt-transport-https wget libprelude2 libprelude-dev build-essential  php7.0-mbstring php7.0
+DEBIAN_FRONTEND=noninteractive apt-get install -y unbound dovecot-imapd proftpd apt-transport-https wget libprelude2 libprelude-dev build-essential  php7.0-mbstring php7.0
 
 cp dns.conf /etc/unbound/unbound.conf.d/
 
-sed -i -e 's/ssl = no/ssl = yes/' /etc/dovecot/conf.d/10-ssl.conf
-echo "ssl_cert = </etc/ssl/certs/ssl-cert-snakeoil.pem" >> /etc/dovecot/conf.d/10-ssl.conf
-echo "ssl_key = </etc/ssl/private/ssl-cert-snakeoil.key" >> /etc/dovecot/conf.d/10-ssl.conf
-echo "disable_plaintext_auth = no" >> /etc/dovecot/conf.d/10-auth.conf
-
-sed -i -e 's/mydestination = /mydestination = target.virt, /' /etc/postfix/main.cf
-sed -i -e 's/mynetworks = /mynetworks = 192.168.0.0\/16 /' /etc/postfix/main.cf
+# sed -i -e 's/ssl = no/ssl = yes/' /etc/dovecot/conf.d/10-ssl.conf
+# echo "ssl_cert = </etc/ssl/certs/ssl-cert-snakeoil.pem" >> /etc/dovecot/conf.d/10-ssl.conf
+# echo "ssl_key = </etc/ssl/private/ssl-cert-snakeoil.key" >> /etc/dovecot/conf.d/10-ssl.conf
+# echo "disable_plaintext_auth = no" >> /etc/dovecot/conf.d/10-auth.conf
+#
+# sed -i -e 's/mydestination = /mydestination = target.virt, /' /etc/postfix/main.cf
+# sed -i -e 's/mynetworks = /mynetworks = 192.168.0.0\/16 /' /etc/postfix/main.cf
 
 
 useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 commercial` commercial || true

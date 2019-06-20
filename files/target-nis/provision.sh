@@ -19,8 +19,8 @@ DEBIAN_FRONTEND=noninteractive apt-get install -d -y nis
 mv /etc/resolv.conf /etc/resolv.conf.bak
 DEBIAN_FRONTEND=noninteractive apt-get install -y nis
 mv /etc/resolv.conf.bak /etc/resolv.conf
-echo "target.virt" > /etc/defaultdomain
-domainname target.virt
+echo "target.milxc" > /etc/defaultdomain
+domainname target.milxc
 sed -i -e 's/NISSERVER=false/NISSERVER=master/' /etc/default/nis
 sed -i -e 's/YPSERVARGS=/YPSERVARGS="-p 834"/' /etc/default/nis
 make -C /var/yp

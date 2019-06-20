@@ -39,7 +39,8 @@
         {"bridge":"target-lan", "address":"10.100.1.2/16"}
       ],
       "gateway":"10.100.0.1",
-      "templates":[{"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
+      "templates":[{"template":"mailserver", "domain":"target.milxc"},
+                  {"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
       {"container":"target-nis",
         "interfaces":[
           {"bridge":"target-lan", "address":"10.100.2.2/16"}
@@ -99,7 +100,7 @@
           ],
           "gateway":"10.150.1.1",
           "templates":[
-            {"template":"mailserver"},
+            {"template":"mailserver", "domain":"isp-a.milxc"},
             {"template":"internal", "domain":"isp-a.milxc", "ns":"10.10.10.10"}]},
           {"container":"home",
             "interfaces":[
