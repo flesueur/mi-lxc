@@ -9,7 +9,7 @@ import re
 import ipaddress
 
 def flushArp():
-    os.system("ip -s neigh flush dev " + lxcbr)
+    os.system("ip neigh flush dev " + lxcbr)
 
 def getGlobals(data):
     global lxcbr, prefixc, prefixbr
@@ -302,12 +302,12 @@ def display(c, user):
           " on " + str(hostdisplay) + " with user " + user)
     os.system("xhost local:")
     c.attach(lxc.attach_run_command, ["/bin/su", "-l", "-c",
-                                      "killall Xnest ; \
-                                        Xnest -name \"Xnest " + c.name + "\" -display " + hostdisplay + " :" + str(displaynum) + " & \
+                                      "killall Xnest  2>/dev/null; \
+                                        Xnest -name \"Xnest " + c.name + "\" -display " + hostdisplay + " :" + str(displaynum) + " 2>/dev/null & \
                                         export DISPLAY=:" + str(displaynum) + " ; \
-                                        while ! `setxkbmap fr` ; do sleep 1 ; done ; \
-                                        xfce4-session &  \
-                                        sleep 1 && setxkbmap fr",
+                                        while ! `setxkbmap fr 2>/dev/null` ; do sleep 1 ; done ; \
+                                        xfce4-session 2>/dev/null &  \
+                                        sleep 1 && setxkbmap fr 2>/dev/null",
                                       user], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
 
 #
