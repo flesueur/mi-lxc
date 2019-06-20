@@ -8,6 +8,9 @@ import json
 import re
 import ipaddress
 
+def flushArp():
+    os.system("ip -s neigh flush dev " + lxcbr)
+
 def getGlobals(data):
     global lxcbr, prefixc, prefixbr
     lxcbr = data["nat-bridge"]
@@ -262,6 +265,7 @@ def createInfra():
             print("Container " + container +
                   " already exists", file=sys.stderr)
         else:
+            flushArp()
             newclone = clone(container, mastercontainer)
             provision(newclone)
             configNet(newclone)
@@ -311,20 +315,21 @@ def display(c, user):
 
 def createBridges():
     print("Creating bridges")
+    #os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
     for bridge in bridges:
         os.system("brctl addbr " + bridge)
         os.system("ifconfig " + bridge + " up")
         os.system("iptables -A FORWARD -i " +
                   bridge + " -o " + bridge + " -j ACCEPT")
-        os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
+
 
 
 def deleteBridges():
     print("Deleting bridges")
+    #os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
     for bridge in bridges:
         os.system("ifconfig " + bridge + " down")
         os.system("brctl delbr " + bridge)
-        os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
         os.system("iptables -D FORWARD -i " +
                   bridge + " -o " + bridge + " -j ACCEPT")
 
@@ -398,6 +403,7 @@ if __name__ == '__main__':
         exit("You need to have root privileges to run this script.\nExiting.")
 
     command = sys.argv[1]
+    flushArp()
 
     if (command == "create"):
         createInfra()
