@@ -19,6 +19,11 @@ sed -i -e "s/\$mailname/$mailname/" /home/debian/.claws-mail/accountrc
 sed -i -e "s/\$domainname/$domain/" /home/debian/.claws-mail/folderlist.xml
 sed -i -e "s/\$mailname/$mailname/" /home/debian/.claws-mail/folderlist.xml
 
+# Ugly hack for now with precomputed passwords ! They could(should !) be generated on the fly on future versions, some docs :
+# https://github.com/AlessandroZ/LaZagne/blob/master/Linux/lazagne/softwares/mails/clawsmail.py
+# https://github.com/eworm-de/claws-mail/blob/master/doc/src/password_encryption.txt
+# https://github.com/eworm-de/claws-mail/blob/aca15d9a473bdfdeef4a572b112ff3679d745247/src/password.c#L409
+# For now, they have to be extracted from a configured claws in .claws-mail/passwordstorerc
 if [ "$password" = "hacker" ] ; then
   pass="AiU2DSaWBrjobby90aPWqUKtfV6bnpueNcmHKo5+59gXxh9Y1nrxFNpzOaXa/kKdoUEuyoMzCnwK9eXCS9I96u8mDzYQMall1RkJNb8hWxXOiIOI7kp4ivU+bFqRCzBBadtwdFRtvpDiQYhCIb0di3ltNLE017eoMi6sRrd23PY="
 elif [ "$password" = "commercial" ] ; then
