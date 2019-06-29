@@ -10,14 +10,19 @@ cd `dirname $0`
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y claws-mail
 
-cp -ar claws-mail /home/debian/.claws-mail
-chown -R debian:debian /home/debian/.claws-mail
+if [ -z $login ] ; then
+  login="debian"
+fi
 
-sed -i -e "s/\$domainname/$domain/" /home/debian/.claws-mail/accountrc
-sed -i -e "s/\$mailname/$mailname/" /home/debian/.claws-mail/accountrc
+cp -ar claws-mail /home/$login/.claws-mail
+#chown -R $login /home/$login/.claws-mail
+chmod -R 777 /home/$login/.claws-mail
 
-sed -i -e "s/\$domainname/$domain/" /home/debian/.claws-mail/folderlist.xml
-sed -i -e "s/\$mailname/$mailname/" /home/debian/.claws-mail/folderlist.xml
+sed -i -e "s/\$domainname/$domain/" /home/$login/.claws-mail/accountrc
+sed -i -e "s/\$mailname/$mailname/" /home/$login/.claws-mail/accountrc
+
+sed -i -e "s/\$domainname/$domain/" /home/$login/.claws-mail/folderlist.xml
+sed -i -e "s/\$mailname/$mailname/" /home/$login/.claws-mail/folderlist.xml
 
 # Ugly hack for now with precomputed passwords ! They could(should !) be generated on the fly on future versions, some docs :
 # https://github.com/AlessandroZ/LaZagne/blob/master/Linux/lazagne/softwares/mails/clawsmail.py
@@ -37,5 +42,5 @@ sed -i -e "s/\$mailname/$mailname/" /home/debian/.claws-mail/folderlist.xml
 pass=`./genpasswd $password`
 #gcc genpasswd.c -o genpasswd -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/lib/x86_64-linux-gnu/glib-2.0/include/ -lglib-2.0 -lgnutls
 
-sed -i -e "s;\$password;$pass;" /home/debian/.claws-mail/passwordstorerc
+sed -i -e "s;\$password;$pass;" /home/$login/.claws-mail/passwordstorerc
 # AiU2DSaWBrjobby90aPWqUKtfV6bnpueNcmHKo5+59gXxh9Y1nrxFNpzOaXa/kKdoUEuyoMzCnwK9eXCS9I96u8mDzYQMall1RkJNb8hWxXOiIOI7kp4ivU+bFqRCzBBadtwdFRtvpDiQYhCIb0di3ltNLE017eoMi6sRrd23PY=

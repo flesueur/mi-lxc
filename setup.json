@@ -54,7 +54,7 @@
       "gateway":"10.100.0.1",
       "templates":[{"template":"sshfs"},
                     {"template":"nisclient", "domain":"target.milxc", "nisserver":"10.100.2.2"},
-                    {"template":"mailclient", "domain":"target.milxc", "mailname":"commercial", "password":"commercial"},
+                    {"template":"mailclient", "domain":"target.milxc", "mailname":"commercial", "password":"commercial", "login":"commercial"},
                     {"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
     {"container":"target-dev",
       "interfaces":[
