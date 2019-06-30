@@ -275,9 +275,14 @@ def destroyInfra():
         destroy(container)
 #    destroy(masterc)
 
+def increaseInotify():
+    print("Increasing inotify kernel parameters through sysctl")
+    os.system("sysctl fs.inotify.max_queued_events=1048576 fs.inotify.max_user_instances=1048576 fs.inotify.max_user_watches=1048576 1>/dev/null")
+
 
 def startInfra():
     createBridges()
+    increaseInotify()
     for container in containers:
         print("Starting " + container)
         c = lxc.Container(container)
