@@ -40,7 +40,7 @@ The "IANA-type" numbering (AS numbers, IP space, TLDs) is described in [MI-IANA.
 
 # How to use
 
-The `files` subdirectory contains files and scripts to provision the containers. The `mi-lxc.py` script generates and uses containers (as *root*, since it manipulates bridges and lxc commands, more on this [here](#what-is-done-with-root-permissions)). The topology is defined in `setup.json` (not yet documented)
+The `files` subdirectory contains files and scripts to provision the containers. The `mi-lxc.py` script generates and uses containers (as *root*, since it manipulates bridges and lxc commands, more on this [here](#what-is-done-with-root-permissions-)). The topology is defined in `setup.json` (not yet documented)
 
 Optionally, you can install `apt-cacher-ng` on your host (port 3142) to speed up the creation of the containers. This proxy is detected in [files/master/detect_proxy.sh](https://github.com/flesueur/mi-lxc/blob/master/files/master/detect_proxy.sh).
 
