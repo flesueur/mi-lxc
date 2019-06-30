@@ -36,13 +36,13 @@ A few things you can do and observe :
 * You can query the DNS entry `smtp.target.milxc` from `hacker`. `hacker` will ask the resolver at `isp-a-infra`, which will recursively resolve from the DNS root `ns-root-o`, then from `reg-milxc` and finally from `target-dmz`
 * You can send an email from `hacker@isp-a.milxc` (or another forged address...), using claws-mail on `hacker`, to `commercial@target.milxc`, which can be read using claws-mail on `target-commercial` (with X11 sessions in both containers)
 
-The "IANA-type" numbering (AS numbers, IP space, TLDs) is described in ![MI-IANA.txt](https://github.com/flesueur/mi-lxc/blob/master/MI-IANA.txt). There is currently no cryptography deployed anywhere (no HTTPS, no IMAPS, no DNSSEC, etc.). This will probably be added at some point but in the meantime, deploying this is part of the expected work from students.
+The "IANA-type" numbering (AS numbers, IP space, TLDs) is described in [MI-IANA.txt](https://github.com/flesueur/mi-lxc/blob/master/MI-IANA.txt). There is currently no cryptography deployed anywhere (no HTTPS, no IMAPS, no DNSSEC, etc.). This will probably be added at some point but in the meantime, deploying this is part of the expected work from students.
 
 # How to use
 
-The `files` subdirectory contains files and scripts to provision the containers. The `mi-lxc.py` script generates and uses containers (as *root*, since it manipulates bridges and lxc commands). The topology is defined in `setup.json` (not yet documented)
+The `files` subdirectory contains files and scripts to provision the containers. The `mi-lxc.py` script generates and uses containers (as *root*, since it manipulates bridges and lxc commands, more on this [here](#what-is-done-with-root-permissions)). The topology is defined in `setup.json` (not yet documented)
 
-Optionally, you can install `apt-cacher-ng` on your host (port 3142) to speed up the creation of the containers. This proxy is detected in ![files/master/detect_proxy.sh](https://github.com/flesueur/mi-lxc/blob/master/files/master/detect_proxy.sh).
+Optionally, you can install `apt-cacher-ng` on your host (port 3142) to speed up the creation of the containers. This proxy is detected in [files/master/detect_proxy.sh](https://github.com/flesueur/mi-lxc/blob/master/files/master/detect_proxy.sh).
 
 ## Installation on Linux
 
@@ -73,10 +73,15 @@ Usage
 * `./mi-lxc.py destroy && ./mi-lxc.py destroymaster   # Destroys everything (master container and all linked containers)`
 
 
-Known problems
---------------
+# What is done with root permissions ?
 
-If network seems to be stalled during provisioning (especially when you destroy then create), you can try `service lxc-net restart` before creating containers. It recreates the LXC bridge and seems to flush some problematic caches (ARP ?).
+* Manipulation of LXC containers (no unprivileged LXC usage yet)
+* Management of virtual ethernet bridges with `brctl`, `ifconfig` and `iptables` (in mi-lxc.py:createBridges() and mi-lxc.py:deleteBridges(), around [line 324](https://github.com/flesueur/mi-lxc/blob/master/mi-lxc.py#L324))
+* Increase of fs.inotify.max_queued_events, fs.inotify.max_user_instances and fs.inotify.max_user_watches through `sysctl` (in mi-lxc.py:increaseInotify(), around [line 278](https://github.com/flesueur/mi-lxc/blob/master/mi-lxc.py#L278))
+
+This is not ideal but is currently needed. An [issue](https://github.com/flesueur/mi-lxc/issues/9) is opened on the topic but it is not currently planned.
+
+
 
 # How to extend
 
