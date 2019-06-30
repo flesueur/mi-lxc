@@ -73,7 +73,7 @@ Usage
 * `./mi-lxc.py destroy && ./mi-lxc.py destroymaster   # Destroys everything (master container and all linked containers)`
 
 
-# What is done with root permissions ?
+## What is done with root permissions ?
 
 * Manipulation of LXC containers (no unprivileged LXC usage yet)
 * Management of virtual ethernet bridges with `brctl`, `ifconfig` and `iptables` (in mi-lxc.py:createBridges() and mi-lxc.py:deleteBridges(), around [line 324](https://github.com/flesueur/mi-lxc/blob/master/mi-lxc.py#L324))
