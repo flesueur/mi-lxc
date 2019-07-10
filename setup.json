@@ -3,14 +3,23 @@
   "prefix-bridges":"mi-",
   "nat-bridge":"lxcbr0",
   "comment":"An interconnected network of different AS with internety services",
-  "master":{
+  "masters": [
+    {
     "backend":"lxc",
     "template":"download",
     "parameters":{"dist": "debian", "release": "stretch", "arch": "amd64", "no-validate": "true"},
-    "name":"debian"
+    "name":"stretch"
   },
+  {
+  "backend":"lxc",
+  "template":"download",
+  "parameters":{"dist": "debian", "release": "buster", "arch": "amd64", "no-validate": "true"},
+  "name":"buster",
+  "status":"disabled"
+}],
   "containers": [
     {"container":"transit-a",
+      "master":"stretch",
       "interfaces":[
       {"bridge":"nat-bridge", "address":"dhcp"},
       {"bridge":"transit-a", "address":"10.180.0.1/24"}
