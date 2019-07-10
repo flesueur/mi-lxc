@@ -5,7 +5,7 @@ if [ -z $MILXCGUARD ] ; then exit 1; fi
 DIR=`dirname $0`
 cd `dirname $0`
 
-sed -i "s/dhcp/manual/" /etc/network/interfaces
+#sed -i "s/dhcp/manual/" /etc/network/interfaces
 
 echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 apk update
@@ -46,7 +46,7 @@ protocol bgp {
 }" >>  /etc/bird.conf
 done
 
-#service bird restart
+service bird restart
 
 # iptables -t nat -A POSTROUTING -o eth2 ! -d 10.0.0.0/16 -j SNAT --to 192.168.10.1
 # birdc show route all

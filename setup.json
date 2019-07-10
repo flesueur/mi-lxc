@@ -26,13 +26,13 @@
 }],
   "containers": [
     {"container":"transit-a",
-      "master":"stretch",
+      "master":"alpine",
       "interfaces":[
       {"bridge":"nat-bridge", "address":"dhcp"},
       {"bridge":"transit-a", "address":"10.180.0.1/24"}
       ],
       "gateway":"dhcp",
-      "templates":[{"template":"bgprouter", "asn":"30", "neighbors":"10.180.0.10 as 10;10.180.0.20 as 5;10.180.0.30 as 7;10.180.0.40 as 8; 10.180.0.2 as 31"}]},
+      "templates":[{"template":"alpinebgprouter", "asn":"30", "neighbors":"10.180.0.10 as 10;10.180.0.20 as 5;10.180.0.30 as 7;10.180.0.40 as 8; 10.180.0.2 as 31"}]},
       {"container":"transit-b",
         "master":"alpine",
         "interfaces":[
