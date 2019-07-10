@@ -40,7 +40,8 @@
         {"bridge":"transit-a", "address":"10.180.0.2/24"}
         ],
         "gateway":"None",
-        "templates":[{"template":"alpinebgprouter", "asn":"31", "neighbors":"10.180.0.1 as 30;10.181.0.20 as 5;10.181.0.10 as 20;10.181.0.30 as 7"}]},
+        "templates":[{"template":"alpinebgprouter", "asn":"31", "neighbors":"10.180.0.1 as 30;10.181.0.20 as 5;10.181.0.10 as 20;10.181.0.30 as 7"},
+                      {"template":"internal", "domain":"target.milxc", "ns":"10.10.10.10"}]},
     {"container":"target-firewall",
       "interfaces":[
       {"bridge":"transit-a", "address":"10.180.0.10/24"},
