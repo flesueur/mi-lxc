@@ -82,6 +82,12 @@ def getMIMasters(data):
         #    mimasters[cname] = "default"
     return
 
+def getInterpreter(file):
+    script = open(file)
+    first = script.readline()
+    interpreter = first[2:-1]
+    script.close()
+    return interpreter
 
 
 config = "setup.json"
@@ -153,7 +159,7 @@ def updateMaster(master):
             sys.exit(1)
 
         ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["MILXCGUARD=TRUE"] + [
-                        "bash", "/mnt/lxc/" + folder + "/update.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+                        getInterpreter(filesdir), "/mnt/lxc/" + folder + "/update.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
         if ret != 0:
             print("\033[31mUpdating of master failed (" + str(ret) + "), exiting...\033[0m", file=sys.stderr)
             c.stop()
@@ -238,7 +244,7 @@ def provision(c):
     filesdir = os.path.dirname(os.path.realpath(__file__)) + "/files/" + folder + "/provision.sh"
     if os.path.isfile(filesdir):
         ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["MILXCGUARD=TRUE"] + [
-                        "bash", "/mnt/lxc/" + folder + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+                        getInterpreter(filesdir), "/mnt/lxc/" + folder + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
         if ret != 0:
             print("\033[31mProvisioning of " + folder + " failed (" + str(ret) + "), exiting...\033[0m")
             c.stop()
@@ -253,12 +259,13 @@ def provision(c):
 
     if c.name in mitemplates.keys():
         for template in mitemplates[c.name]:
+            filesdir = os.path.dirname(os.path.realpath(__file__)) + "/files/templates/" + template["template"] + "/provision.sh"
             # if (template["order"] == "after"):
             args = ["MILXCGUARD=TRUE"]
             for arg in template:
                 args.append(arg + "=" + template[arg])
             ret = c.attach_wait(lxc.attach_run_command, ["env"] + args + [
-                                "bash", "/mnt/lxc/templates/" + template["template"] + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+                                getInterpreter(filesdir), "/mnt/lxc/templates/" + template["template"] + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
             if ret != 0: # and ret != 127:
                 print("\033[31mProvisioning of " + folder + "/" + template["template"] + " failed (" + str(ret) + "), exiting...\033[0m")
                 c.stop()
