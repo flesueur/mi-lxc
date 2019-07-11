@@ -374,7 +374,7 @@ def display(c, user):
                                         sleep 1 && setxkbmap fr 2>/dev/null",
                                       user], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
 
-#
+# Xnest and firefox seem incompatible with kernel.unprivileged_userns_clone=1 (need to disable the multiprocess)
 
 
 def createBridges():
