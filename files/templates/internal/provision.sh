@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Internal template
 set -e
 if [ -z $MILXCGUARD ] ; then exit 1; fi
@@ -10,5 +10,6 @@ cd `dirname $0`
 # DEBIAN_FRONTEND=noninteractive apt-get install -y thunderbird
 
 # Disable DHCP and do DNS config
-sed -i "s/.*dhcp.*//" /etc/network/interfaces
+#sed -i "s/.*dhcp.*//" /etc/network/interfaces
+sed -i "s/dhcp/manual/" /etc/network/interfaces
 echo -e "domain $domain\nsearch $domain\nnameserver $ns" > /etc/resolv.conf

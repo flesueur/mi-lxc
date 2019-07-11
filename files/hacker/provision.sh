@@ -18,3 +18,6 @@ chown -R debian:debian /home/debian
 # Disable DHCP and do DNS config
 #sed -i "s/.*dhcp.*//" /etc/network/interfaces
 #echo -e "domain internet.virt\nsearch internet.virt\nnameserver 10.0.0.1" > /etc/resolv.conf
+
+# https://help.gnome.org/users/epiphany/stable/cert.html.en
+# p11-kit : trust anchor /home/user/Downloads/certificate.crt
