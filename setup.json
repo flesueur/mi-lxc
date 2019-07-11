@@ -3,28 +3,45 @@
   "prefix-bridges":"mi-",
   "nat-bridge":"lxcbr0",
   "comment":"An interconnected network of different AS with internety services",
-  "master":{
+  "masters": [
+    {
     "backend":"lxc",
     "template":"download",
     "parameters":{"dist": "debian", "release": "stretch", "arch": "amd64", "no-validate": "true"},
-    "name":"debian"
+    "name":"stretch"
   },
+  {
+  "backend":"lxc",
+  "template":"download",
+  "parameters":{"dist": "debian", "release": "buster", "arch": "amd64", "no-validate": "true"},
+  "name":"buster",
+  "status":"disabled"
+},
+{
+"backend":"lxc",
+"template":"download",
+"parameters":{"dist": "alpine", "release": "3.10", "arch": "amd64", "no-validate": "true"},
+"name":"alpine",
+"status":"enabled"
+}],
   "containers": [
     {"container":"transit-a",
+      "master":"alpine",
       "interfaces":[
       {"bridge":"nat-bridge", "address":"dhcp"},
       {"bridge":"transit-a", "address":"10.180.0.1/24"}
       ],
       "gateway":"dhcp",
-      "templates":[{"template":"bgprouter", "asn":"30", "neighbors":"10.180.0.10 as 10;10.180.0.20 as 5;10.180.0.30 as 7;10.180.0.40 as 8; 10.180.0.2 as 31"}]},
+      "templates":[{"template":"alpinebgprouter", "asn":"30", "neighbors":"10.180.0.10 as 10;10.180.0.20 as 5;10.180.0.30 as 7;10.180.0.40 as 8; 10.180.0.2 as 31"}]},
       {"container":"transit-b",
+        "master":"alpine",
         "interfaces":[
         {"bridge":"transit-b", "address":"10.181.0.1/24"},
         {"bridge":"transit-a", "address":"10.180.0.2/24"}
         ],
         "gateway":"None",
-        "templates":[{"template":"bgprouter", "asn":"31", "neighbors":"10.180.0.1 as 30;10.181.0.20 as 5;10.181.0.10 as 20;10.181.0.30 as 7"},
-                    {"template":"internal", "domain":"target.milxc", "ns":"10.10.10.10"}]},
+        "templates":[{"template":"alpinebgprouter", "asn":"31", "neighbors":"10.180.0.1 as 30;10.181.0.20 as 5;10.181.0.10 as 20;10.181.0.30 as 7"},
+                      {"template":"internal", "domain":"target.milxc", "ns":"10.10.10.10"}]},
     {"container":"target-firewall",
       "interfaces":[
       {"bridge":"transit-a", "address":"10.180.0.10/24"},
@@ -87,13 +104,14 @@
       "templates":[{"template":"nisclient", "domain":"target.milxc", "nisserver":"10.100.2.2"},
                     {"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
       {"container":"isp-a",
+                        "master":"alpine",
                         "interfaces":[
                         {"bridge":"transit-b", "address":"10.181.0.10/24"},
                         {"bridge":"isp-a", "address":"10.150.0.1/24"},
                         {"bridge":"isp-a-infra", "address":"10.150.1.1/24"}
                         ],
                         "gateway":"None",
-                        "templates":[{"template":"bgprouter", "asn":"20", "asdev":"eth1;eth2", "neighbors":"10.181.0.1 as 31"},
+                        "templates":[{"template":"alpinebgprouter", "asn":"20", "asdev":"eth1;eth2", "neighbors":"10.181.0.1 as 31"},
                                     {"template":"internal", "domain":"isp-a.milxc", "ns":"10.10.10.10"}]},
         {"container":"isp-a-infra",
           "interfaces":[
@@ -117,12 +135,13 @@
             "templates":[{"template":"mailclient", "domain":"isp-a.milxc", "mailname":"hacker", "password":"hacker"},
                     {"template":"internal", "domain":"isp-a.milxc", "ns":"10.10.10.10"}]},
             {"container":"ns-root-o-router",
+                      "master":"alpine",
                               "interfaces":[
                               {"bridge":"transit-b", "address":"10.181.0.20/24"},
                               {"bridge":"ns-root-o", "address":"10.10.0.1/24"}
                               ],
                               "gateway":"None",
-                              "templates":[{"template":"bgprouter", "asn":"5", "asdev":"eth1", "neighbors":"10.181.0.1 as 31"},
+                              "templates":[{"template":"alpinebgprouter", "asn":"5", "asdev":"eth1", "neighbors":"10.181.0.1 as 31"},
                                         {"template":"internal", "domain":"ns-root-o.milxc", "ns":"10.10.10.10"}]},
           {"container":"ns-root-o-rootns",
                             "interfaces":[
@@ -132,13 +151,14 @@
                             "templates":[{"template":"rootns"},
                                         {"template":"internal", "domain":"ns-root-o.milxc", "ns":"10.10.10.10"}]},
           {"container":"opendns-router",
+          "master":"alpine",
                             "interfaces":[
                             {"bridge":"transit-a", "address":"10.180.0.30/24"},
                             {"bridge":"transit-b", "address":"10.181.0.30/24"},
                             {"bridge":"opendns", "address":"10.10.10.1/24"}
                             ],
                             "gateway":"None",
-                            "templates":[{"template":"bgprouter", "asn":"7", "asdev":"eth2", "neighbors":"10.180.0.1 as 30;10.181.0.1 as 31"},
+                            "templates":[{"template":"alpinebgprouter", "asn":"7", "asdev":"eth2", "neighbors":"10.180.0.1 as 30;10.181.0.1 as 31"},
                                       {"template":"internal", "domain":"opendns.milxc", "ns":"10.10.10.10"}]},
           {"container":"opendns-resolver",
                             "interfaces":[
@@ -148,12 +168,13 @@
                             "templates":[{"template":"resolverns", "root":"10.10.0.10"},
                                     {"template":"internal", "domain":"opendns.milxc", "ns":"10.10.10.10"}]},
           {"container":"reg-milxc-router",
+            "master":"alpine",
                             "interfaces":[
                             {"bridge":"transit-a", "address":"10.180.0.40/24"},
                             {"bridge":"reg-milxc", "address":"10.10.20.1/24"}
                             ],
                             "gateway":"None",
-                            "templates":[{"template":"bgprouter", "asn":"8", "asdev":"eth1", "neighbors":"10.180.0.1 as 30"},
+                            "templates":[{"template":"alpinebgprouter", "asn":"8", "asdev":"eth1", "neighbors":"10.180.0.1 as 30"},
                                       {"template":"internal", "domain":"reg.milxc", "ns":"10.10.10.10"}]},
           {"container":"reg-milxc-ns",
                             "interfaces":[
