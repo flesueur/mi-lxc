@@ -365,16 +365,18 @@ def display(c, user):
     print("Using display " + str(displaynum) +
           " on " + str(hostdisplay) + " with user " + user)
     os.system("xhost local:")
+    command="killall Xephyr  2>/dev/null; \
+        DISPLAY=" + hostdisplay + " Xephyr -title \"Xephyr " + c.name + "\" -br -ac -dpms -s 0 -resizeable :" + str(displaynum) + " 2>/dev/null & \
+        export DISPLAY=:" + str(displaynum) + " ; \
+        while ! `setxkbmap -query 1>/dev/null 2>/dev/null` ; do sleep 1 ; done ; \
+        xfce4-session 2>/dev/null &"
+    #print(command)
     c.attach(lxc.attach_run_command, ["/bin/su", "-l", "-c",
-                                      "killall Xnest  2>/dev/null; \
-                                        Xnest -name \"Xnest " + c.name + "\" -display " + hostdisplay + " :" + str(displaynum) + " 2>/dev/null & \
-                                        export DISPLAY=:" + str(displaynum) + " ; \
-                                        while ! `setxkbmap fr 2>/dev/null` ; do sleep 1 ; done ; \
-                                        xfce4-session 2>/dev/null &  \
-                                        sleep 1 && setxkbmap fr 2>/dev/null",
+                                        command,
                                       user], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
 
 # Xnest and firefox seem incompatible with kernel.unprivileged_userns_clone=1 (need to disable the multiprocess)
+# Xephyr : can try -host-cursor
 
 
 def createBridges():
