@@ -56,9 +56,10 @@
         {"bridge":"target-lan", "address":"10.100.1.2/16"}
       ],
       "gateway":"10.100.0.1",
-      "templates":[{"template":"mailserver", "domain":"target.milxc"},
+      "templates":[{"template":"ldapclient", "domain":"target.milxc", "server":"10.100.2.2"},
+                  {"template":"mailserver", "domain":"target.milxc"},
                   {"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
-      {"container":"target-nis",
+      {"container":"target-ldap",
         "interfaces":[
           {"bridge":"target-lan", "address":"10.100.2.2/16"}
         ],
@@ -70,7 +71,7 @@
       ],
       "gateway":"10.100.0.1",
       "templates":[{"template":"sshfs"},
-                    {"template":"nisclient", "domain":"target.milxc", "nisserver":"10.100.2.2"},
+                    {"template":"ldapclient", "domain":"target.milxc", "server":"10.100.2.2"},
                     {"template":"mailclient", "domain":"target.milxc", "mailname":"commercial", "password":"commercial", "login":"commercial"},
                     {"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
     {"container":"target-dev",
@@ -79,7 +80,7 @@
       ],
       "gateway":"10.100.0.1",
       "templates":[{"template":"sshfs"},
-                    {"template":"nisclient", "domain":"target.milxc", "nisserver":"10.100.2.2"},
+                    {"template":"ldapclient", "domain":"target.milxc", "server":"10.100.2.2"},
                   {"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
     {"container":"target-admin",
       "interfaces":[
@@ -87,21 +88,21 @@
       ],
       "gateway":"10.100.0.1",
       "templates":[{"template":"sshfs"},
-                    {"template":"nisclient", "domain":"target.milxc", "nisserver":"10.100.2.2"},
+                    {"template":"ldapclient", "domain":"target.milxc", "server":"10.100.2.2"},
                     {"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
     {"container":"target-intranet",
       "interfaces":[
         {"bridge":"target-lan", "address":"10.100.0.5/16"}
       ],
       "gateway":"10.100.0.1",
-      "templates":[{"template":"nisclient", "domain":"target.milxc", "nisserver":"10.100.2.2"},
+      "templates":[{"template":"ldapclient", "domain":"target.milxc", "server":"10.100.2.2"},
                   {"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
     {"container":"target-filer",
       "interfaces":[
         {"bridge":"target-lan", "address":"10.100.0.6/16"}
       ],
       "gateway":"10.100.0.1",
-      "templates":[{"template":"nisclient", "domain":"target.milxc", "nisserver":"10.100.2.2"},
+      "templates":[{"template":"ldapclient", "domain":"target.milxc", "server":"10.100.2.2"},
                     {"template":"internal", "domain":"target.milxc", "ns":"10.100.0.1"}]},
       {"container":"isp-a",
                         "master":"alpine",

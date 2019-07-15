@@ -7,38 +7,18 @@ cd `dirname $0`
 
 sed -i -e 's/127.0.1.1.*$/127.0.1.1\tlxc-infra-dmz/' /etc/hosts
 
-# DEBIAN_FRONTEND=noninteractive apt-get install -y thunderbird
-
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y unbound dovecot-imapd proftpd apt-transport-https wget libprelude2 libprelude-dev build-essential  php7.0-mbstring php7.0
 
 cp dns.conf /etc/unbound/unbound.conf.d/
 
-# sed -i -e 's/ssl = no/ssl = yes/' /etc/dovecot/conf.d/10-ssl.conf
-# echo "ssl_cert = </etc/ssl/certs/ssl-cert-snakeoil.pem" >> /etc/dovecot/conf.d/10-ssl.conf
-# echo "ssl_key = </etc/ssl/private/ssl-cert-snakeoil.key" >> /etc/dovecot/conf.d/10-ssl.conf
-# echo "disable_plaintext_auth = no" >> /etc/dovecot/conf.d/10-auth.conf
-#
-# sed -i -e 's/mydestination = /mydestination = target.virt, /' /etc/postfix/main.cf
-# sed -i -e 's/mynetworks = /mynetworks = 192.168.0.0\/16 /' /etc/postfix/main.cf
-
-
-useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 commercial` commercial || true
-addgroup commercial mail
+#useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 commercial` commercial || true
+#addgroup commercial mail
 #mkdir /home/commercial/mail
 #touch /home/commercial/mail/Drafts /home/commercial/mail/Queue /home/commercial/mail/Sent /home/commercial/mail/Trash
-
-#useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 @password` insa || true
-
-#cp /mnt/lxc/dmz/ossec.list /etc/apt/sources.list.d/
-#wget -q -O /tmp/key https://www.atomicorp.com/RPM-GPG-KEY.art.txt
-#apt-key add /tmp/key
-#apt-get update
-#DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-unauthenticated ossec-hids-server
-#sed -i -e 's/<rule id="31151" level="10" frequency="12" timeframe="90">/<rule id="31151" level="5" frequency="12" timeframe="90">/' /var/ossec/rules/web_rules.xml # deactivate active-response/firewall block when multiple http forbidden
-#sed -i -e 's/\/var\/www\/logs\/access_log/\/var\/log\/apache2\/access.log/' /var/ossec/etc/ossec.conf
-#sed -i -e 's/\/var\/www\/logs\/error_log/\/var\/log\/apache2\/error.log/' /var/ossec/etc/ossec.conf
-#sed -i -e 's/<\/global>/<prelude_output>yes<\/prelude_output><prelude_profile>OSSEC-DMZ<\/prelude_profile><prelude_log_level>0<\/prelude_log_level><\/global>/' /var/ossec/etc/ossec.conf
+# allow to create homedirs when ldap authentication succeeds in IMAP - pam_mkhomedir does not work with imap auth (no pam-session in imap), other solution would be to manually create needed directories
+echo -e '#!/bin/sh\nchmod 777 /home\nchmod o+t /home\nexit 0' > /etc/rc.local
+chmod +x /etc/rc.local
 
 
 # Install de dokuwiki
@@ -77,13 +57,13 @@ sed -i -e 's/<frequency>79200<\/frequency>/<frequency>60<\/frequency>/' /var/oss
 sed -i -e 's/<directories check_all="yes">/<directories check_all="yes" realtime="no">/' /var/ossec/etc/ossec.conf
 sed -i -e 's/server-addr = 127.0.0.1/server-addr = 192.168.0.1/' /etc/prelude/default/client.conf
 
-# NIS server
-#DEBIAN_FRONTEND=noninteractive apt-get install -y nis
-#echo "target.virt" > /etc/defaultdomain
-#domainname target.virt
-#sed -i -e 's/NISSERVER=false/NISSERVER=master/' /etc/default/nis
-#make -C /var/yp
 
-# Disable DHCP and do DNS config
-#sed -i "s/.*dhcp.*//" /etc/network/interfaces
-#echo -e "domain target.virt\nsearch target.virt\nnameserver 192.168.1.2" > /etc/resolv.conf
+#cp /mnt/lxc/dmz/ossec.list /etc/apt/sources.list.d/
+#wget -q -O /tmp/key https://www.atomicorp.com/RPM-GPG-KEY.art.txt
+#apt-key add /tmp/key
+#apt-get update
+#DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-unauthenticated ossec-hids-server
+#sed -i -e 's/<rule id="31151" level="10" frequency="12" timeframe="90">/<rule id="31151" level="5" frequency="12" timeframe="90">/' /var/ossec/rules/web_rules.xml # deactivate active-response/firewall block when multiple http forbidden
+#sed -i -e 's/\/var\/www\/logs\/access_log/\/var\/log\/apache2\/access.log/' /var/ossec/etc/ossec.conf
+#sed -i -e 's/\/var\/www\/logs\/error_log/\/var\/log\/apache2\/error.log/' /var/ossec/etc/ossec.conf
+#sed -i -e 's/<\/global>/<prelude_output>yes<\/prelude_output><prelude_profile>OSSEC-DMZ<\/prelude_profile><prelude_log_level>0<\/prelude_log_level><\/global>/' /var/ossec/etc/ossec.conf
