@@ -139,6 +139,7 @@ def createMaster(master):
         sys.exit(1)
     configure(c)
     provision(c)
+    print("Master " + master['name'] + " created successfully")
     return c
 
 def updateMasters():
@@ -172,7 +173,7 @@ def updateMaster(master):
             exit(1)
 
         c.stop()
-        print("Master container updated !", file=sys.stdout)
+        print("Master " + master['name'] + " updated successfully")
     return c
 
 
@@ -326,6 +327,7 @@ def createInfra():
             newc = create(container)
             provision(newc)
             configNet(newc)
+    print("Infrastructure created successfully !")
 
 
 def destroyInfra():
@@ -370,9 +372,8 @@ def display(c, user):
     hostdisplay = os.getenv("DISPLAY")
     print("Using display " + cdisplay +
           " on " + hostdisplay + " with user " + user)
-    #os.system("xhost local:")
-    command="killall Xephyr  2>/dev/null; \
-        DISPLAY=" + hostdisplay + " Xephyr -title \"Xephyr " + c.name + "\" -br -ac -dpms -s 0 -resizeable " + cdisplay + " 2>/dev/null & \
+    os.system("xhost local:")
+    command="DISPLAY=" + hostdisplay + " Xephyr -title \"Xephyr " + c.name + "\" -br -ac -dpms -s 0 -resizeable " + cdisplay + " 2>/dev/null & \
         export DISPLAY=" + cdisplay + " ; \
         while ! `setxkbmap -query 1>/dev/null 2>/dev/null` ; do sleep 1 ; done ; \
         xfce4-session 2>/dev/null & \
@@ -381,6 +382,7 @@ def display(c, user):
         #setxkbmap " + getxkbmap()
         # to set a cookie in xephyr : xauth list puis ajout -cookie
     #print(command)
+    #c.attach(lxc.attach_run_command, ["/usr/bin/pkill", "-f", "Xephyr", "-u", user], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
     c.attach(lxc.attach_run_command, ["/bin/su", "-l", "-c",
                                         command,
                                       user], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
