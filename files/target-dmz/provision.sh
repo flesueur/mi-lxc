@@ -7,8 +7,18 @@ cd `dirname $0`
 
 sed -i -e 's/127.0.1.1.*$/127.0.1.1\tlxc-infra-dmz/' /etc/hosts
 
+# disable systemd-resolved which conflicts with nsd
+echo "DNSStubListener=no" >> /etc/systemd/resolved.conf
+systemctl stop systemd-resolved
+
 apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y unbound dovecot-imapd proftpd apt-transport-https wget libprelude2 libprelude-dev build-essential  php7.0-mbstring php7.0
+DEB_VERSION=`cat /etc/debian_version | cut -d'.' -f1`
+if [ $DEB_VERSION -eq "10" ] # DEB 10 aka Buster
+then
+  DEBIAN_FRONTEND=noninteractive apt-get install -y unbound dovecot-imapd proftpd apt-transport-https wget prelude-utils libprelude-dev build-essential php7.3-mbstring php7.3
+else # DEB 9 aka stretch
+  DEBIAN_FRONTEND=noninteractive apt-get install -y unbound dovecot-imapd proftpd apt-transport-https wget libprelude2 libprelude-dev build-essential  php7.0-mbstring php7.0
+fi
 
 cp dns.conf /etc/unbound/unbound.conf.d/
 

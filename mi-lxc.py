@@ -255,7 +255,7 @@ def provision(c):
         if ret != 0:
             print("\033[31mProvisioning of " + folder + " failed (" + str(ret) + "), exiting...\033[0m")
             c.stop()
-            c.destroy()
+            #c.destroy()
             exit(1)
     else:
 #        ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["http_proxy=http://"+proxy] +[

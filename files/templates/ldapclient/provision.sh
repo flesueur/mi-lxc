@@ -25,4 +25,7 @@ libnss-ldap	shared/ldapns/ldap-server	string	ldap://$server/
 libpam-ldap	shared/ldapns/ldap-server	string	ldap://$server/" | debconf-set-selections
 
 DEBIAN_FRONTEND=noninteractive apt-get install -y libnss-ldap libpam-ldap
-sed -i -e 's/compat/compat ldap/' /etc/nsswitch.conf
+sed -i "s/^\(passwd:.*\)$/\1 ldap/" /etc/nsswitch.conf
+sed -i "s/^\(group:.*\)$/\1 ldap/" /etc/nsswitch.conf
+sed -i "s/^\(shadow:.*\)$/\1 ldap/" /etc/nsswitch.conf
+#sed -i -e 's/compat/compat ldap/' /etc/nsswitch.conf
