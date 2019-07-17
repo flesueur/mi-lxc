@@ -22,15 +22,18 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y dnsutils traceroute nftables f
 apt-get clean
 # firefox-esr epiphany-browser midori medit mousepad leafpad
 
-# Localisation fr
+# Localisation du $LANG, en par défaut, timezone Paris
+if [ -z $HOSTLANG ] ; then
+  HOSTLANG="en_US.UTF-8"
+fi
 echo "Europe/Paris" > /etc/timezone
 ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
 dpkg-reconfigure -f noninteractive tzdata
 sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
-sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen
-echo 'LANG="fr_FR.UTF-8"'>/etc/default/locale
-dpkg-reconfigure --frontend=noninteractive locales
-update-locale LANG=fr_FR.UTF-8
+sed -i -e "s/# $HOSTLANG /$HOSTLANG /" /etc/locale.gen
+echo "LANG=\"$HOSTLANG\"">/etc/default/locale
+dpkg-reconfigure --frontend=noninteractive locales || true  # don't fail for a locales problem
+update-locale LANG=$HOSTLANG || true   # don't fail for a locales problem
 
 
 # Creation des utilisateurs
