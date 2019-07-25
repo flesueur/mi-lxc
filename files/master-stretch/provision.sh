@@ -22,6 +22,9 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y dnsutils traceroute nftables f
 apt-get clean
 # firefox-esr epiphany-browser midori
 
+# Disable user_ns which crashes firefox, see https://bugzilla.mozilla.org/show_bug.cgi?id=1565972
+echo "MOZ_ASSUME_USER_NS=0" >> /etc/environment
+
 # Localisation du $LANG, en par défaut, timezone Paris
 if [ -z $HOSTLANG ] ; then
   HOSTLANG="en_US.UTF-8"
