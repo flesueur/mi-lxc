@@ -1,3 +1,8 @@
+# Work-in-progress
+
+This branch refactors the folders hierarchy and the json topology format. It is not working yet !
+
+
 # MI-LXC : Mini-Internet using LXC
 
 MI-LXC uses LXC to simulate a small-scale internet-like environment. I use this environment for (infosec) practical work (intrusion, firewall, IDS, etc.). The small memory footprint of LXC combined with differential images allows to run it on modest hardware.
