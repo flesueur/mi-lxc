@@ -11,6 +11,9 @@ addgroup hacker mail
 #mkdir /home/hacker/mail
 #touch /home/hacker/mail/Drafts /home/hacker/mail/Queue /home/hacker/mail/Sent /home/hacker/mail/Trash
 
+# disable systemd-resolved which conflicts with nsd
+echo "DNSStubListener=no" >> /etc/systemd/resolved.conf
+systemctl stop systemd-resolved
 
 # manage isp-a.milxc zone
 apt-get update

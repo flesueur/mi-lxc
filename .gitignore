@@ -6,3 +6,4 @@ notes
 *.bak
 mkcert
 launch.sh
+files/target-firewall/prelude-manager.conf

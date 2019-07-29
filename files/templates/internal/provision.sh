@@ -12,4 +12,4 @@ cd `dirname $0`
 # Disable DHCP and do DNS config
 #sed -i "s/.*dhcp.*//" /etc/network/interfaces
 sed -i "s/dhcp/manual/" /etc/network/interfaces
-echo -e "domain $domain\nsearch $domain\nnameserver $ns" > /etc/resolv.conf
+echo "domain $domain\nsearch $domain\nnameserver $ns" > /etc/resolv.conf

@@ -11,6 +11,12 @@ import ipaddress
 def flushArp():
     os.system("ip neigh flush dev " + lxcbr)
 
+# def getxkbmap():
+#     cmd = "setxkbmap -query | grep layout | cut -d':' -f2 | sed \"s/ //g\""
+#     result = subprocess.check_output(cmd, shell=True)
+#     return result.decode("utf-8")
+#     #return(os.system("setxkbmap -query | grep layout | cut -d':' -f2 | sed \"s/ //g\""))
+
 def getGlobals(data):
     global lxcbr, prefixc, prefixbr
     lxcbr = data["nat-bridge"]
@@ -133,6 +139,7 @@ def createMaster(master):
         sys.exit(1)
     configure(c)
     provision(c)
+    print("Master " + master['name'] + " created successfully")
     return c
 
 def updateMasters():
@@ -166,7 +173,7 @@ def updateMaster(master):
             exit(1)
 
         c.stop()
-        print("Master container updated !", file=sys.stdout)
+        print("Master " + master['name'] + " updated successfully")
     return c
 
 
@@ -243,12 +250,12 @@ def provision(c):
     #filesdir = os.path.dirname(os.path.realpath(__file__)).replace(" ", "\\040") + "/files/" + folder + "/provision.sh"
     filesdir = os.path.dirname(os.path.realpath(__file__)) + "/files/" + folder + "/provision.sh"
     if os.path.isfile(filesdir):
-        ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["MILXCGUARD=TRUE"] + [
+        ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["MILXCGUARD=TRUE", "HOSTLANG="+os.getenv("LANG")] + [
                         getInterpreter(filesdir), "/mnt/lxc/" + folder + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
         if ret != 0:
             print("\033[31mProvisioning of " + folder + " failed (" + str(ret) + "), exiting...\033[0m")
             c.stop()
-            c.destroy()
+            #c.destroy()
             exit(1)
     else:
 #        ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["http_proxy=http://"+proxy] +[
@@ -261,7 +268,7 @@ def provision(c):
         for template in mitemplates[c.name]:
             filesdir = os.path.dirname(os.path.realpath(__file__)) + "/files/templates/" + template["template"] + "/provision.sh"
             # if (template["order"] == "after"):
-            args = ["MILXCGUARD=TRUE"]
+            args = ["MILXCGUARD=TRUE", "HOSTLANG="+os.getenv("LANG")]
             for arg in template:
                 args.append(arg + "=" + template[arg])
             ret = c.attach_wait(lxc.attach_run_command, ["env"] + args + [
@@ -320,6 +327,7 @@ def createInfra():
             newc = create(container)
             provision(newc)
             configNet(newc)
+    print("Infrastructure created successfully !")
 
 
 def destroyInfra():
@@ -360,21 +368,27 @@ def stopInfra():
 def display(c, user):
     # c.attach(lxc.attach_run_command, ["Xnest", "-sss", "-name", "Xnest",
     # "-display", ":0", ":1"])
-    displaynum = containers.index(c.name) + 2
+    cdisplay = ":" + str(containers.index(c.name) + 2)
     hostdisplay = os.getenv("DISPLAY")
-    print("Using display " + str(displaynum) +
-          " on " + str(hostdisplay) + " with user " + user)
+    print("Using display " + cdisplay +
+          " on " + hostdisplay + " with user " + user)
     os.system("xhost local:")
+    command="DISPLAY=" + hostdisplay + " Xephyr -title \"Xephyr " + c.name + "\" -br -ac -dpms -s 0 -resizeable " + cdisplay + " 2>/dev/null & \
+        export DISPLAY=" + cdisplay + " ; \
+        while ! `setxkbmap -query 1>/dev/null 2>/dev/null` ; do sleep 1 ; done ; \
+        xfce4-session 2>/dev/null & \
+        setxkbmap -display " + hostdisplay + " -print | xkbcomp - " + cdisplay + " 2>/dev/null"
+        #xkbcomp " + str(hostdisplay) + " :" + str(displaynum)
+        #setxkbmap " + getxkbmap()
+        # to set a cookie in xephyr : xauth list puis ajout -cookie
+    #print(command)
+    #c.attach(lxc.attach_run_command, ["/usr/bin/pkill", "-f", "Xephyr", "-u", user], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
     c.attach(lxc.attach_run_command, ["/bin/su", "-l", "-c",
-                                      "killall Xnest  2>/dev/null; \
-                                        Xnest -name \"Xnest " + c.name + "\" -display " + hostdisplay + " :" + str(displaynum) + " 2>/dev/null & \
-                                        export DISPLAY=:" + str(displaynum) + " ; \
-                                        while ! `setxkbmap fr 2>/dev/null` ; do sleep 1 ; done ; \
-                                        xfce4-session 2>/dev/null &  \
-                                        sleep 1 && setxkbmap fr 2>/dev/null",
+                                        command,
                                       user], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
 
 # Xnest and firefox seem incompatible with kernel.unprivileged_userns_clone=1 (need to disable the multiprocess)
+# Xephyr : can try -host-cursor
 
 
 def createBridges():
