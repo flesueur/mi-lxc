@@ -10,6 +10,8 @@ cd `dirname $0`
 # DEBIAN_FRONTEND=noninteractive apt-get install -y thunderbird
 
 # Disable DHCP and do DNS config
-#sed -i "s/.*dhcp.*//" /etc/network/interfaces
+if [ ! -f /etc/network/keepdhcp ]
+then
 sed -i "s/dhcp/manual/" /etc/network/interfaces
 echo "domain $domain\nsearch $domain\nnameserver $ns" > /etc/resolv.conf
+fi

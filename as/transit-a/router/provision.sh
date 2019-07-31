@@ -15,6 +15,9 @@ echo -e '#!/bin/sh\niptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE' > /etc
 chmod +x /etc/local.d/iptables.start
 rc-update add local
 
+# keep DHCP on eth0
+touch /etc/network/keepdhcp
+
 
 #echo "supersede domain-name-servers 10.10.10.10;" >> /etc/dhcp/dhclient.conf
 #echo "supersede domain-name \"internet.milxc\";" >> /etc/dhcp/dhclient.conf

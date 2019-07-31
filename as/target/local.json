@@ -1,13 +1,8 @@
 {
   "comment":"AS of the Target organization",
   "containers": [
-    {"container":"firewall",
+    {"container":"router",
       "master":"buster",
-      "interfaces":[
-      {"bridge":"router", "address":"10.180.0.10/24"},
-      {"bridge":"lan", "address":"10.100.0.1/16"}
-      ],
-      "gateway":"10.100.0.254",
       "templates":[{"template":"resolverns", "root":"10.10.0.10"},
                   {"template":"nodhcp", "domain":"target.milxc", "ns":"10.100.0.1"}]},
     {"container":"dmz",
