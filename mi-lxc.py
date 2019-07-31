@@ -75,7 +75,7 @@ def getNics(data):
     global nics
     for asn in data["aslist"]:
         asname = asn["as"]
-        cname = asname + ".router"
+        cname = asname + sep + "router"
         interfaces = []
         for interface in asn["interfaces"]:
             iface = interface["bridge"]
@@ -92,7 +92,7 @@ def getNics(data):
             for container in localtopology["containers"]:
                 if container["container"] == "router":   # router nics are configured in global.json
                     continue
-                cname = asname + "." + container["container"]
+                cname = asname + sep + container["container"]
                 interfaces = []
                 for interface in container["interfaces"]:
                     iface = interface["bridge"]
@@ -113,7 +113,7 @@ def getMITemplates(data):
     global mitemplates
     for asn in data["aslist"]:
         asname = asn["as"]
-        rname = asname + ".router"
+        rname = asname + sep + "router"
         if "asdev" in asn:
             mitemplates[rname] = [{"template":"bgprouter", "asn":asn["asn"], "neighbors":asn["neighbors"], "asdev":asn["asdev"]}]
         else:
@@ -122,7 +122,7 @@ def getMITemplates(data):
             json_data = open("as/"+asname+"/local.json").read()
             localtopology = json.loads(json_data)
             for container in localtopology["containers"]:
-                cname = asname + "." + container["container"]
+                cname = asname + sep + container["container"]
                 if "templates" in container.keys():
                     if container["container"] == "router":
                         mitemplates[cname]+=(container["templates"])
@@ -138,13 +138,13 @@ def getMIMasters(data):
     global mimasters
     for asn in data["aslist"]:
         asname = asn["as"]
-        rname = asname + ".router"
+        rname = asname + sep + "router"
         mimasters[rname] = "alpine"
         try:
             json_data = open("as/"+asname+"/local.json").read()
             localtopology = json.loads(json_data)
             for container in localtopology["containers"]:
-                cname = asname + "." + container["container"]
+                cname = asname + sep + container["container"]
                 if "master" in container.keys():
                     mimasters[cname] = container["master"]
         except FileNotFoundError:
@@ -175,6 +175,7 @@ config = "global.json"
 prefixc = "lxc-infra-"
 prefixbr = "lxc"
 lxcbr = "lxcbr0"
+sep = "-"
 
 # Containers
 containers = {}
@@ -201,7 +202,7 @@ def createMaster(master):
     if master['backend'] != 'lxc':
         print("Can't create a master using " + master['backend'] + " backend, only lxc backend supported currently !", file=sys.stderr)
         exit(1)
-    c = lxc.Container(prefixc + "masters." + master['name'])
+    c = lxc.Container(prefixc + "masters" + sep + master['name'])
     if c.defined:
         print("Master container " + master['name'] + " already exists", file=sys.stdout)
         return c
@@ -223,7 +224,7 @@ def updateMasters():
 
 def updateMaster(master):
     print("Updating master " + master['name'])
-    c = lxc.Container(prefixc + "masters." + master['name'])
+    c = lxc.Container(prefixc + "masters" + sep + master['name'])
     if c.defined:
         print("Master container " +master['name']+ " exists, updating...", file=sys.stdout)
         path = "masters/" + master['name']
@@ -255,7 +256,7 @@ def create(container):
         mastername = mimasters[container]
     else: # use default master
         mastername = masters[0]['name']
-    mastercontainer = lxc.Container(prefixc + "masters." + mastername)
+    mastercontainer = lxc.Container(prefixc + "masters" + sep + mastername)
     if mastercontainer.defined:
         print("Cloning " + container + " from " + mastercontainer.name)
         newclone = mastercontainer.clone(prefixc + container, flags=lxc.LXC_CLONE_SNAPSHOT)
@@ -323,7 +324,7 @@ def provision(c, namespace):
     else:
         print("No Provisioning script for " + path)
 
-    fname = namespace + "." + miname
+    fname = namespace + sep + miname
     family = getMasterFamily(fname)
     if fname in mitemplates.keys():
         for template in mitemplates[fname]:
@@ -381,7 +382,7 @@ def createInfra():
     createMasters()
     for asn in containers.keys():
         for container in containers[asn]:
-            cname = asn + "." + container
+            cname = asn + sep + container
             c = lxc.Container(prefixc + cname)
             if c.defined:
                 print("Container " + cname + " already exists", file=sys.stderr)
@@ -396,12 +397,12 @@ def createInfra():
 def destroyInfra():
     for asn in containers.keys():
         for container in containers[asn]:
-            destroy(prefixc + asn + "." + container)
+            destroy(prefixc + asn + sep + container)
 #    destroy(masterc)
 
 def destroyMasters():
     for master in masters:
-        destroy(prefixc + "masters." + master['name'])
+        destroy(prefixc + "masters" + sep + master['name'])
 
 
 def increaseInotify():
@@ -414,7 +415,7 @@ def startInfra():
     increaseInotify()
     for asn in containers.keys():
         for container in containers[asn]:
-            cname = asn + "." + container
+            cname = asn + sep + container
             print("Starting " + cname)
             c = lxc.Container(prefixc + cname)
             if c.defined:
@@ -427,7 +428,7 @@ def startInfra():
 def stopInfra():
     for asn in containers.keys():
         for container in containers[asn]:
-            cname = asn + "." + container
+            cname = asn + sep + container
             print("Stopping " + cname)
             c = lxc.Container(prefixc + cname)
             c.stop()
@@ -493,7 +494,7 @@ def printgraph():
 
     for asn in containers:
         for c in containers[asn]:
-            G2.add_node("c"+asn+c, color='red', shape='box', label=asn+"."+c)
+            G2.add_node("c"+asn+c, color='red', shape='box', label=asn+sep+c)
 
     for bridge in bridges:
         G2.add_node("b"+bridge, color='green', label=bridge[len(prefixbr):])
@@ -501,7 +502,7 @@ def printgraph():
     for asn in containers:
         for c in containers[asn]:
             global nics
-            for nic in nics[asn+"."+c]['interfaces']:
+            for nic in nics[asn+sep+c]['interfaces']:
                 # if nic[0] == lxcbr:
                 #     nicname = lxcbr
                 # else:
@@ -526,14 +527,14 @@ def listContainers():
     str = ""
     for asn in containers:
         for c in containers[asn]:
-            str += asn + "." + c + ', '
+            str += asn + sep + c + ', '
     return str
 
 def getAllContainers():
     mycontainers = []
     for asn in containers:
         for c in containers[asn]:
-            mycontainers.append(asn + "." + c)
+            mycontainers.append(asn + sep + c)
     return sorted(mycontainers)
 
 def debugData(name,data):
