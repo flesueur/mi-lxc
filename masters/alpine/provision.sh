@@ -12,7 +12,3 @@ cd `dirname $0`
 
 apk update
 apk upgrade
-
-# Disable DHCP and do DNS config
-sed -i "s/dhcp/manual/" /etc/network/interfaces
-echo "domain milxc\nsearch milxc\nnameserver 10.10.10.10" > /etc/resolv.conf
