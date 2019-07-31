@@ -1,6 +1,7 @@
 {
   "comment":"ISP-A AS",
-  "containers": [
+  "containers": {
+    "infra":
         {"container":"infra",
           "interfaces":[
             {"bridge":"infra", "address":"10.150.1.2/24"}
@@ -9,18 +10,18 @@
           "templates":[
             {"template":"mailserver", "domain":"isp-a.milxc"},
             {"template":"nodhcp", "domain":"isp-a.milxc", "ns":"10.10.10.10"}]},
-          {"container":"home",
+          "home":{"container":"home",
             "interfaces":[
               {"bridge":"cust", "address":"10.150.0.3/24"}
             ],
             "gateway":"10.150.0.1",
             "templates":[{"template":"nodhcp", "domain":"isp-a.milxc", "ns":"10.10.10.10"}]},
-          {"container":"hacker",
+          "hacker":{"container":"hacker",
             "interfaces":[
               {"bridge":"cust", "address":"10.150.0.4/24"}
             ],
             "gateway":"10.150.0.1",
             "templates":[{"template":"mailclient", "domain":"isp-a.milxc", "mailname":"hacker", "password":"hacker"},
                     {"template":"nodhcp", "domain":"isp-a.milxc", "ns":"10.10.10.10"}]}
-  ]
+  }
 }

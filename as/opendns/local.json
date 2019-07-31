@@ -1,12 +1,12 @@
 {
   "comment":"open DNS service AS",
-  "containers": [
-          {"container":"resolver",
+  "containers": {
+          "resolver":{"container":"resolver",
                             "interfaces":[
                             {"bridge":"lan", "address":"10.10.10.10/24"}
                             ],
                             "gateway":"10.10.10.1",
                             "templates":[{"template":"resolverns", "root":"10.10.0.10"},
                                     {"template":"nodhcp", "domain":"opendns.milxc", "ns":"10.10.10.10"}]}
-  ]
+  }
 }

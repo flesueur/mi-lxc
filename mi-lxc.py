@@ -24,21 +24,69 @@ def getGlobals(data):
     prefixbr = data["prefix-bridges"]
     return
 
+def merge(c1, c2):
+    #print("merging")
+    if "master" in c2:
+        c1["master"] = c2["master"]
+    c1["templates"] = c2["templates"] + c1["templates"]
+    return c1
+
+def developTopology(data):
+    global topology
+    data["containers"] = {}
+    containers = data["containers"]
+
+    for gname in data["groups"]:
+        group = data["groups"][gname]
+        for template in group["templates"]:
+            json_data = open("templates/groups/"+template["template"]+".json").read()
+            datatemplate = json.loads(json_data)
+            tcontainers = datatemplate["containers"]
+            for cname in tcontainers:
+                container = tcontainers[cname]
+                container["folder"]="as/" + gname + "/" + cname
+                container["group"]= gname
+                for key in container.keys():
+                    if container[key][0] == "$":
+                        #print("parameter " + container[key])
+                        container[key] = template[key]
+                for targettemplate in container["templates"]:
+                    for key in targettemplate.keys():
+                        if targettemplate[key][0] == "$":
+                            #print("parameter " + targettemplate[key])
+                            try:
+                                targettemplate[key] = template[key]
+                            except KeyError:
+                                targettemplate[key] = ""
+                containers[gname+sep+cname]=container
+
+        try:
+            json_data = open("as/"+gname+"/local.json").read()
+            localtopology = json.loads(json_data)
+            for cname in localtopology["containers"]:
+                container = localtopology["containers"][cname]
+                container["folder"]="as/" + gname + "/" + cname
+                container["group"]= gname
+                try:
+                    for iface in container["interfaces"]:
+                        iface["bridge"] = gname + sep + iface["bridge"]
+                except KeyError:
+                    pass
+                if (gname+sep+cname) in data["containers"]:
+                    data["containers"][gname+sep+cname]=merge(data["containers"][gname+sep+cname], container)
+                else:
+                    data["containers"][gname+sep+cname]=container
+        except FileNotFoundError:
+            pass
+
+    topology = data["containers"]
+    return data
 
 def getContainers(data):
     global containers
-    for asn in data["aslist"]:
-        asname = asn["as"]
-        localcont = set()
-        localcont.add("router")
-        try:
-            json_data = open("as/"+asname+"/local.json").read()
-            localtopology = json.loads(json_data)
-            for container in localtopology["containers"]:
-                localcont.add(container["container"])
-        except FileNotFoundError:
-            pass
-        containers[asname] = localcont
+    for container in data["containers"].keys():
+        containers.append(container)
+    containers.sort()
     return
 
 def getMasters(data):
@@ -51,105 +99,55 @@ def getMasters(data):
 
 def getBridges(data):
     global bridges
-    for asn in data["aslist"]:
-        asname = asn["as"]
-        for interface in asn["interfaces"]:
+    for container in data["containers"].values():
+        for interface in container["interfaces"]:
             if interface["bridge"] != "nat-bridge":
                 bridges.add(prefixbr + interface["bridge"])
-        try:
-            json_data = open("as/"+asname+"/local.json").read()
-            localtopology = json.loads(json_data)
-            for container in localtopology["containers"]:
-                try:
-                    for interface in container["interfaces"]:
-                        if interface["bridge"] != "nat-bridge":
-                            bridges.add(prefixbr + asname + "-" + interface["bridge"])
-                except KeyError:  # routers in local.json have no interfaces keyword
-                    pass
-        except FileNotFoundError:
-            pass
     return
 
 
 def getNics(data):
     global nics
-    for asn in data["aslist"]:
-        asname = asn["as"]
-        cname = asname + sep + "router"
+    for cname, container in data["containers"].items():
         interfaces = []
-        for interface in asn["interfaces"]:
+        for interface in container["interfaces"]:
             iface = interface["bridge"]
             if iface == "nat-bridge":
                 iface = lxcbr
             else:
                 iface = prefixbr + iface
             interfaces.append((iface, interface["address"]))
-        nics[cname] = {'gateway': None, 'interfaces': interfaces}
-
-        try:
-            json_data = open("as/"+asname+"/local.json").read()
-            localtopology = json.loads(json_data)
-            for container in localtopology["containers"]:
-                if container["container"] == "router":   # router nics are configured in global.json
-                    continue
-                cname = asname + sep + container["container"]
-                interfaces = []
-                for interface in container["interfaces"]:
-                    iface = interface["bridge"]
-                    if iface == "nat-bridge":
-                        iface = lxcbr
-                    else:
-                        iface = prefixbr + asname + "-" + iface
-                    interfaces.append((iface, interface["address"]))
-                nics[cname] = {'gateway': container[
-                    "gateway"], 'interfaces': interfaces}
-        except FileNotFoundError:
-            pass
-
+        nics[cname] = {'gateway': container[
+            "gateway"], 'interfaces': interfaces}
     return
+
 
 
 def getMITemplates(data):
     global mitemplates
-    for asn in data["aslist"]:
-        asname = asn["as"]
-        rname = asname + sep + "router"
-        if "asdev" in asn:
-            mitemplates[rname] = [{"template":"bgprouter", "asn":asn["asn"], "neighbors":asn["neighbors"], "asdev":asn["asdev"]}]
-        else:
-            mitemplates[rname] = [{"template":"bgprouter", "asn":asn["asn"], "neighbors":asn["neighbors"]}]
-        try:
-            json_data = open("as/"+asname+"/local.json").read()
-            localtopology = json.loads(json_data)
-            for container in localtopology["containers"]:
-                cname = asname + sep + container["container"]
-                if "templates" in container.keys():
-                    if container["container"] == "router":
-                        mitemplates[cname]+=(container["templates"])
-                    else:
-                        mitemplates[cname] = container["templates"]
-        except FileNotFoundError:
-            pass
-        mitemplates[rname]+=[{"template":"nodhcp", "domain":"milxc", "ns":"10.10.10.10"}]
+    for cname, container in data["containers"].items():
+        if "templates" in container.keys():
+            mitemplates[cname] = container["templates"]
     return
+
 
 
 def getMIMasters(data):
     global mimasters
-    for asn in data["aslist"]:
-        asname = asn["as"]
-        rname = asname + sep + "router"
-        mimasters[rname] = "alpine"
-        try:
-            json_data = open("as/"+asname+"/local.json").read()
-            localtopology = json.loads(json_data)
-            for container in localtopology["containers"]:
-                cname = asname + sep + container["container"]
-                if "master" in container.keys():
-                    mimasters[cname] = container["master"]
-        except FileNotFoundError:
-            pass
+    for cname, container in data["containers"].items():
+        if "master" in container.keys():
+            mimasters[cname] = container["master"]
+        #else:   # no entry in mimasters if default master
+        #    mimasters[cname] = "default"
     return
+
+def getFolders(data):
+    global folders
+    for cname, container in data["containers"].items():
+        folders[cname] = container["folder"]
+    return
+
+
 
 
 def getInterpreter(file):
@@ -178,7 +176,8 @@ lxcbr = "lxcbr0"
 sep = "-"
 
 # Containers
-containers = {}
+containers = []
+topology = {}
 
 # Bridges
 bridges = set()
@@ -186,6 +185,8 @@ bridges = set()
 nics = {}
 
 mitemplates = {}
+
+folders = {}
 
 masters = [] # list of Masters
 mimasters = {} # dict of master used by containers
@@ -212,7 +213,7 @@ def createMaster(master):
         print("Failed to create the container rootfs", file=sys.stderr)
         sys.exit(1)
     configure(c)
-    provision(c, "masters")
+    provision(c, isMaster=True)
     print("Master " + master['name'] + " created successfully")
     return c
 
@@ -301,12 +302,12 @@ def configure(c):
     c.save_config()
 
 
-def provision(c, namespace):
-    miname = c.name[len(prefixc) + len(namespace) + 1:]
-    if namespace is "masters":
-        path = namespace + "/" + miname
+def provision(c, isMaster=False):
+    miname = c.name[len(prefixc):]
+    if isMaster:
+        path = "masters/" + miname[len("masters"+sep):]
     else:
-        path = "/as/" + namespace + "/" + miname
+        path = folders[miname]
     c.start()
     if not c.get_ips(timeout=60):
         print("Container seems to have failed to start (no IP)")
@@ -324,10 +325,9 @@ def provision(c, namespace):
     else:
         print("No Provisioning script for " + path)
 
-    fname = namespace + sep + miname
-    family = getMasterFamily(fname)
-    if fname in mitemplates.keys():
-        for template in mitemplates[fname]:
+    family = getMasterFamily(miname)
+    if miname in mitemplates.keys():
+        for template in mitemplates[miname]:
             filesdir = os.path.dirname(os.path.realpath(__file__)) + "/templates/hosts/" + family + "/" + template["template"] + "/provision.sh"
             args = ["MILXCGUARD=TRUE", "HOSTLANG="+os.getenv("LANG")]
             for arg in template:
@@ -335,7 +335,7 @@ def provision(c, namespace):
             ret = c.attach_wait(lxc.attach_run_command, ["env"] + args + [
                                 getInterpreter(filesdir), "/mnt/lxc/templates/hosts/" + family + "/" + template["template"] + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
             if ret != 0: # and ret != 127:
-                print("\033[31mProvisioning of " + fname + "/" + template["template"] + " failed (" + str(ret) + "), exiting...\033[0m")
+                print("\033[31mProvisioning of " + miname + "/" + template["template"] + " failed (" + str(ret) + "), exiting...\033[0m")
                 c.stop()
                 c.destroy()
                 exit(1)
@@ -380,24 +380,21 @@ def configNet(c):
 
 def createInfra():
     createMasters()
-    for asn in containers.keys():
-        for container in containers[asn]:
-            cname = asn + sep + container
-            c = lxc.Container(prefixc + cname)
-            if c.defined:
-                print("Container " + cname + " already exists", file=sys.stderr)
-            else:
-                flushArp()
-                newc = create(cname)
-                provision(newc, asn)
-                configNet(newc)
+    for cname in containers:
+        c = lxc.Container(prefixc + cname)
+        if c.defined:
+            print("Container " + cname + " already exists", file=sys.stderr)
+        else:
+            flushArp()
+            newc = create(cname)
+            provision(newc, )
+            configNet(newc)
     print("Infrastructure created successfully !")
 
 
 def destroyInfra():
-    for asn in containers.keys():
-        for container in containers[asn]:
-            destroy(prefixc + asn + sep + container)
+    for cname in containers:
+        destroy(prefixc + cname)
 #    destroy(masterc)
 
 def destroyMasters():
@@ -413,32 +410,28 @@ def increaseInotify():
 def startInfra():
     createBridges()
     increaseInotify()
-    for asn in containers.keys():
-        for container in containers[asn]:
-            cname = asn + sep + container
-            print("Starting " + cname)
-            c = lxc.Container(prefixc + cname)
-            if c.defined:
-                c.start()
-            else:
-                print("Container " + cname + " does not exist ! You need to run \"./mi-lxc.py create\"", file=sys.stderr)
-                exit(1)
+    for cname in containers:
+        print("Starting " + cname)
+        c = lxc.Container(prefixc + cname)
+        if c.defined:
+            c.start()
+        else:
+            print("Container " + cname + " does not exist ! You need to run \"./mi-lxc.py create\"", file=sys.stderr)
+            exit(1)
 
 
 def stopInfra():
-    for asn in containers.keys():
-        for container in containers[asn]:
-            cname = asn + sep + container
-            print("Stopping " + cname)
-            c = lxc.Container(prefixc + cname)
-            c.stop()
+    for cname in containers:
+        print("Stopping " + cname)
+        c = lxc.Container(prefixc + cname)
+        c.stop()
     deleteBridges()
 
 
 def display(c, user):
     # c.attach(lxc.attach_run_command, ["Xnest", "-sss", "-name", "Xnest",
     # "-display", ":0", ":1"])
-    cdisplay = ":" + str(getAllContainers().index(c.name[len(prefixc):]) + 2)
+    cdisplay = ":" + str(containers.index(c.name[len(prefixc):]) + 2)
     hostdisplay = os.getenv("DISPLAY")
     print("Using display " + cdisplay +
           " on " + hostdisplay + " with user " + user)
@@ -492,24 +485,22 @@ def printgraph():
     G2.graph_attr['overlap'] = "false"
     G2.node_attr['style'] = "filled"
 
-    for asn in containers:
-        for c in containers[asn]:
-            G2.add_node("c"+asn+c, color='red', shape='box', label=asn+sep+c)
+    for cname in containers:
+        G2.add_node("c"+cname, color='red', shape='box', label=cname)
 
     for bridge in bridges:
         G2.add_node("b"+bridge, color='green', label=bridge[len(prefixbr):])
 
-    for asn in containers:
-        for c in containers[asn]:
-            global nics
-            for nic in nics[asn+sep+c]['interfaces']:
-                # if nic[0] == lxcbr:
-                #     nicname = lxcbr
-                # else:
-                #     nicname = nic[0]
+    for cname in containers:
+        global nics
+        for nic in nics[cname]['interfaces']:
+            # if nic[0] == lxcbr:
+            #     nicname = lxcbr
+            # else:
+            #     nicname = nic[0]
 
-    #            G2.add_edge(container[len(prefixc):],nicname)
-                G2.add_edge("c"+asn+c,"b"+nic[0], label = nic[1])  # with IPs
+#            G2.add_edge(container[len(prefixc):],nicname)
+            G2.add_edge("c"+cname,"b"+nic[0], label = nic[1])  # with IPs
 
     #G2.write("test.dot")
     #G2.draw("test.png", prog="neato")
@@ -525,17 +516,9 @@ def usage():
 
 def listContainers():
     str = ""
-    for asn in containers:
-        for c in containers[asn]:
-            str += asn + sep + c + ', '
+    for c in containers:
+            str += c + ', '
     return str
-
-def getAllContainers():
-    mycontainers = []
-    for asn in containers:
-        for c in containers[asn]:
-            mycontainers.append(asn + sep + c)
-    return sorted(mycontainers)
 
 def debugData(name,data):
     return
@@ -551,6 +534,7 @@ if __name__ == '__main__':
     json_data = open(config).read()
     data = json.loads(json_data)
     getGlobals(data)
+    data = developTopology(data)
     getContainers(data)
     debugData("Containers", containers)
     getBridges(data)
@@ -563,6 +547,7 @@ if __name__ == '__main__':
     debugData("Masters", masters)
     getMIMasters(data)
     debugData("Used masters", mimasters)
+    getFolders(data)
 
 
     if len(sys.argv) < 2:

@@ -1,11 +1,11 @@
 {
   "comment":".milxc registry AS",
-  "containers": [
-          {"container":"ns",
+  "containers": {
+        "ns":{"container":"ns",
                             "interfaces":[
                             {"bridge":"lan", "address":"10.10.20.10/24"}
                             ],
                             "gateway":"10.10.20.1",
                             "templates":[{"template":"nodhcp", "domain":"reg.milxc", "ns":"10.10.10.10"}]}
-  ]
+  }
 }

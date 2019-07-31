@@ -1,12 +1,12 @@
 {
   "comment":"ROOT-O NS",
-  "containers": [
-    {"container":"rootns",
+  "containers": {
+    "rootns":{"container":"rootns",
                       "interfaces":[
                       {"bridge":"lan", "address":"10.10.0.10/24"}
                       ],
                       "gateway":"10.10.0.1",
                       "templates":[{"template":"rootns"},
                                   {"template":"nodhcp", "domain":"ns-root-o.milxc", "ns":"10.10.10.10"}]}
-  ]
+  }
 }
