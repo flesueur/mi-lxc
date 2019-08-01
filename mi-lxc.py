@@ -44,7 +44,7 @@ def developTopology(data):
             tcontainers = datatemplate["containers"]
             for cname in tcontainers:
                 container = tcontainers[cname]
-                container["folder"]="as/" + gname + "/" + cname
+                container["folder"]="groups/" + gname + "/" + cname
                 container["group"]= gname
                 for key in container.keys():
                     if container[key][0] == "$":
@@ -61,11 +61,11 @@ def developTopology(data):
                 containers[gname+sep+cname]=container
 
         try:
-            json_data = open("as/"+gname+"/local.json").read()
+            json_data = open("groups/"+gname+"/local.json").read()
             localtopology = json.loads(json_data)
             for cname in localtopology["containers"]:
                 container = localtopology["containers"][cname]
-                container["folder"]="as/" + gname + "/" + cname
+                container["folder"]="groups/" + gname + "/" + cname
                 container["group"]= gname
                 try:
                     for iface in container["interfaces"]:
