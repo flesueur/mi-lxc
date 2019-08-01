@@ -24,26 +24,82 @@ def getGlobals(data):
     prefixbr = data["prefix-bridges"]
     return
 
+def merge(c1, c2):
+    #print("merging")
+    if "master" in c2:
+        c1["master"] = c2["master"]
+    c1["templates"] = c2["templates"] + c1["templates"]
+    return c1
+
+def developTopology(data):
+    global topology
+    data["containers"] = {}
+    containers = data["containers"]
+
+    for gname in data["groups"]:
+        group = data["groups"][gname]
+        for template in group["templates"]:
+            json_data = open("templates/groups/"+template["template"]+".json").read()
+            datatemplate = json.loads(json_data)
+            tcontainers = datatemplate["containers"]
+            for cname in tcontainers:
+                container = tcontainers[cname]
+                container["folder"]="groups/" + gname + "/" + cname
+                container["group"]= gname
+                for key in container.keys():
+                    if container[key][0] == "$":
+                        #print("parameter " + container[key])
+                        container[key] = template[key]
+                for targettemplate in container["templates"]:
+                    for key in targettemplate.keys():
+                        if targettemplate[key][0] == "$":
+                            #print("parameter " + targettemplate[key])
+                            try:
+                                targettemplate[key] = template[key]
+                            except KeyError:
+                                targettemplate[key] = ""
+                containers[gname+sep+cname]=container
+
+        try:
+            json_data = open("groups/"+gname+"/local.json").read()
+            localtopology = json.loads(json_data)
+            for cname in localtopology["containers"]:
+                container = localtopology["containers"][cname]
+                container["folder"]="groups/" + gname + "/" + cname
+                container["group"]= gname
+                try:
+                    for iface in container["interfaces"]:
+                        iface["bridge"] = gname + sep + iface["bridge"]
+                except KeyError:
+                    pass
+                if (gname+sep+cname) in data["containers"]:
+                    data["containers"][gname+sep+cname]=merge(data["containers"][gname+sep+cname], container)
+                else:
+                    data["containers"][gname+sep+cname]=container
+        except FileNotFoundError:
+            pass
+
+    topology = data["containers"]
+    return data
 
 def getContainers(data):
-    global containers#, masterc
-    #masterc = prefixc + "master"
-    for container in data["containers"]:
-        containers.append(prefixc + container["container"])
+    global containers
+    for container in data["containers"].keys():
+        containers.append(container)
+    containers.sort()
     return
 
 def getMasters(data):
     global masters
     for master in data["masters"]:
         if not ("status" in master.keys() and master['status'] == "disabled"):
-            #masters[master['name']] = master
             masters.append(master)
     return
 
 
 def getBridges(data):
     global bridges
-    for container in data["containers"]:
+    for container in data["containers"].values():
         for interface in container["interfaces"]:
             if interface["bridge"] != "nat-bridge":
                 bridges.add(prefixbr + interface["bridge"])
@@ -52,8 +108,7 @@ def getBridges(data):
 
 def getNics(data):
     global nics
-    for container in data["containers"]:
-        cname = prefixc + container["container"]
+    for cname, container in data["containers"].items():
         interfaces = []
         for interface in container["interfaces"]:
             iface = interface["bridge"]
@@ -67,26 +122,33 @@ def getNics(data):
     return
 
 
+
 def getMITemplates(data):
     global mitemplates
-    for container in data["containers"]:
-        cname = prefixc + container["container"]
-        # templates = []
+    for cname, container in data["containers"].items():
         if "templates" in container.keys():
-            # for template in container["templates"]:
-            #    templates.append(template["template"])
             mitemplates[cname] = container["templates"]
     return
 
+
+
 def getMIMasters(data):
     global mimasters
-    for container in data["containers"]:
-        cname = prefixc + container["container"]
+    for cname, container in data["containers"].items():
         if "master" in container.keys():
             mimasters[cname] = container["master"]
         #else:   # no entry in mimasters if default master
         #    mimasters[cname] = "default"
     return
+
+def getFolders(data):
+    global folders
+    for cname, container in data["containers"].items():
+        folders[cname] = container["folder"]
+    return
+
+
+
 
 def getInterpreter(file):
     script = open(file)
@@ -95,16 +157,27 @@ def getInterpreter(file):
     script.close()
     return interpreter
 
+def getMasterFamily(name):
+    if name in mimasters.keys():
+        mastername = mimasters[name]
+    else: # use default master
+        mastername = masters[0]['name']
+    for master in masters:
+        if master["name"] == mastername:
+            return master["family"]
+    print ("No master family found for " + name)
+    exit(1)
 
-config = "setup.json"
+config = "global.json"
 
 prefixc = "lxc-infra-"
 prefixbr = "lxc"
 lxcbr = "lxcbr0"
+sep = "-"
 
 # Containers
-# masterc = ""
 containers = []
+topology = {}
 
 # Bridges
 bridges = set()
@@ -112,6 +185,8 @@ bridges = set()
 nics = {}
 
 mitemplates = {}
+
+folders = {}
 
 masters = [] # list of Masters
 mimasters = {} # dict of master used by containers
@@ -128,7 +203,7 @@ def createMaster(master):
     if master['backend'] != 'lxc':
         print("Can't create a master using " + master['backend'] + " backend, only lxc backend supported currently !", file=sys.stderr)
         exit(1)
-    c = lxc.Container(prefixc + "master-" + master['name'])
+    c = lxc.Container(prefixc + "masters" + sep + master['name'])
     if c.defined:
         print("Master container " + master['name'] + " already exists", file=sys.stdout)
         return c
@@ -138,7 +213,7 @@ def createMaster(master):
         print("Failed to create the container rootfs", file=sys.stderr)
         sys.exit(1)
     configure(c)
-    provision(c)
+    provision(c, isMaster=True)
     print("Master " + master['name'] + " created successfully")
     return c
 
@@ -150,11 +225,11 @@ def updateMasters():
 
 def updateMaster(master):
     print("Updating master " + master['name'])
-    c = lxc.Container(prefixc + "master-" + master['name'])
+    c = lxc.Container(prefixc + "masters" + sep + master['name'])
     if c.defined:
         print("Master container " +master['name']+ " exists, updating...", file=sys.stdout)
-        folder = c.name[len(prefixc):]
-        filesdir = os.path.dirname(os.path.realpath(__file__)) + "/files/" + folder + "/update.sh"
+        path = "masters/" + master['name']
+        filesdir = os.path.dirname(os.path.realpath(__file__)) + "/" + path + "/update.sh"
         if not os.path.isfile(filesdir):
             print("\033[31mNo update script for master !\033[0m", file=sys.stderr)
             c.stop()
@@ -166,7 +241,7 @@ def updateMaster(master):
             sys.exit(1)
 
         ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["MILXCGUARD=TRUE"] + [
-                        getInterpreter(filesdir), "/mnt/lxc/" + folder + "/update.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+                        getInterpreter(filesdir), "/mnt/lxc/" + path + "/update.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
         if ret != 0:
             print("\033[31mUpdating of master failed (" + str(ret) + "), exiting...\033[0m", file=sys.stderr)
             c.stop()
@@ -180,13 +255,12 @@ def updateMaster(master):
 def create(container):
     if container in mimasters.keys():
         mastername = mimasters[container]
-        mastercontainer = lxc.Container(prefixc + "master-" + mimasters[container])
     else: # use default master
         mastername = masters[0]['name']
-        mastercontainer = lxc.Container(prefixc + "master-" + masters[0]['name'])
+    mastercontainer = lxc.Container(prefixc + "masters" + sep + mastername)
     if mastercontainer.defined:
         print("Cloning " + container + " from " + mastercontainer.name)
-        newclone = mastercontainer.clone(container, flags=lxc.LXC_CLONE_SNAPSHOT)
+        newclone = mastercontainer.clone(prefixc + container, flags=lxc.LXC_CLONE_SNAPSHOT)
         return newclone
     else:
         print("Invalid master container \"" + mastername + "\" for container \"" + container + "\"", file=sys.stderr)
@@ -212,7 +286,7 @@ def configure(c):
         "lxc.mount.entry", "/tmp/.X11-unix tmp/.X11-unix none ro,bind,create=dir 0 0")
     filesdir = os.path.dirname(os.path.realpath(__file__))
     c.append_config_item(
-        "lxc.mount.entry", filesdir.replace(" ", "\\040") + "/files mnt/lxc none ro,bind,create=dir 0 0")
+        "lxc.mount.entry", filesdir.replace(" ", "\\040") + " mnt/lxc none ro,bind,create=dir 0 0")
     try:  # AppArmor is installed and must be configured
         c.get_config_item("lxc.apparmor.profile")
         # may be aa_profile sometimes ?
@@ -228,53 +302,40 @@ def configure(c):
     c.save_config()
 
 
-def provision(c):
-    # c = lxc.Container(master)
-    folder = c.name[len(prefixc):]
+def provision(c, isMaster=False):
+    miname = c.name[len(prefixc):]
+    if isMaster:
+        path = "masters/" + miname[len("masters"+sep):]
+    else:
+        path = folders[miname]
     c.start()
     if not c.get_ips(timeout=60):
         print("Container seems to have failed to start (no IP)")
         sys.exit(1)
 
-    # if c.name in mitemplates.keys():
-    #     for template in mitemplates[c.name]:
-    #         if (template["order"] == "before"):
-    #             args = []
-    #             for arg in template:
-    #                 args.append(arg+"="+template[arg])
-    # c.attach_wait(lxc.attach_run_command, ["env"]+args+["bash",
-    # "/mnt/lxc/templates/"+template["template"]+"/provision.sh"],
-    # env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
-
-    # time.sleep(2)
-    #filesdir = os.path.dirname(os.path.realpath(__file__)).replace(" ", "\\040") + "/files/" + folder + "/provision.sh"
-    filesdir = os.path.dirname(os.path.realpath(__file__)) + "/files/" + folder + "/provision.sh"
+    filesdir = os.path.dirname(os.path.realpath(__file__)) + "/" + path + "/provision.sh"
     if os.path.isfile(filesdir):
         ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["MILXCGUARD=TRUE", "HOSTLANG="+os.getenv("LANG")] + [
-                        getInterpreter(filesdir), "/mnt/lxc/" + folder + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+                        getInterpreter(filesdir), "/mnt/lxc/" + path + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
         if ret != 0:
-            print("\033[31mProvisioning of " + folder + " failed (" + str(ret) + "), exiting...\033[0m")
+            print("\033[31mProvisioning of " + path + " failed (" + str(ret) + "), exiting...\033[0m")
             c.stop()
-            #c.destroy()
+            c.destroy()
             exit(1)
     else:
-#        ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["http_proxy=http://"+proxy] +[
-#                        "bash", "/mnt/lxc/" + folder + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
-    #if ret > 255:
-        print("No Provisioning script for " + folder)
+        print("No Provisioning script for " + path)
 
-
-    if c.name in mitemplates.keys():
-        for template in mitemplates[c.name]:
-            filesdir = os.path.dirname(os.path.realpath(__file__)) + "/files/templates/" + template["template"] + "/provision.sh"
-            # if (template["order"] == "after"):
+    family = getMasterFamily(miname)
+    if miname in mitemplates.keys():
+        for template in mitemplates[miname]:
+            filesdir = os.path.dirname(os.path.realpath(__file__)) + "/templates/hosts/" + family + "/" + template["template"] + "/provision.sh"
             args = ["MILXCGUARD=TRUE", "HOSTLANG="+os.getenv("LANG")]
             for arg in template:
                 args.append(arg + "=" + template[arg])
             ret = c.attach_wait(lxc.attach_run_command, ["env"] + args + [
-                                getInterpreter(filesdir), "/mnt/lxc/templates/" + template["template"] + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+                                getInterpreter(filesdir), "/mnt/lxc/templates/hosts/" + family + "/" + template["template"] + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
             if ret != 0: # and ret != 127:
-                print("\033[31mProvisioning of " + folder + "/" + template["template"] + " failed (" + str(ret) + "), exiting...\033[0m")
+                print("\033[31mProvisioning of " + miname + "/" + template["template"] + " failed (" + str(ret) + "), exiting...\033[0m")
                 c.stop()
                 c.destroy()
                 exit(1)
@@ -284,8 +345,9 @@ def provision(c):
 
 def configNet(c):
     c.clear_config_item("lxc.network")
-    cnics = nics[c.name]['interfaces']
-    print("Configuring NICs of " + c.name + " to " + str(cnics))
+    miname = c.name[len(prefixc):]
+    cnics = nics[miname]['interfaces']
+    print("Configuring NICs of " + miname + " to " + str(cnics))
     c.clear_config_item("lxc.network")
     i = 0
     for cnic in cnics:
@@ -303,8 +365,8 @@ def configNet(c):
             #if (getGateway(v) == nics[c.name]['gateway']):
             #    c.network[i].ipv4_gateway = getGateway(v)
             try:
-                if ipaddress.ip_address(nics[c.name]['gateway']) in ipaddress.ip_network(v,strict=False):
-                    c.network[i].ipv4_gateway = nics[c.name]['gateway']
+                if ipaddress.ip_address(nics[miname]['gateway']) in ipaddress.ip_network(v,strict=False):
+                    c.network[i].ipv4_gateway = nics[miname]['gateway']
             except ValueError:  #gateway is not a valid address, no gateway to set
                 pass
         # c.network[i].script_up = "upscript"
@@ -318,26 +380,27 @@ def configNet(c):
 
 def createInfra():
     createMasters()
-    for container in containers:
-        c = lxc.Container(container)
+    for cname in containers:
+        c = lxc.Container(prefixc + cname)
         if c.defined:
-            print("Container " + container + " already exists", file=sys.stderr)
+            print("Container " + cname + " already exists", file=sys.stderr)
         else:
             flushArp()
-            newc = create(container)
-            provision(newc)
+            newc = create(cname)
+            provision(newc, )
             configNet(newc)
     print("Infrastructure created successfully !")
 
 
 def destroyInfra():
-    for container in containers:
-        destroy(container)
+    for cname in containers:
+        destroy(prefixc + cname)
 #    destroy(masterc)
 
 def destroyMasters():
     for master in masters:
-        destroy(prefixc + "master-" + master['name'])
+        destroy(prefixc + "masters" + sep + master['name'])
+
 
 def increaseInotify():
     print("Increasing inotify kernel parameters through sysctl")
@@ -347,20 +410,20 @@ def increaseInotify():
 def startInfra():
     createBridges()
     increaseInotify()
-    for container in containers:
-        print("Starting " + container)
-        c = lxc.Container(container)
+    for cname in containers:
+        print("Starting " + cname)
+        c = lxc.Container(prefixc + cname)
         if c.defined:
             c.start()
         else:
-            print("Container " + container + " does not exist ! You need to run \"./mi-lxc.py create\"", file=sys.stderr)
+            print("Container " + cname + " does not exist ! You need to run \"./mi-lxc.py create\"", file=sys.stderr)
             exit(1)
 
 
 def stopInfra():
-    for container in containers:
-        print("Stopping " + container)
-        c = lxc.Container(container)
+    for cname in containers:
+        print("Stopping " + cname)
+        c = lxc.Container(prefixc + cname)
         c.stop()
     deleteBridges()
 
@@ -368,7 +431,7 @@ def stopInfra():
 def display(c, user):
     # c.attach(lxc.attach_run_command, ["Xnest", "-sss", "-name", "Xnest",
     # "-display", ":0", ":1"])
-    cdisplay = ":" + str(containers.index(c.name) + 2)
+    cdisplay = ":" + str(containers.index(c.name[len(prefixc):]) + 2)
     hostdisplay = os.getenv("DISPLAY")
     print("Using display " + cdisplay +
           " on " + hostdisplay + " with user " + user)
@@ -422,22 +485,22 @@ def printgraph():
     G2.graph_attr['overlap'] = "false"
     G2.node_attr['style'] = "filled"
 
-    for c in containers:
-        G2.add_node("c"+c, color='red', shape='box', label=c[len(prefixc):])
+    for cname in containers:
+        G2.add_node("c"+cname, color='red', shape='box', label=cname)
 
     for bridge in bridges:
         G2.add_node("b"+bridge, color='green', label=bridge[len(prefixbr):])
 
-    for container in containers:
+    for cname in containers:
         global nics
-        for nic in nics[container]['interfaces']:
+        for nic in nics[cname]['interfaces']:
             # if nic[0] == lxcbr:
             #     nicname = lxcbr
             # else:
             #     nicname = nic[0]
 
 #            G2.add_edge(container[len(prefixc):],nicname)
-            G2.add_edge("c"+container,"b"+nic[0], label = nic[1])  # with IPs
+            G2.add_edge("c"+cname,"b"+nic[0], label = nic[1])  # with IPs
 
     #G2.write("test.dot")
     #G2.draw("test.png", prog="neato")
@@ -453,9 +516,13 @@ def usage():
 
 def listContainers():
     str = ""
-    for container in containers:
-        str += container[len(prefixc):] + ', '
+    for c in containers:
+            str += c + ', '
     return str
+
+def debugData(name,data):
+    return
+    print(name + ": " + str(data) + "\n\n")
 
 if __name__ == '__main__':
     # parser = argparse.ArgumentParser(description='Launches mini-internet')
@@ -467,18 +534,21 @@ if __name__ == '__main__':
     json_data = open(config).read()
     data = json.loads(json_data)
     getGlobals(data)
+    data = developTopology(data)
     getContainers(data)
+    debugData("Containers", containers)
     getBridges(data)
+    debugData("Bridges", bridges)
     getNics(data)
+    debugData("Nics", nics)
     getMITemplates(data)
+    debugData("Templates", mitemplates)
     getMasters(data)
+    debugData("Masters", masters)
     getMIMasters(data)
+    debugData("Used masters", mimasters)
+    getFolders(data)
 
-#    print(containers)
-#    print(bridges)
-#    print(nics)
-#    print(mitemplates)
-#    print(masters)
 
     if len(sys.argv) < 2:
         usage()
@@ -495,10 +565,10 @@ if __name__ == '__main__':
     elif (command == "destroy"):
         if len(sys.argv) > 2:
             container = sys.argv[2]
-            if (prefixc + container) in containers:
-                destroy(prefixc + container)
-            else:
-                print("Unexisting container " + container + ", valid containers are " + listContainers(), file=sys.stderr)
+            #if (prefixc + container) in containers:
+            destroy(prefixc + container)
+            #else:
+            #    print("Unexisting container " + container + ", valid containers are " + listContainers(), file=sys.stderr)
         else:
             destroyInfra()
     elif (command == "start"):
@@ -525,16 +595,15 @@ if __name__ == '__main__':
             run_command = [
                 "env", "TERM=" + os.getenv("TERM"), "/bin/su", "-", user]
 
-        if (prefixc + container) in containers:
-            lxccontainer = lxc.Container(prefixc + container)
-            if lxccontainer.running:
-                lxccontainer.attach_wait(lxc.attach_run_command, run_command, env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
-            else:
-                print("Container " + container + " is not running. You need to run \"./mi-lxc.py start\" before attaching to a container", file=sys.stderr)
-                exit(1)
-        else:
+        lxccontainer = lxc.Container(prefixc + container)
+        if not lxccontainer.defined:
             print("Unexisting container " + container + ", valid containers are " + listContainers(), file=sys.stderr)
             exit(1)
+        if not lxccontainer.running:
+            print("Container " + container + " is not running. You need to run \"./mi-lxc.py start\" before attaching to a container", file=sys.stderr)
+            exit(1)
+        lxccontainer.attach_wait(lxc.attach_run_command, run_command, env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+
     elif (command == "display"):
         if len(sys.argv) < 3:
             usage()
@@ -547,16 +616,14 @@ if __name__ == '__main__':
             user = "debian"
             container = user_container[0]
 
-        if (prefixc + container) in containers:
-            lxccontainer = lxc.Container(prefixc + container)
-            if lxccontainer.running:
-                display(lxccontainer, user)
-            else:
-                print("Container " + container + " is not running. You need to run \"./mi-lxc.py start\" before attaching to a container", file=sys.stderr)
-                exit(1)
-        else:
+        lxccontainer = lxc.Container(prefixc + container)
+        if not lxccontainer.defined:
             print("Unexisting container " + container + ", valid containers are " + listContainers(), file=sys.stderr)
             exit(1)
+        if not lxccontainer.running:
+            print("Container " + container + " is not running. You need to run \"./mi-lxc.py start\" before attaching to a container", file=sys.stderr)
+            exit(1)
+        display(lxccontainer, user)
     elif (command == "updatemaster"):
         updateMasters()
     elif (command == "destroymaster"):
