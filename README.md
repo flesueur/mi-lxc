@@ -90,8 +90,8 @@ The address space is explained in `MI-IANA.txt` and the global topology is defin
 
 Groups of hosts are described through:
 
-* group templates in `templates/groups`, which typically provides a `as-bgp.json` template to setup an AS
-* enriched with specifications in `groups/<groupname>/local.json`
+* group templates in `templates/groups/<groupname>/local.json`, which typically provides a `as-bgp` group template to setup an AS
+* enriched with local specifications in `groups/<groupname>/local.json`
 
 Finally, hosts are described and provisonned through:
 
