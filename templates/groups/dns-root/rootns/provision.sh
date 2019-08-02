@@ -22,6 +22,10 @@ sed -i -e 's/^\.\s.*NS.*[a-m].root-servers.net.*//' /etc/nsd/root.zone
 echo -e ".	518400	IN	NS	o.root-servers.net
 o.root-servers.net	518400	IN	A 10.10.0.10" >> /etc/nsd/root.zone
 
+echo -e ".	518400	IN	NS	p.root-servers.net
+p.root-servers.net	518400	IN	A 10.10.1.10" >> /etc/nsd/root.zone
+
+
 # add .milxc TLD served by 10.10.20.10
 echo -e "milxc.	518400	IN	NS	ns.milxc.
 ns.milxc.	518400	IN	A 10.10.20.10" >> /etc/nsd/root.zone

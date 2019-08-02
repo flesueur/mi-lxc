@@ -7,6 +7,7 @@ import subprocess
 import json
 import re
 import ipaddress
+import pprint
 
 def flushArp():
     os.system("ip neigh flush dev " + lxcbr)
@@ -28,29 +29,49 @@ def merge(c1, c2):
     #print("merging")
     if "master" in c2:
         c1["master"] = c2["master"]
+    c1["folder"] = c2["folder"]
     c1["templates"] = c2["templates"] + c1["templates"]
     return c1
 
 def developTopology(data):
     global topology
-    data["containers"] = {}
-    containers = data["containers"]
+    containers = {}
 
     for gname in data["groups"]:
         group = data["groups"][gname]
+
         for template in group["templates"]:
-            json_data = open("templates/groups/"+template["template"]+".json").read()
+            json_data = open("templates/groups/"+template["template"]+"/local.json").read()
             datatemplate = json.loads(json_data)
             tcontainers = datatemplate["containers"]
+
             for cname in tcontainers:
                 container = tcontainers[cname]
                 container["folder"]="groups/" + gname + "/" + cname
                 container["group"]= gname
+
+                try:
+                    for iface in container["interfaces"]:
+                        if not "$" in iface["bridge"]:
+                            iface["bridge"] = gname + sep + iface["bridge"]
+                except:
+                    pass
+
                 for key in container.keys():
                     if container[key][0] == "$":
-                        #print("parameter " + container[key])
                         container[key] = template[key]
+
+                try:
+                    for iface in container["interfaces"]:
+                        for key in iface:
+                            if iface[key][0] == "$":
+                                iface[key] = template[key]
+                except KeyError:
+                    pass
+
                 for targettemplate in container["templates"]:
+                    if os.path.isfile(os.path.dirname(os.path.realpath(__file__)) + "/templates/groups/" + template["template"] + "/" + targettemplate["template"] + "/provision.sh"):
+                        targettemplate["folder"] = "templates/groups/" + template["template"] + "/" + targettemplate["template"]
                     for key in targettemplate.keys():
                         if targettemplate[key][0] == "$":
                             #print("parameter " + targettemplate[key])
@@ -72,14 +93,15 @@ def developTopology(data):
                         iface["bridge"] = gname + sep + iface["bridge"]
                 except KeyError:
                     pass
-                if (gname+sep+cname) in data["containers"]:
-                    data["containers"][gname+sep+cname]=merge(data["containers"][gname+sep+cname], container)
+                if (gname+sep+cname) in containers:
+                    containers[gname+sep+cname]=merge(containers[gname+sep+cname], container)
                 else:
-                    data["containers"][gname+sep+cname]=container
+                    containers[gname+sep+cname]=container
         except FileNotFoundError:
             pass
 
-    topology = data["containers"]
+    data["containers"] = containers
+    topology = containers
     return data
 
 def getContainers(data):
@@ -328,12 +350,17 @@ def provision(c, isMaster=False):
     family = getMasterFamily(miname)
     if miname in mitemplates.keys():
         for template in mitemplates[miname]:
-            filesdir = os.path.dirname(os.path.realpath(__file__)) + "/templates/hosts/" + family + "/" + template["template"] + "/provision.sh"
+            if "folder" in template.keys():
+                path = template["folder"]
+            else:
+                path = "templates/hosts/" + family + "/" + template["template"]
+
+            filesdir = os.path.dirname(os.path.realpath(__file__)) + "/" + path + "/provision.sh"
             args = ["MILXCGUARD=TRUE", "HOSTLANG="+os.getenv("LANG")]
             for arg in template:
                 args.append(arg + "=" + template[arg])
             ret = c.attach_wait(lxc.attach_run_command, ["env"] + args + [
-                                getInterpreter(filesdir), "/mnt/lxc/templates/hosts/" + family + "/" + template["template"] + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+                                getInterpreter(filesdir), "/mnt/lxc/" + path + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
             if ret != 0: # and ret != 127:
                 print("\033[31mProvisioning of " + miname + "/" + template["template"] + " failed (" + str(ret) + "), exiting...\033[0m")
                 c.stop()
@@ -520,9 +547,20 @@ def listContainers():
             str += c + ', '
     return str
 
+def terminal_size():
+    import fcntl, termios, struct
+    h, w, hp, wp = struct.unpack('HHHH',
+        fcntl.ioctl(0, termios.TIOCGWINSZ,
+        struct.pack('HHHH', 0, 0, 0, 0)))
+    return w, h
+
 def debugData(name,data):
     return
-    print(name + ": " + str(data) + "\n\n")
+    w,h = terminal_size()
+    pp = pprint.PrettyPrinter(indent=2, width=w)
+    print(name + ": ")
+    pp.pprint(data)
+    print("\n\n")
 
 if __name__ == '__main__':
     # parser = argparse.ArgumentParser(description='Launches mini-internet')
@@ -535,6 +573,7 @@ if __name__ == '__main__':
     data = json.loads(json_data)
     getGlobals(data)
     data = developTopology(data)
+    debugData("Data", data)
     getContainers(data)
     debugData("Containers", containers)
     getBridges(data)

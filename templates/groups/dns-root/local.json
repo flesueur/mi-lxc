@@ -1,0 +1,12 @@
+{
+  "comment":"ROOT DNS Template",
+  "containers": {
+    "rootns":{
+                      "interfaces":[
+                      {"bridge":"lan", "address":"$address"}
+                      ],
+                      "gateway":"$gateway",
+                      "templates":[{"template":"rootns"},
+                                  {"template":"nodhcp", "domain":"$domain", "ns":"10.10.10.10"}]}
+  }
+}
