@@ -43,7 +43,7 @@
         ]
     }]},
     "target": {
-      "templates":[{"template":"as-bgp", "asn":"10", "asdev":"eth1", "neighbors":"10.180.0.1 as 30",
+      "templates":[{"template":"as-bgp-debian", "asn":"10", "asdev":"eth1", "neighbors":"10.180.0.1 as 30",
       "interfaces":[
         {"bridge":"transit-a", "address":"10.180.0.10/24"},
         {"bridge":"target-lan", "address":"10.100.0.1/16"}

@@ -1,0 +1,10 @@
+{
+  "comment":"AS BGP template",
+  "containers": {"router":
+                  { "interfaces": "$interfaces",
+                    "gateway":"None",
+                    "master":"buster",
+                    "templates":[{"template":"bgprouter", "asn":"$asn", "neighbors":"$neighbors", "asdev":"$asdev"},
+                                {"template":"nodhcp", "domain":"milxc", "ns":"10.10.10.10"}]}
+    }
+}
