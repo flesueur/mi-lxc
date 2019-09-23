@@ -323,22 +323,35 @@ def configure(c):
 
     c.save_config()
 
+def clearnet(c):
+    c.clear_config_item("lxc.network")
+    # c.network.remove(0)
+    c.network.add("veth")
+    c.network[0].link = lxcbr
+    c.network[0].flags = "up"
 
-def provision(c, isMaster=False):
+def provision(c, isMaster=False, isRenet=False):
     miname = c.name[len(prefixc):]
+
+    if isRenet:
+        scriptname="/renet.sh"
+    else:
+        scriptname="/provision.sh"
+
     if isMaster:
         path = "masters/" + miname[len("masters"+sep):]
     else:
         path = folders[miname]
+
     c.start()
-    if not c.get_ips(timeout=60):
+    if not isRenet and not c.get_ips(timeout=60):
         print("Container seems to have failed to start (no IP)")
         sys.exit(1)
 
-    filesdir = os.path.dirname(os.path.realpath(__file__)) + "/" + path + "/provision.sh"
+    filesdir = os.path.dirname(os.path.realpath(__file__)) + "/" + path + scriptname
     if os.path.isfile(filesdir):
         ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["MILXCGUARD=TRUE", "HOSTLANG="+os.getenv("LANG")] + [
-                        getInterpreter(filesdir), "/mnt/lxc/" + path + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+                        getInterpreter(filesdir), "/mnt/lxc/" + path + scriptname], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
         if ret != 0:
             print("\033[31mProvisioning of " + path + " failed (" + str(ret) + "), exiting...\033[0m")
             c.stop()
@@ -355,17 +368,20 @@ def provision(c, isMaster=False):
             else:
                 path = "templates/hosts/" + family + "/" + template["template"]
 
-            filesdir = os.path.dirname(os.path.realpath(__file__)) + "/" + path + "/provision.sh"
-            args = ["MILXCGUARD=TRUE", "HOSTLANG="+os.getenv("LANG")]
-            for arg in template:
-                args.append(arg + "=" + template[arg])
-            ret = c.attach_wait(lxc.attach_run_command, ["env"] + args + [
-                                getInterpreter(filesdir), "/mnt/lxc/" + path + "/provision.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
-            if ret != 0: # and ret != 127:
-                print("\033[31mProvisioning of " + miname + "/" + template["template"] + " failed (" + str(ret) + "), exiting...\033[0m")
-                c.stop()
-                c.destroy()
-                exit(1)
+            filesdir = os.path.dirname(os.path.realpath(__file__)) + "/" + path + scriptname
+            if os.path.isfile(filesdir):
+                args = ["MILXCGUARD=TRUE", "HOSTLANG="+os.getenv("LANG")]
+                for arg in template:
+                    args.append(arg + "=" + template[arg])
+                ret = c.attach_wait(lxc.attach_run_command, ["env"] + args + [
+                                    getInterpreter(filesdir), "/mnt/lxc/" + path + scriptname], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+                if ret != 0: # and ret != 127:
+                    print("\033[31mProvisioning of " + miname + "/" + template["template"] + " failed (" + str(ret) + "), exiting...\033[0m")
+                    c.stop()
+                    c.destroy()
+                    exit(1)
+            else:
+                print("No Provisioning script for " + path)
 
     c.stop()
 
@@ -417,6 +433,20 @@ def createInfra():
             provision(newc, )
             configNet(newc)
     print("Infrastructure created successfully !")
+
+def renetInfra():
+    for cname in containers:
+        c = lxc.Container(prefixc + cname)
+        if not c.defined:
+            print("Container " + cname + " does not exist", file=sys.stderr)
+            exit(1)
+        else:
+            flushArp()
+            clearnet(c)
+            provision(c, isRenet=True)
+            c.clear_config_item("lxc.network")
+            configNet(c)
+    print("Infrastructure reneted successfully !")
 
 
 def destroyInfra():
@@ -538,7 +568,7 @@ def printgraph():
 
 def usage():
     print(
-        "No argument given, usage with create, destroy, destroymaster, updatemaster, start, stop, attach [user@]<name> [command], display [user@]<name>, print.\nNames are ", end='')
+        "No argument given, usage with create, renet, destroy, destroymaster, updatemaster, start, stop, attach [user@]<name> [command], display [user@]<name>, print.\nNames are ", end='')
     print(listContainers())
 
 def listContainers():
@@ -669,5 +699,7 @@ if __name__ == '__main__':
         destroyMasters()
     elif (command == "print"):
         printgraph()
+    elif (command == "renet"):
+        renetInfra()
     else:
         usage()
