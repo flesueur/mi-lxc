@@ -68,7 +68,7 @@ The `mi-lxc.py` script generates and uses containers (as *root*, since it manipu
 * `./mi-lxc.py start          # Start the generated infrastructure  (stop to stop it)`
 * `./mi-lxc.py attach [user@]<name> [command]  # Executes [command] in the container <name> as user [user]. [command] and [user] are optional; if not specified, user is root and command is an interactive shell.`
 * `./mi-lxc.py display [user@]<name> # X11 access to the container <name>. Default user is debian`
-* `./mi-lxc.py renet         # Updates containers network interfaces and setups to reflect network topology changes (global.json/local.json)`
+* `./mi-lxc.py renet         # Updates containers network interfaces and setups to reflect topology changes (global.json/local.json)`
 * `./mi-lxc.py                # Usage and list of container names`
 * `./mi-lxc.py destroy && ./mi-lxc.py destroymaster   # Destroys everything (master containers and all linked containers)`
 
