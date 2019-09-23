@@ -15,12 +15,18 @@ apt-get update
 DEB_VERSION=`cat /etc/debian_version | cut -d'.' -f1`
 if [ $DEB_VERSION -eq "10" ] # DEB 10 aka Buster
 then
-  DEBIAN_FRONTEND=noninteractive apt-get install -y unbound dovecot-imapd proftpd apt-transport-https wget prelude-utils libprelude-dev build-essential php7.3-mbstring php7.3
+  DEBIAN_FRONTEND=noninteractive apt-get install -y nsd dovecot-imapd proftpd apt-transport-https wget prelude-utils libprelude-dev build-essential php7.3-mbstring php7.3
 else # DEB 9 aka stretch
-  DEBIAN_FRONTEND=noninteractive apt-get install -y unbound dovecot-imapd proftpd apt-transport-https wget libprelude2 libprelude-dev build-essential  php7.0-mbstring php7.0
+  DEBIAN_FRONTEND=noninteractive apt-get install -y nsd dovecot-imapd proftpd apt-transport-https wget libprelude2 libprelude-dev build-essential  php7.0-mbstring php7.0
 fi
 
-cp dns.conf /etc/unbound/unbound.conf.d/
+# DNS server
+echo -e "zone:
+	name: \"target.milxc.\"
+	zonefile: \"target.milxc.zone\"
+" > /etc/nsd/nsd.conf
+
+cp dns.conf /etc/nsd/target.milxc.zone
 
 #useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 commercial` commercial || true
 #addgroup commercial mail
