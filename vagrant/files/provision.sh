@@ -15,7 +15,9 @@ DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
 DEBIAN_FRONTEND=noninteractive apt-get install -y apt-cacher-ng
 echo "Acquire::http::Proxy \"http://127.0.0.1:3142\";" > /etc/apt/apt.conf.d/01proxy;  # utilisation de apt-cacher-ng
-DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-`uname -r` curl dkms apt-cacher-ng python3-pygraphviz python3-pil imagemagick linux-headers-amd64 curl git lxc python3-lxc apache2 vim xfce4 lightdm firefox-esr gnome-terminal tcpdump dsniff whois postgresql wireshark dkms net-tools zerofree # keyboard-configuration  wireshark
+#data=`uname -r`
+#arch=${data##*-}
+DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-`dpkg --print-architecture` curl dkms apt-cacher-ng python3-pygraphviz python3-pil imagemagick linux-headers-amd64 curl git lxc python3-lxc apache2 vim xfce4 lightdm firefox-esr gnome-terminal tcpdump dsniff whois postgresql wireshark dkms net-tools zerofree # keyboard-configuration  wireshark
 apt-get clean
 # linux-headers-4.9.0-7-amd64 firmware-atheros firmware-misc-nonfree
 
