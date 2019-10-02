@@ -37,3 +37,13 @@ echo "listen = 10.100.0.1" >> /etc/prelude-manager/prelude-manager.conf
 # only for stretch
 sed -i -e "s/RUN=no/RUN=yes/" /etc/default/suricata
 systemctl enable suricata
+
+
+# Firewall setup
+echo -e '#!/bin/sh
+iptables -P FORWARD DROP
+iptables -A FORWARD -i eth0 -o eth1 -d 10.100.1.2 -j ACCEPT
+iptables -A FORWARD -i eth0 -o eth1 -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
+exit 0' > /etc/rc.local
+chmod +x /etc/rc.local
