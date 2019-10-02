@@ -26,6 +26,7 @@ VERSION=`curl https://download.virtualbox.org/virtualbox/LATEST-STABLE.TXT`
 curl https://download.virtualbox.org/virtualbox/$VERSION/VBoxGuestAdditions_$VERSION.iso -o /tmp/vbox.iso
 mount -o loop /tmp/vbox.iso /mnt
 /mnt/VBoxLinuxAdditions.run || true # vboxsf module will fail to load before reboot, expected behavior
+/sbin/rcvboxadd quicksetup all || true
 
 # Localisation du $LANG, en par défaut, timezone Paris
 if [ -z $HOSTLANG ] ; then
