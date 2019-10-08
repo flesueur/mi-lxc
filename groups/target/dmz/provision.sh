@@ -44,7 +44,7 @@ wget https://github.com/splitbrain/dokuwiki/archive/release_stable_2018-04-22a.t
 tar zxf /tmp/dokuwiki.tar.gz -C /var/www/html --strip 1
 echo "sh      application/x-sh" >> /var/www/html/conf/mime.conf
 PASS=`mkpasswd -5 superman`
-echo "admin:$PASS:admin:admin@target.virt:admin,user" >> /var/www/html/conf/users.auth.php
+echo "admin:$PASS:admin:admin@target.milxc:admin,user" >> /var/www/html/conf/users.auth.php
 echo "* @ALL  1" > /var/www/html/conf/acl.auth.php
 echo "* @user  8" >> /var/www/html/conf/acl.auth.php
 cp doku/local.php /var/www/html/conf/
