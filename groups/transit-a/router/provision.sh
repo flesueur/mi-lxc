@@ -18,6 +18,10 @@ rc-update add local
 # keep DHCP on eth0
 touch /etc/network/keepdhcp
 
+# Force lxc bridged interface metric (else, it grows to 200+interface_index, which can be large with successive  stop/start)
+# This metric must be lower than the one exported by BGP for the default route (static part below)
+mkdir /etc/udhcpc
+echo "IF_METRIC=200" > /etc/udhcpc/udhcpc.conf
 
 #echo "supersede domain-name-servers 10.10.10.10;" >> /etc/dhcp/dhclient.conf
 #echo "supersede domain-name \"internet.milxc\";" >> /etc/dhcp/dhclient.conf
