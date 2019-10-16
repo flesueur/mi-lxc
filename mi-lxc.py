@@ -299,7 +299,7 @@ def destroy(container):
 
 def configure(c):
     # c = lxc.Container(master)
-    c.clear_config_item("lxc.network")
+    c.clear_config_item("lxc.net")
     # c.network.remove(0)
     c.network.add("veth")
     c.network[0].link = lxcbr
@@ -324,7 +324,7 @@ def configure(c):
     c.save_config()
 
 def clearnet(c):
-    c.clear_config_item("lxc.network")
+    c.clear_config_item("lxc.net")
     # c.network.remove(0)
     c.network.add("veth")
     c.network[0].link = lxcbr
@@ -387,11 +387,10 @@ def provision(c, isMaster=False, isRenet=False):
 
 
 def configNet(c):
-    c.clear_config_item("lxc.network")
+    c.clear_config_item("lxc.net")
     miname = c.name[len(prefixc):]
     cnics = nics[miname]['interfaces']
     print("Configuring NICs of " + miname + " to " + str(cnics))
-    c.clear_config_item("lxc.network")
     i = 0
     for cnic in cnics:
         k = cnic[0]
@@ -404,7 +403,7 @@ def configNet(c):
             except:
                 # c.append_config_item("lxc.network."+str(i)+".ipv4", v)
                 c.append_config_item(
-                    "lxc.network." + str(i) + ".ipv4.address", v)
+                    "lxc.net." + str(i) + ".ipv4.address", v)
             #if (getGateway(v) == nics[c.name]['gateway']):
             #    c.network[i].ipv4_gateway = getGateway(v)
             try:
@@ -444,7 +443,7 @@ def renetInfra():
             flushArp()
             clearnet(c)
             provision(c, isRenet=True)
-            c.clear_config_item("lxc.network")
+            c.clear_config_item("lxc.net")
             configNet(c)
     print("Infrastructure reneted successfully !")
 
