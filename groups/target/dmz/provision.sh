@@ -51,11 +51,6 @@ cp doku/local.php /var/www/html/conf/
 cp doku/start.txt /var/www/html/data/pages/
 chown -R www-data /var/www/html/*
 
-# Seulement dans htmlold/conf: acl.auth.php
-# Seulement dans htmlold/conf: local.php
-# Seulement dans htmlold/conf: plugins.local.php
-# Seulement dans htmlold/conf: users.auth.php
-
 
 # Install de OSSEC avec support prelude
 cd /tmp
@@ -71,7 +66,7 @@ sed -i -e 's/\/var\/www\/logs\/error_log/\/var\/log\/apache2\/error.log/' /var/o
 sed -i -e 's/<\/global>/<prelude_output>no<\/prelude_output>\n<prelude_profile>OSSEC-DMZ<\/prelude_profile>\n<prelude_log_level>0<\/prelude_log_level>\n<\/global>/' /var/ossec/etc/ossec.conf
 sed -i -e 's/<frequency>79200<\/frequency>/<frequency>60<\/frequency>/' /var/ossec/etc/ossec.conf
 sed -i -e 's/<directories check_all="yes">/<directories check_all="yes" realtime="no">/' /var/ossec/etc/ossec.conf
-sed -i -e 's/server-addr = 127.0.0.1/server-addr = 192.168.0.1/' /etc/prelude/default/client.conf
+sed -i -e 's/server-addr = 127.0.0.1/server-addr = 10.100.0.1/' /etc/prelude/default/client.conf
 
 
 #cp /mnt/lxc/dmz/ossec.list /etc/apt/sources.list.d/
