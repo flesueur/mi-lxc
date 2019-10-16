@@ -39,6 +39,6 @@
 
 <mkmountpoint enable="1" remove="true" />
 
-<volume ssh="1" fstype="fuse" path="sshfs#%(USER)@filer:/home/shared" mountpoint="~/shared" options="nonempty,StrictHostKeyChecking=no" />
+<volume ssh="1" fstype="fuse" path="sshfs#%(USER)@$server:/home/shared" mountpoint="~/shared" options="nonempty,StrictHostKeyChecking=no" />
 <!-- options="nonempty,StrictHostKeyChecking=no"  -->
 </pam_mount>
