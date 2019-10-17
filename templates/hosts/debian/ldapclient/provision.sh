@@ -29,3 +29,8 @@ sed -i "s/^\(passwd:.*\)$/\1 ldap/" /etc/nsswitch.conf
 sed -i "s/^\(group:.*\)$/\1 ldap/" /etc/nsswitch.conf
 sed -i "s/^\(shadow:.*\)$/\1 ldap/" /etc/nsswitch.conf
 #sed -i -e 's/compat/compat ldap/' /etc/nsswitch.conf
+
+echo "bind_timelimit 2" >> /etc/pam_ldap.conf
+echo "bind_policy soft" >> /etc/pam_ldap.conf
+echo "bind_timelimit 2" >> /etc/libnss-ldap.conf
+echo "bind_policy soft" >> /etc/libnss-ldap.conf
