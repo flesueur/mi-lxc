@@ -15,7 +15,7 @@ apt-get update
 DEB_VERSION=`cat /etc/debian_version | cut -d'.' -f1`
 if [ $DEB_VERSION -eq "10" ] # DEB 10 aka Buster
 then
-  DEBIAN_FRONTEND=noninteractive apt-get install -y nsd dovecot-imapd proftpd apt-transport-https wget prelude-utils libprelude-dev build-essential php7.3-mbstring php7.3
+  DEBIAN_FRONTEND=noninteractive apt-get install -y nsd dovecot-imapd proftpd apt-transport-https wget prelude-utils libprelude-dev build-essential php7.3-mbstring php7.3 libevent-dev libpcre2-dev zlib1g-dev libssl-dev
 else # DEB 9 aka stretch
   DEBIAN_FRONTEND=noninteractive apt-get install -y nsd dovecot-imapd proftpd apt-transport-https wget libprelude2 libprelude-dev build-essential  php7.0-mbstring php7.0
 fi
@@ -40,7 +40,7 @@ chmod +x /etc/rc.local
 # Install de dokuwiki
 rm -f /var/www/html/index.html
 #cp -ar /mnt/lxc/dmz/dokuwiki/* /var/www/html/
-wget https://github.com/splitbrain/dokuwiki/archive/release_stable_2018-04-22a.tar.gz -O /tmp/dokuwiki.tar.gz
+wget https://github.com/splitbrain/dokuwiki/archive/release_stable_2018-04-22b.tar.gz -O /tmp/dokuwiki.tar.gz
 tar zxf /tmp/dokuwiki.tar.gz -C /var/www/html --strip 1
 echo "sh      application/x-sh" >> /var/www/html/conf/mime.conf
 PASS=`mkpasswd -5 superman`
@@ -54,9 +54,9 @@ chown -R www-data /var/www/html/*
 
 # Install de OSSEC avec support prelude
 cd /tmp
-wget https://github.com/ossec/ossec-hids/archive/3.1.0.tar.gz
-tar zxvf 3.1.0.tar.gz
-cd ossec-hids-3.1.0
+wget https://github.com/ossec/ossec-hids/archive/3.4.0.tar.gz
+tar zxvf 3.4.0.tar.gz
+cd ossec-hids-3.4.0
 cp $DIR/preloaded-vars.conf etc/
 USE_PRELUDE=yes ./install.sh
 
@@ -68,6 +68,8 @@ sed -i -e 's/<frequency>79200<\/frequency>/<frequency>60<\/frequency>/' /var/oss
 sed -i -e 's/<directories check_all="yes">/<directories check_all="yes" realtime="no">/' /var/ossec/etc/ossec.conf
 sed -i -e 's/server-addr = 127.0.0.1/server-addr = 10.100.0.1/' /etc/prelude/default/client.conf
 
+# create prelude-admin spool directory
+mkdir /var/spool/prelude
 
 #cp /mnt/lxc/dmz/ossec.list /etc/apt/sources.list.d/
 #wget -q -O /tmp/key https://www.atomicorp.com/RPM-GPG-KEY.art.txt
