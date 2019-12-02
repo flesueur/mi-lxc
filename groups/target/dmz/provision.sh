@@ -80,3 +80,7 @@ mkdir /var/spool/prelude
 #sed -i -e 's/\/var\/www\/logs\/access_log/\/var\/log\/apache2\/access.log/' /var/ossec/etc/ossec.conf
 #sed -i -e 's/\/var\/www\/logs\/error_log/\/var\/log\/apache2\/error.log/' /var/ossec/etc/ossec.conf
 #sed -i -e 's/<\/global>/<prelude_output>yes<\/prelude_output><prelude_profile>OSSEC-DMZ<\/prelude_profile><prelude_log_level>0<\/prelude_log_level><\/global>/' /var/ossec/etc/ossec.conf
+
+# Install MISP
+wget "https://raw.githubusercontent.com/MISP/misp-vagrant/master/bootstrap.sh" -O misp.sh
+bash misp.sh
