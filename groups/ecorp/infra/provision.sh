@@ -19,3 +19,6 @@ systemctl stop systemd-resolved
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y unbound
 cp dns.conf /etc/unbound/unbound.conf.d/
+
+cp index.html /var/www/html/
+ln -s /var/www/html/index.html /var/www/html/doku.php
