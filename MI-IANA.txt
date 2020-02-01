@@ -10,15 +10,15 @@ TLD milxc : ASN 8, 10.10.20.0/24              # A TLD operator for .milxc
 TLD evil : ASN 9, 10.10.21.0/24               # A TLD operator for .evil, not yet deployed
 
 Target : ASN 10, 10.100.0.0/16, target.milxc  # A cool enterprise to attack
-Ecorp : ASN 11, 10.101.0.0/16, ecorp.evil     # Some evil enterprise, not yet deployed
+Ecorp : ASN 11, 10.101.0.0/16, ecorp.milxc    # Some evil enterprise, not yet deployed
 MICA : ASN 12, 10.102.0.0/16, mica.milxc      # A CA doing its best, not yet deployed
 
 ISP-A : ASN 20, 10.150.0.0/16, ispa.milxc     # An end-user ISP, .0.x for users, .1.x for infra
 ISP-B : ASN 21, 10.151.0.0/16, ispb.milxc     # An end-user ISP, .0.x for users, .1.x for infra, not yet deployed
 
 Transit-A : ASN 30, 10.180.0.0/24             # Some transit operators, only A and B for now
-Transit-B : ASN 31, 10.180.1.0/24
-Transit-C : ASN 32, 10.180.2.0/24
-Transit-D : ASN 33, 10.180.3.0/24
+Transit-B : ASN 31, 10.181.0.0/24
+Transit-C : ASN 32, 10.182.0.0/24
+Transit-D : ASN 33, 10.183.0.0/24
 
 Peering-A : ASN 40, 10.190.0.0/24             # Some peering operators, not yet deployed

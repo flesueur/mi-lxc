@@ -33,4 +33,6 @@ target.milxc.		IN	NS	ns.target.milxc.
 ns.target.milxc.	IN	A 10.100.1.2
 isp-a.milxc.	IN	NS	ns.isp-a.milxc.
 ns.isp-a.milxc.	IN	A 10.150.1.2
+mica.milxc.	IN	NS	ns.mica.milxc.
+ns.mica.milxc.	IN	A 10.102.0.2
 " >> /etc/nsd/milxc.zone

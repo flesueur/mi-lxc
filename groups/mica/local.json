@@ -1,0 +1,21 @@
+{
+  "comment":"MICA AS",
+  "containers": {
+    "infra":
+        {"container":"infra",
+          "interfaces":[
+            {"bridge":"lan", "address":"10.102.0.2/16"}
+          ],
+          "gateway":"10.102.0.1",
+          "templates":[
+            {"template":"mailserver", "domain":"mica.milxc"},
+            {"template":"nodhcp", "domain":"mica.milxc", "ns":"10.10.10.10"}]},
+          "ca":{"container":"ca",
+            "interfaces":[
+              {"bridge":"lan", "address":"10.102.0.3/16"}
+            ],
+            "gateway":"10.102.0.1",
+            "templates":[{"template":"mailclient", "domain":"mica.milxc", "mailname":"ca", "password":"ca"},
+                        {"template":"nodhcp", "domain":"mica.milxc", "ns":"10.10.10.10"}]}
+  }
+}

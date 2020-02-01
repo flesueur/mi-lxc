@@ -46,6 +46,7 @@
       "gateway":"10.100.0.1",
       "templates":[{"template":"sshfs", "server":"filer"},
                     {"template":"ldapclient", "domain":"target.milxc", "server":"ldap"},
+                    {"template":"mailclient", "domain":"target.milxc", "mailname":"admin", "password":"admin"},
                     {"template":"nodhcp", "domain":"target.milxc", "ns":"10.100.0.1"}]},
                     "intranet":
     {"container":"intranet",
