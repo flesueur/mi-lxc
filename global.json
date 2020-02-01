@@ -36,7 +36,7 @@
       ]
       }]},
     "transit-b": {
-      "templates":[{"template":"as-bgp", "asn":"31", "neighbors":"10.180.0.1 as 30;10.181.0.20 as 5;10.181.0.10 as 20;10.181.0.30 as 7;10.181.0.40 as 12",
+      "templates":[{"template":"as-bgp", "asn":"31", "neighbors":"10.180.0.1 as 30;10.181.0.20 as 5;10.181.0.10 as 20;10.181.0.30 as 7;10.181.0.40 as 12;10.181.0.50 as 11",
       "interfaces":[
         {"bridge":"transit-b", "address":"10.181.0.1/24"},
         {"bridge":"transit-a", "address":"10.180.0.2/24"}
@@ -54,6 +54,13 @@
       "interfaces":[
         {"bridge":"transit-b", "address":"10.181.0.40/24"},
         {"bridge":"mica-lan", "address":"10.102.0.1/16"}
+      ]
+    }]},
+    "ecorp": {
+      "templates":[{"template":"as-bgp", "asn":"11", "asdev":"eth1", "neighbors":"10.181.0.1 as 31",
+      "interfaces":[
+        {"bridge":"transit-b", "address":"10.181.0.50/24"},
+        {"bridge":"ecorp-lan", "address":"10.101.0.1/16"}
       ]
     }]},
     "isp-a": {

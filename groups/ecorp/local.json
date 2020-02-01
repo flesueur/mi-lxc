@@ -1,0 +1,21 @@
+{
+  "comment":"ECorp evil AS",
+  "containers": {
+    "infra":
+        {"container":"infra",
+          "interfaces":[
+            {"bridge":"lan", "address":"10.101.0.2/16"}
+          ],
+          "gateway":"10.101.0.1",
+          "templates":[
+            {"template":"mailserver", "domain":"ecorp.milxc,target.milxc"},
+            {"template":"nodhcp", "domain":"ecorp.milxc", "ns":"10.10.10.10"}]},
+          "hacker":{"container":"hacker",
+            "interfaces":[
+              {"bridge":"lan", "address":"10.101.0.3/16"}
+            ],
+            "gateway":"10.101.0.1",
+            "templates":[{"template":"mailclient", "domain":"ecorp.milxc", "mailname":"admin", "password":"admin"},
+                        {"template":"nodhcp", "domain":"ecorp.milxc", "ns":"10.10.10.10"}]}
+  }
+}
