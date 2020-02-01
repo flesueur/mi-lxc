@@ -9,6 +9,7 @@ Example practical work using this environment (in french) :
 * [Intrusion scenario](https://github.com/flesueur/srs/blob/master/tp1-intrusion.md)
 * [Firewall](https://github.com/flesueur/srs/blob/master/tp2-firewall.md)
 * [IDS](https://github.com/flesueur/srs/blob/master/tp3-ids.md)
+* [CA](https://github.com/flesueur/csc/blob/master/tp1-openssl.md)
 
 ![Topology](https://github.com/flesueur/mi-lxc/blob/master/topologie.png)
 
