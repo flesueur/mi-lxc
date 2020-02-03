@@ -27,13 +27,15 @@ else
   sed -i -e "s/mynetworks = /mynetworks = $mynetworks /" /etc/postfix/main.cf
 fi
 
-#for i in `ls /home`; do
-#  mkdir -p /home/$i/mail
-#  touch /home/$i/mail/Drafts /home/$i/mail/Queue /home/$i/mail/Sent /home/$i/mail/Trash
-#  echo -e "Trash\nDrafts\nQueue\nSent" >> /home/$i/mail/.subscriptions
-#  chown -R $i /home/$i/mail
-#done
+# create mail directories for already created users
+for i in `ls /home`; do
+  mkdir -p /home/$i/mail
+  touch /home/$i/mail/Drafts /home/$i/mail/Queue /home/$i/mail/Sent /home/$i/mail/Trash
+  echo -e "Trash\nDrafts\nQueue\nSent" >> /home/$i/mail/.subscriptions
+  chown -R $i /home/$i/mail
+done
 
+# create mail directories for future (ie, LDAP) users
 mkdir -p /etc/skel/mail
 touch /etc/skel/mail/Drafts /etc/skel/mail/Queue /etc/skel/mail/Sent /etc/skel/mail/Trash
 echo -e "Trash\nDrafts\nQueue\nSent" >> /etc/skel/mail/.subscriptions
