@@ -35,6 +35,7 @@ echo -e "server:
 	interface: 0.0.0.0
   access-control: 0.0.0.0/0 allow
 	cache-max-ttl: 20
+	cache-max-negative-ttl: 20
 " > /etc/unbound/unbound.conf.d/listen.conf
 
 service unbound restart
