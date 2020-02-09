@@ -75,5 +75,7 @@ cd mi-lxc
 # updates PATH with su
 echo "ALWAYS_SET_PATH yes" >> /etc/login.defs
 
+# enable bash autocompletion
+cp milxc-completion.bash /etc/bash_completion.d/
 
 reboot
