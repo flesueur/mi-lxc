@@ -494,8 +494,9 @@ def display(c, user):
     os.system("xhost local:")
     command="DISPLAY=" + hostdisplay + " Xephyr -title \"Xephyr " + c.name + "\" -br -ac -dpms -s 0 -resizeable " + cdisplay + " 2>/dev/null & \
         export DISPLAY=" + cdisplay + " ; \
-        while ! `setxkbmap -query 1>/dev/null 2>/dev/null` ; do sleep 1 ; done ; \
+        while ! setxkbmap -query 1>/dev/null 2>/dev/null ; do sleep 1 ; done ; \
         xfce4-session 2>/dev/null & \
+        while ! pidof xfce4-panel 1>/dev/null ; do sleep 1 ; done ; \
         setxkbmap -display " + hostdisplay + " -print | xkbcomp - " + cdisplay + " 2>/dev/null"
         #xkbcomp " + str(hostdisplay) + " :" + str(displaynum)
         #setxkbmap " + getxkbmap()
