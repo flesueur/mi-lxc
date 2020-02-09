@@ -48,3 +48,6 @@ echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
 sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
 service ssh restart
+
+# updates PATH with su
+echo "ALWAYS_SET_PATH yes" >> /etc/login.defs
