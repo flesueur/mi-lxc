@@ -72,4 +72,8 @@ cd /root
 cd mi-lxc
 ./mi-lxc.py create
 
+# updates PATH with su
+echo "ALWAYS_SET_PATH yes" >> /etc/login.defs
+
+
 reboot
