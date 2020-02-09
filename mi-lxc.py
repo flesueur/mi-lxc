@@ -568,7 +568,7 @@ def printgraph():
 
 def usage():
     print(
-        "No argument given, usage with create, renet, destroy, destroymaster, updatemaster, start, stop, attach [user@]<name> [command], display [user@]<name>, print.\nNames are ", end='')
+        "No argument given, usage with: create, renet, destroy, destroymaster, updatemaster, start, stop, attach [user@]<name> [command], display [user@]<name>, print.\nNames are: ", end='')
     print(listContainers())
 
 def listContainers():
