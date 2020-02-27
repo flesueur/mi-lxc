@@ -50,7 +50,7 @@
       ]
     }]},
     "mica": {
-      "templates":[{"template":"as-bgp", "asn":"12", "asdev":"eth1", "neighbors":"10.181.0.1 as 31",
+      "templates":[{"template":"as-bgp-dynamips", "asn":"12", "asdev":"eth1", "neighbors":"10.181.0.1 as 31",
       "interfaces":[
         {"bridge":"transit-b", "address":"10.181.0.40/24"},
         {"bridge":"mica-lan", "address":"10.102.0.1/16"}

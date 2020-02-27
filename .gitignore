@@ -7,3 +7,4 @@ notes
 mkcert
 launch.sh
 files/target-firewall/prelude-manager.conf
+/templates/groups/as-bgp-dynamips/bgprouter/bins
