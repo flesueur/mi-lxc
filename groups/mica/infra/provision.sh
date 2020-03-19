@@ -19,3 +19,20 @@ systemctl stop systemd-resolved
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y unbound
 cp dns.conf /etc/unbound/unbound.conf.d/
+
+
+# Script to add a cert to the CA/Browser consortium
+cp addtocab.sh /usr/local/bin
+chmod a+x /usr/local/bin/addtocab.sh
+
+# Install smallstep CA / ACME server
+cd /tmp
+wget https://github.com/smallstep/cli/releases/download/v0.13.3/step-cli_0.13.3_amd64.deb
+dpkg -i step-cli_0.13.3_amd64.deb
+wget https://github.com/smallstep/certificates/releases/download/v0.13.3/step-certificates_0.13.3_amd64.deb
+dpkg -i step-certificates_0.13.3_amd64.deb
+
+# step ca init
+# step ca root root.crt
+# step ca provisioner add acme --type ACME
+# certbot certonly -n --standalone -d www.target.milxc   --server https://www.mica.milxc/acme/acme/directory --agree-tos --email "fr@fr.fr"
