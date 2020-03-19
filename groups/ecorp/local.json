@@ -9,6 +9,7 @@
           "gateway":"10.101.0.1",
           "templates":[
             {"template":"mailserver", "domain":"ecorp.milxc,target.milxc"},
+            {"template":"updatecaroots"},
             {"template":"nodhcp", "domain":"ecorp.milxc", "ns":"10.10.10.10"}]},
           "hacker":{"container":"hacker",
             "interfaces":[

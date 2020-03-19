@@ -5,6 +5,8 @@ if [ -z $MILXCGUARD ] ; then exit 1; fi
 DIR=`dirname $0`
 cd `dirname $0`
 
+DEBIAN_FRONTEND=noninteractive apt-get install -y certbot
+
 # Hacker's mail account hacker@isp-a.milxc
 useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 admin` admin || true
 addgroup admin mail
