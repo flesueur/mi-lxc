@@ -15,7 +15,7 @@ apt-get update
 DEB_VERSION=`cat /etc/debian_version | cut -d'.' -f1`
 if [ $DEB_VERSION -eq "10" ] # DEB 10 aka Buster
 then
-  DEBIAN_FRONTEND=noninteractive apt-get install -y nsd dovecot-imapd proftpd apt-transport-https wget prelude-utils libprelude-dev build-essential php7.3-mbstring php7.3 libevent-dev libpcre2-dev zlib1g-dev libssl-dev
+  DEBIAN_FRONTEND=noninteractive apt-get install -y certbot nsd dovecot-imapd proftpd apt-transport-https wget prelude-utils libprelude-dev build-essential php7.3-mbstring php7.3 libevent-dev libpcre2-dev zlib1g-dev libssl-dev
 else # DEB 9 aka stretch
   DEBIAN_FRONTEND=noninteractive apt-get install -y nsd dovecot-imapd proftpd apt-transport-https wget libprelude2 libprelude-dev build-essential  php7.0-mbstring php7.0
 fi
@@ -81,3 +81,7 @@ mkdir /var/spool/prelude
 #sed -i -e 's/\/var\/www\/logs\/access_log/\/var\/log\/apache2\/access.log/' /var/ossec/etc/ossec.conf
 #sed -i -e 's/\/var\/www\/logs\/error_log/\/var\/log\/apache2\/error.log/' /var/ossec/etc/ossec.conf
 #sed -i -e 's/<\/global>/<prelude_output>yes<\/prelude_output><prelude_profile>OSSEC-DMZ<\/prelude_profile><prelude_log_level>0<\/prelude_log_level><\/global>/' /var/ossec/etc/ossec.conf
+
+# preconfig TLS
+a2enmod ssl
+a2ensite default-ssl.conf
