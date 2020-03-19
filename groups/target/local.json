@@ -11,7 +11,8 @@
       "gateway":"10.100.0.1",
       "templates":[{"template":"ldapclient", "domain":"target.milxc", "server":"ldap"},
                   {"template":"mailserver", "domain":"target.milxc"},
-                  {"template":"nodhcp", "domain":"target.milxc", "ns":"10.100.0.1"}]},
+                  {"template":"nodhcp", "domain":"target.milxc", "ns":"10.100.0.1"},
+                  {"template":"updatecaroots"}]},
                   "ldap":
       {"container":"ldap",
         "interfaces":[
