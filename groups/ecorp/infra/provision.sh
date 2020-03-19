@@ -22,3 +22,5 @@ cp dns.conf /etc/unbound/unbound.conf.d/
 
 cp index.html /var/www/html/
 ln -s /var/www/html/index.html /var/www/html/doku.php
+a2enmod headers
+echo "RequestHeader unset If-Modified-Since" >> /etc/apache2/apache2.conf

@@ -50,7 +50,8 @@ echo "* @user  8" >> /var/www/html/conf/acl.auth.php
 cp doku/local.php /var/www/html/conf/
 cp doku/start.txt /var/www/html/data/pages/
 chown -R www-data /var/www/html/*
-
+a2enmod headers
+echo "RequestHeader unset If-Modified-Since" >> /etc/apache2/apache2.conf
 
 # Install de OSSEC avec support prelude
 cd /tmp
