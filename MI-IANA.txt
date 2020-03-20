@@ -12,6 +12,7 @@ TLD evil : ASN 9, 10.10.21.0/24               # A TLD operator for .evil, not ye
 Target : ASN 10, 10.100.0.0/16, target.milxc  # A cool enterprise to attack
 Ecorp : ASN 11, 10.101.0.0/16, ecorp.milxc    # Some evil enterprise, not yet deployed
 MICA : ASN 12, 10.102.0.0/16, mica.milxc      # A CA doing its best, not yet deployed
+Gozilla : ASN 13, 10.103.0.0/16, gozilla.milxc   # A web browser editor (ie, Mozilla), allowed to spread new root CA certificates
 
 ISP-A : ASN 20, 10.150.0.0/16, ispa.milxc     # An end-user ISP, .0.x for users, .1.x for infra
 ISP-B : ASN 21, 10.151.0.0/16, ispb.milxc     # An end-user ISP, .0.x for users, .1.x for infra, not yet deployed

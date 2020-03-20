@@ -6,9 +6,9 @@ DIR=`dirname $0`
 cd `dirname $0`
 
 # Add to system store
-cp updateca.sh /usr/local/sbin/
-chmod a+x /usr/local/sbin/updateca.sh
-echo "* * * * * root /usr/local/sbin/updateca.sh" > /etc/cron.d/updateca
+cp updatefox.sh /usr/local/sbin/
+chmod a+x /usr/local/sbin/updatefox.sh
+#echo "* * * * * root /usr/local/sbin/updateca.sh" > /etc/cron.d/updateca
 
 # Add to Firefox store
 echo -e '{

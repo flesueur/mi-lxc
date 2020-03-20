@@ -1,0 +1,12 @@
+{
+  "comment":"Gozilla AS",
+  "containers": {
+    "infra":
+        {"container":"infra",
+          "interfaces":[
+            {"bridge":"lan", "address":"10.103.0.2/16"}
+          ],
+          "gateway":"10.103.0.1",
+          "templates":[{"template":"nodhcp", "domain":"gozilla.milxc", "ns":"10.10.10.10"}]}
+  }
+}

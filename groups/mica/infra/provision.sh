@@ -21,10 +21,6 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y unbound
 cp dns.conf /etc/unbound/unbound.conf.d/
 
 
-# Script to add a cert to the CA/Browser consortium
-cp addtocab.sh /usr/local/bin
-chmod a+x /usr/local/bin/addtocab.sh
-
 # Install smallstep CA / ACME server
 cd /tmp
 wget https://github.com/smallstep/cli/releases/download/v0.13.3/step-cli_0.13.3_amd64.deb

@@ -29,7 +29,7 @@
 }],
   "groups": {
     "transit-a": {
-      "templates":[{"template":"as-bgp", "asn":"30", "neighbors":"10.180.0.10 as 10;10.180.0.30 as 7;10.180.0.40 as 8; 10.180.0.2 as 31; 10.180.0.20 as 6",
+      "templates":[{"template":"as-bgp", "asn":"30", "neighbors":"10.180.0.10 as 10;10.180.0.30 as 7;10.180.0.40 as 8; 10.180.0.2 as 31; 10.180.0.20 as 6; 10.180.0.50 as 13",
       "interfaces":[
         {"bridge":"nat-bridge", "address":"dhcp"},
         {"bridge":"transit-a", "address":"10.180.0.1/24"}
@@ -61,6 +61,13 @@
       "interfaces":[
         {"bridge":"transit-b", "address":"10.181.0.50/24"},
         {"bridge":"ecorp-lan", "address":"10.101.0.1/16"}
+      ]
+    }]},
+    "gozilla": {
+      "templates":[{"template":"as-bgp", "asn":"13", "asdev":"eth1", "neighbors":"10.180.0.1 as 30",
+      "interfaces":[
+        {"bridge":"transit-a", "address":"10.180.0.50/24"},
+        {"bridge":"gozilla-lan", "address":"10.103.0.1/16"}
       ]
     }]},
     "isp-a": {

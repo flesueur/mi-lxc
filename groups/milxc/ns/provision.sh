@@ -37,4 +37,6 @@ mica.milxc.	IN	NS	ns.mica.milxc.
 ns.mica.milxc.	IN	A 10.102.0.2
 ecorp.milxc.	IN	NS	ns.ecorp.milxc.
 ns.ecorp.milxc.	IN	A 10.101.0.2
+gozilla.milxc.	IN	NS	ns.gozilla.milxc.
+ns.gozilla.milxc.	IN	A 10.103.0.2
 " >> /etc/nsd/milxc.zone
