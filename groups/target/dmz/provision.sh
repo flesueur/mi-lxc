@@ -82,6 +82,11 @@ mkdir /var/spool/prelude
 #sed -i -e 's/\/var\/www\/logs\/error_log/\/var\/log\/apache2\/error.log/' /var/ossec/etc/ossec.conf
 #sed -i -e 's/<\/global>/<prelude_output>yes<\/prelude_output><prelude_profile>OSSEC-DMZ<\/prelude_profile><prelude_log_level>0<\/prelude_log_level><\/global>/' /var/ossec/etc/ossec.conf
 
-# preconfig TLS
+# preconfig TLS and certbot
 a2enmod ssl
 a2ensite default-ssl.conf
+echo -e "
+email=admin@target.milxc
+agree-tos=1
+no-verify-ssl=1
+" >> /etc/letsencrypt/cli.ini
