@@ -19,6 +19,7 @@
 * target-dmz :
   * smtp, imap for users admin@, commercial@
   * http on www.target.milxc
+  * certbot pre-installed for ACME with MICA
 * target-ldap :
   * ldap server
 * target-admin:
@@ -33,7 +34,9 @@
 * ecorp-router:
   * bird BGP daemon to alter BGP routing
 * ecorp-infra:
-  * http to server fake/malicious content
+  * http to serve fake/malicious content
+  * certbot pre-installed for ACME
+* This AS is used to impersonate Target
 
 ## MICA
 

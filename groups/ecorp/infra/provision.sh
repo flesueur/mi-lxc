@@ -26,3 +26,12 @@ cp index.html /var/www/html/
 ln -s /var/www/html/index.html /var/www/html/doku.php
 a2enmod headers
 echo "RequestHeader unset If-Modified-Since" >> /etc/apache2/apache2.conf
+
+# preconfig TLS and certbot
+a2enmod ssl
+a2ensite default-ssl.conf
+echo -e "
+email=admin@target.milxc
+agree-tos=1
+no-verify-ssl=1
+" >> /etc/letsencrypt/cli.ini
