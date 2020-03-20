@@ -39,6 +39,8 @@ A few things you can do and observe :
 
 The "IANA-type" numbering (AS numbers, IP space, TLDs) is described in [MI-IANA.txt](https://github.com/flesueur/mi-lxc/blob/master/MI-IANA.txt). There is currently no cryptography deployed anywhere (no HTTPS, no IMAPS, no DNSSEC, etc.). This will probably be added at some point but in the meantime, deploying this is part of the expected work from students.
 
+More precise details on what is installed and configured on hosts is in [DETAILS.md](DETAILS.md).
+
 # How to use
 
 ## Installation on Linux
