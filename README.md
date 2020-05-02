@@ -55,8 +55,8 @@ On Kali 2018.2, you need lxc (`apt-get install lxc`) and then to enable networki
 On Arch Linux, you need to downgrade LXC to LXC 2.0.7 (it should now work with LXC 3, reports welcome), then to install python3-lxc from the official lxc github. You also need dnsmasq and python-graphviz. Rest of the configuration is quite similar (network configuration, service restart, etc.)
 
 > Optionally, you can:
-* install `apt-cacher-ng` on your host (port 3142) to speed up the creation of the containers. This proxy is detected in [masters/buster/detect_proxy.sh](https://github.com/flesueur/mi-lxc/blob/master/masters/buster/detect_proxy.sh).
-* install the bash autocompletion script `milxc-completion.bash`, either by sourcing it in your current shell (`source milxc-completion.bash`) or by copying it in `/etc/bash_completion.d/`
+> * install `apt-cacher-ng` on your host (port 3142) to speed up the creation of the containers. This proxy is detected in [masters/buster/detect_proxy.sh](https://github.com/flesueur/mi-lxc/blob/master/masters/buster/detect_proxy.sh).
+> * install the bash autocompletion script `milxc-completion.bash`, either by sourcing it in your current shell (`source milxc-completion.bash`) or by copying it in `/etc/bash_completion.d/`
 
 ## Installation on Windows/MacOS/Linux (using Vagrant)
 
