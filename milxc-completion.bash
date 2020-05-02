@@ -15,4 +15,4 @@ _milxc_completions()
 
 }
 
-complete -F _milxc_completions mi-lxc.py
+complete -F _milxc_completions ./mi-lxc.py
