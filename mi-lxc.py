@@ -543,10 +543,13 @@ def printgraph():
     G2.node_attr['style'] = "filled"
 
     for cname in containers:
-        G2.add_node("c"+cname, color='red', shape='box', label=cname)
+        G2.add_node("c"+cname, colorscheme='brbg9', color='2', shape='box', label=cname)
 
     for bridge in bridges:
-        G2.add_node("b"+bridge, color='green', label=bridge[len(prefixbr):])
+        G2.add_node("b"+bridge, colorscheme='brbg9', color='4', label=bridge[len(prefixbr):])
+
+    G2.add_node("b"+lxcbr, colorscheme='brbg9', color='6', label=lxcbr)
+    # 69A2B0, A1C084, FFCAB1, 659157, E05263
 
     for cname in containers:
         global nics
