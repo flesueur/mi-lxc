@@ -16,18 +16,31 @@
 
 ## Target
 
+* target-router
+  * Firewall for Target
+  * Suricata, prelude and prewikka preinstalled
 * target-dmz :
   * smtp, imap for users admin@, commercial@
-  * http on www.target.milxc
+  * http on www.target.milxc (weak password)
   * certbot pre-installed for ACME with MICA
+  * OSSEC HIDS
 * target-ldap :
   * ldap server
+  * All hosts simply rely on this centralized authentication (every user can thus connect to any internal host)
+* target-filer :
+  * sshfs file sharing of /home/shared/ (NFS does not work on the current setup)
+  * network shares are mounted in ~/shared on target-admin, target-commercial and target-dev
+* target-intranet :
+  * a web intranet with SQL injections and some bad access rights in /var/www
 * target-admin:
   * administrator workstation
   * claws-mail (for debian user) configured for admin@target.milxc
 * target-commercial:
   * salesman workstation
   * claws-mail (for commercial user) configured for commercial@target.milxc
+* target-dev:
+  * Developer workstation
+  * Can deploy code on target-intranet (in ~/shared/dev/deploy.sh)
 
 ## Ecorp
 
@@ -41,7 +54,7 @@
 ## MICA
 
 * mica-infra :
-  * step-cli and step-ca ready to deploy an ACME-compliant CA using step software
+  * step-cli and step-ca ready to deploy an ACME-compliant CA using Smallstep software suite
   * openssl for an old-style CA
   * http (allows to share the generated root certificate)
 
@@ -54,7 +67,7 @@
 ## ISP-A
 
 * isp-a-infra:
-  * smtp, imap for users hacker@
+  * smtp, imap for user hacker@ispa.milxc
 * isp-a-home:
   * updatefox.sh to simulate a browser update (and updates the root certificates from Gozilla)
 * isp-a-hacker:

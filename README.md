@@ -30,6 +30,7 @@ The example network is composed of :
 * an alternative DNS root, allowing to resolve real TLDs + a custom ".milxc" TLD (the .milxc registry is maintained inside MI-LXC)
 * some residential ISP clients (hacker and a random PC), using mail adresses \@isp-a.milxc
 * a target organization, owning its own AS number, running classical services (HTTP, mail, DNS, filer, NIS, clients, etc.) for target.milxc domain
+* a certification authority (MICA) ready for ACME (Let's Encrypt-style)
 
 A few things you can do and observe :
 
