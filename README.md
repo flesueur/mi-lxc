@@ -58,7 +58,7 @@ On Arch Linux, you need to downgrade LXC to LXC 2.0.7 (it should now work with L
 
 ## Installation on Windows/MacOS/Linux (using Vagrant)
 
-The `vagrant` subdirectory contains a `Vagrantfile` suited to generate a VirtualBox VM running MI-LXC inside. You need to install [Vagrant](https://www.vagrantup.com/downloads.html) and then, in the `vagrant` subdirectory, run `vagrant up`. MI-LXC is then installed in `/root/mi-lxc` and already provisionned (no need to `create`, you can directly `start`).
+The `vagrant` subdirectory contains a `Vagrantfile` suited to generate a VirtualBox VM running MI-LXC inside. You need to install [Vagrant](https://www.vagrantup.com/downloads.html) and then, in the `vagrant` subdirectory, run `vagrant up`. You can then login as root/root. MI-LXC is installed in `/root/mi-lxc` and already provisionned (no need to `create`, you can directly `start`).
 
 
 Usage
