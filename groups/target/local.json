@@ -2,68 +2,68 @@
   "comment":"AS of the Target organization",
   "containers": {"router":
     { "master":"buster",
-      "templates":[{"template":"resolverns", "root":"10.10.0.10"}]},
+      "templates":[{"template":"resolverns"}]},
                   "dmz":
     {"container":"dmz",
       "interfaces":[
-        {"bridge":"lan", "address":"10.100.1.2/16"}
+        {"bridge":"lan", "address":"100.80.1.2/16"}
       ],
-      "gateway":"10.100.0.1",
+      "gateway":"100.80.0.1",
       "templates":[{"template":"ldapclient", "domain":"target.milxc", "server":"ldap"},
                   {"template":"mailserver", "domain":"target.milxc"},
-                  {"template":"nodhcp", "domain":"target.milxc", "ns":"10.100.0.1"},
+                  {"template":"nodhcp", "domain":"target.milxc", "ns":"100.80.0.1"},
                   {"template":"updatecaroots"}]},
                   "ldap":
       {"container":"ldap",
         "interfaces":[
-          {"bridge":"lan", "address":"10.100.0.10/16"}
+          {"bridge":"lan", "address":"100.80.0.10/16"}
         ],
-        "gateway":"10.100.0.1",
-        "templates":[{"template":"nodhcp", "domain":"target.milxc", "ns":"10.100.0.1"}]},
+        "gateway":"100.80.0.1",
+        "templates":[{"template":"nodhcp", "domain":"target.milxc", "ns":"100.80.0.1"}]},
         "commercial":
     {"container":"commercial",
       "interfaces":[
-        {"bridge":"lan", "address":"10.100.0.2/16"}
+        {"bridge":"lan", "address":"100.80.0.2/16"}
       ],
-      "gateway":"10.100.0.1",
+      "gateway":"100.80.0.1",
       "templates":[{"template":"sshfs", "server":"filer"},
                     {"template":"ldapclient", "domain":"target.milxc", "server":"ldap"},
                     {"template":"mailclient", "domain":"target.milxc", "mailname":"commercial", "password":"commercial", "login":"commercial"},
-                    {"template":"nodhcp", "domain":"target.milxc", "ns":"10.100.0.1"}]},
+                    {"template":"nodhcp", "domain":"target.milxc", "ns":"100.80.0.1"}]},
                     "dev":
     {"container":"dev",
       "interfaces":[
-        {"bridge":"lan", "address":"10.100.0.3/16"}
+        {"bridge":"lan", "address":"100.80.0.3/16"}
       ],
-      "gateway":"10.100.0.1",
+      "gateway":"100.80.0.1",
       "templates":[{"template":"sshfs", "server":"filer"},
                     {"template":"ldapclient", "domain":"target.milxc", "server":"ldap"},
-                  {"template":"nodhcp", "domain":"target.milxc", "ns":"10.100.0.1"}]},
+                  {"template":"nodhcp", "domain":"target.milxc", "ns":"100.80.0.1"}]},
                   "admin":
     {"container":"admin",
       "interfaces":[
-        {"bridge":"lan", "address":"10.100.0.4/16"}
+        {"bridge":"lan", "address":"100.80.0.4/16"}
       ],
-      "gateway":"10.100.0.1",
+      "gateway":"100.80.0.1",
       "templates":[{"template":"sshfs", "server":"filer"},
                     {"template":"ldapclient", "domain":"target.milxc", "server":"ldap"},
                     {"template":"mailclient", "domain":"target.milxc", "mailname":"admin", "password":"admin"},
-                    {"template":"nodhcp", "domain":"target.milxc", "ns":"10.100.0.1"}]},
+                    {"template":"nodhcp", "domain":"target.milxc", "ns":"100.80.0.1"}]},
                     "intranet":
     {"container":"intranet",
       "interfaces":[
-        {"bridge":"lan", "address":"10.100.0.5/16"}
+        {"bridge":"lan", "address":"100.80.0.5/16"}
       ],
-      "gateway":"10.100.0.1",
+      "gateway":"100.80.0.1",
       "templates":[{"template":"ldapclient", "domain":"target.milxc", "server":"ldap"},
-                  {"template":"nodhcp", "domain":"target.milxc", "ns":"10.100.0.1"}]},
+                  {"template":"nodhcp", "domain":"target.milxc", "ns":"100.80.0.1"}]},
                   "filer":
     {"container":"filer",
       "interfaces":[
-        {"bridge":"lan", "address":"10.100.0.6/16"}
+        {"bridge":"lan", "address":"100.80.0.6/16"}
       ],
-      "gateway":"10.100.0.1",
+      "gateway":"100.80.0.1",
       "templates":[{"template":"ldapclient", "domain":"target.milxc", "server":"ldap"},
-                    {"template":"nodhcp", "domain":"target.milxc", "ns":"10.100.0.1"}]}
+                    {"template":"nodhcp", "domain":"target.milxc", "ns":"100.80.0.1"}]}
   }
 }

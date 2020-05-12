@@ -1,25 +1,23 @@
-10.0.0.0/8 are routable IP. They mimic the public IP space
+100.64.0.0/10 are routable IP. They mimic the public IP space (100.64.0.0 to 100.127.255.255)
 192.168.0.0/16 are reserved for private use (non routable), as in the real internet.
 
 TLDs : milxc, evil  # evil not yet deployed
 
-NS ROOT O : ASN 5, 10.10.0.0/24               # An alternative root nameserver
-NS ROOT P : ASN 6, 10.10.1.0/24               # An alternative root nameserver, not yet deployed
-OpenDNS : ASN 7, 10.10.10.0/24, 10.10.10.10   # An open resolver
-TLD milxc : ASN 8, 10.10.20.0/24              # A TLD operator for .milxc
-TLD evil : ASN 9, 10.10.21.0/24               # A TLD operator for .evil, not yet deployed
+NS ROOT O : ASN 5, 100.100.0.0/24               # An alternative root nameserver
+NS ROOT P : ASN 6, 100.100.1.0/24               # An alternative root nameserver, not yet deployed
+OpenDNS : ASN 7, 100.100.100.0/24, 100.100.100.100   # An open resolver
+TLD milxc : ASN 8, 100.100.20.0/24              # A TLD operator for .milxc
+TLD evil : ASN 9, 100.100.21.0/24               # A TLD operator for .evil, not yet deployed
 
-Target : ASN 10, 10.100.0.0/16, target.milxc  # A cool enterprise to attack
-Ecorp : ASN 11, 10.101.0.0/16, ecorp.milxc    # Some evil enterprise, not yet deployed
-MICA : ASN 12, 10.102.0.0/16, mica.milxc      # A CA doing its best, not yet deployed
-Gozilla : ASN 13, 10.103.0.0/16, gozilla.milxc   # A web browser editor (ie, Mozilla), allowed to spread new root CA certificates
+Target : ASN 10, 100.80.0.0/16, target.milxc  # A cool enterprise to attack
+Ecorp : ASN 11, 100.81.0.0/16, ecorp.milxc    # Some evil enterprise, not yet deployed
+MICA : ASN 12, 100.82.0.0/16, mica.milxc      # A CA doing its best, not yet deployed
+Gozilla : ASN 13, 100.83.0.0/16, gozilla.milxc   # A web browser editor (ie, Mozilla), allowed to spread new root CA certificates
 
-ISP-A : ASN 20, 10.150.0.0/16, ispa.milxc     # An end-user ISP, .0.x for users, .1.x for infra
-ISP-B : ASN 21, 10.151.0.0/16, ispb.milxc     # An end-user ISP, .0.x for users, .1.x for infra, not yet deployed
+ISP-A : ASN 20, 100.120.0.0/16, ispa.milxc     # An end-user ISP, .0.x for users, .1.x for infra
+ISP-B : ASN 21, 100.121.0.0/16, ispb.milxc     # An end-user ISP, .0.x for users, .1.x for infra, not yet deployed
 
-Transit-A : ASN 30, 10.180.0.0/24             # Some transit operators, only A and B for now
-Transit-B : ASN 31, 10.181.0.0/24
-Transit-C : ASN 32, 10.182.0.0/24
-Transit-D : ASN 33, 10.183.0.0/24
+Transit-A : ASN 30, 100.64.0.0/24             # Some transit operators, only A and B for now
+Transit-B : ASN 31, 100.64.1.0/24
 
-Peering-A : ASN 40, 10.190.0.0/24             # Some peering operators, not yet deployed
+Peering-A : ASN 40, 100.65.0.0/24             # Some peering operators, not yet deployed

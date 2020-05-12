@@ -5,6 +5,6 @@
                     "gateway":"None",
                     "master":"alpine",
                     "templates":[{"template":"bgprouter", "asn":"$asn", "neighbors":"$neighbors", "asdev":"$asdev"},
-                                {"template":"nodhcp", "domain":"milxc", "ns":"10.10.10.10"}]}
+                                {"template":"nodhcp", "domain":"milxc", "ns":"100.100.100.100"}]}
     }
 }

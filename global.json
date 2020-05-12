@@ -29,86 +29,86 @@
 }],
   "groups": {
     "transit-a": {
-      "templates":[{"template":"as-bgp", "asn":"30", "neighbors":"10.180.0.10 as 10;10.180.0.30 as 7;10.180.0.40 as 8; 10.180.0.2 as 31; 10.180.0.20 as 6; 10.180.0.50 as 13",
+      "templates":[{"template":"as-bgp", "asn":"30", "neighbors":"100.64.0.10 as 10;100.64.0.30 as 7;100.64.0.40 as 8; 100.64.0.2 as 31; 100.64.0.20 as 6; 100.64.0.50 as 13",
       "interfaces":[
         {"bridge":"nat-bridge", "address":"dhcp"},
-        {"bridge":"transit-a", "address":"10.180.0.1/24"}
+        {"bridge":"transit-a", "address":"100.64.0.1/24"}
       ]
       }]},
     "transit-b": {
-      "templates":[{"template":"as-bgp", "asn":"31", "neighbors":"10.180.0.1 as 30;10.181.0.20 as 5;10.181.0.10 as 20;10.181.0.30 as 7;10.181.0.40 as 12;10.181.0.50 as 11",
+      "templates":[{"template":"as-bgp", "asn":"31", "neighbors":"100.64.0.1 as 30;100.64.1.20 as 5;100.64.1.10 as 20;100.64.1.30 as 7;100.64.1.40 as 12;100.64.1.50 as 11",
       "interfaces":[
-        {"bridge":"transit-b", "address":"10.181.0.1/24"},
-        {"bridge":"transit-a", "address":"10.180.0.2/24"}
+        {"bridge":"transit-b", "address":"100.64.1.1/24"},
+        {"bridge":"transit-a", "address":"100.64.0.2/24"}
         ]
     }]},
     "target": {
-      "templates":[{"template":"as-bgp-debian", "asn":"10", "asdev":"eth1", "neighbors":"10.180.0.1 as 30",
+      "templates":[{"template":"as-bgp-debian", "asn":"10", "asdev":"eth1", "neighbors":"100.64.0.1 as 30",
       "interfaces":[
-        {"bridge":"transit-a", "address":"10.180.0.10/24"},
-        {"bridge":"target-lan", "address":"10.100.0.1/16"}
+        {"bridge":"transit-a", "address":"100.64.0.10/24"},
+        {"bridge":"target-lan", "address":"100.80.0.1/16"}
       ]
     }]},
     "mica": {
-      "templates":[{"template":"as-bgp", "asn":"12", "asdev":"eth1", "neighbors":"10.181.0.1 as 31",
+      "templates":[{"template":"as-bgp", "asn":"12", "asdev":"eth1", "neighbors":"100.64.1.1 as 31",
       "interfaces":[
-        {"bridge":"transit-b", "address":"10.181.0.40/24"},
-        {"bridge":"mica-lan", "address":"10.102.0.1/16"}
+        {"bridge":"transit-b", "address":"100.64.1.40/24"},
+        {"bridge":"mica-lan", "address":"100.82.0.1/16"}
       ]
     }]},
     "ecorp": {
-      "templates":[{"template":"as-bgp", "asn":"11", "asdev":"eth1", "neighbors":"10.181.0.1 as 31",
+      "templates":[{"template":"as-bgp", "asn":"11", "asdev":"eth1", "neighbors":"100.64.1.1 as 31",
       "interfaces":[
-        {"bridge":"transit-b", "address":"10.181.0.50/24"},
-        {"bridge":"ecorp-lan", "address":"10.101.0.1/16"}
+        {"bridge":"transit-b", "address":"100.64.1.50/24"},
+        {"bridge":"ecorp-lan", "address":"100.81.0.1/16"}
       ]
     }]},
     "gozilla": {
-      "templates":[{"template":"as-bgp", "asn":"13", "asdev":"eth1", "neighbors":"10.180.0.1 as 30",
+      "templates":[{"template":"as-bgp", "asn":"13", "asdev":"eth1", "neighbors":"100.64.0.1 as 30",
       "interfaces":[
-        {"bridge":"transit-a", "address":"10.180.0.50/24"},
-        {"bridge":"gozilla-lan", "address":"10.103.0.1/16"}
+        {"bridge":"transit-a", "address":"100.64.0.50/24"},
+        {"bridge":"gozilla-lan", "address":"100.83.0.1/16"}
       ]
     }]},
     "isp-a": {
-      "templates":[{"template":"as-bgp", "asn":"20", "asdev":"eth1;eth2", "neighbors":"10.181.0.1 as 31",
+      "templates":[{"template":"as-bgp", "asn":"20", "asdev":"eth1;eth2", "neighbors":"100.64.1.1 as 31",
       "interfaces":[
-          {"bridge":"transit-b", "address":"10.181.0.10/24"},
-          {"bridge":"isp-a-cust", "address":"10.150.0.1/24"},
-          {"bridge":"isp-a-infra", "address":"10.150.1.1/24"}
+          {"bridge":"transit-b", "address":"100.64.1.10/24"},
+          {"bridge":"isp-a-cust", "address":"100.120.0.1/24"},
+          {"bridge":"isp-a-infra", "address":"100.120.1.1/24"}
       ]
     }]},
     "root-o": {
-      "templates":[{"template":"as-bgp", "asn":"5", "asdev":"eth1", "neighbors":"10.181.0.1 as 31",
+      "templates":[{"template":"as-bgp", "asn":"5", "asdev":"eth1", "neighbors":"100.64.1.1 as 31",
               "interfaces":[
-                {"bridge":"transit-b", "address":"10.181.0.20/24"},
-                {"bridge":"root-o-lan", "address":"10.10.0.1/24"}
+                {"bridge":"transit-b", "address":"100.64.1.20/24"},
+                {"bridge":"root-o-lan", "address":"100.100.0.1/24"}
               ]
             },
-            {"template":"dns-root", "address":"10.10.0.10/24", "gateway":"10.10.0.1", "domain":"ns-root-o.milxc"}
+            {"template":"dns-root", "address":"100.100.0.10/24", "gateway":"100.100.0.1", "domain":"ns-root-o.milxc"}
     ]},
     "root-p": {
-      "templates":[{"template":"as-bgp", "asn":"6", "asdev":"eth1", "neighbors":"10.180.0.1 as 30",
+      "templates":[{"template":"as-bgp", "asn":"6", "asdev":"eth1", "neighbors":"100.64.0.1 as 30",
               "interfaces":[
-                {"bridge":"transit-a", "address":"10.180.0.20/24"},
-                {"bridge":"root-p-lan", "address":"10.10.1.1/24"}
+                {"bridge":"transit-a", "address":"100.64.0.20/24"},
+                {"bridge":"root-p-lan", "address":"100.100.1.1/24"}
               ]
             },
-            {"template":"dns-root", "address":"10.10.1.10/24", "gateway":"10.10.1.1", "domain":"ns-root-p.milxc"}
+            {"template":"dns-root", "address":"100.100.1.10/24", "gateway":"100.100.1.1", "domain":"ns-root-p.milxc"}
     ]},
     "opendns": {
-      "templates":[{"template":"as-bgp", "asn":"7", "asdev":"eth2", "neighbors":"10.180.0.1 as 30;10.181.0.1 as 31",
+      "templates":[{"template":"as-bgp", "asn":"7", "asdev":"eth2", "neighbors":"100.64.0.1 as 30;100.64.1.1 as 31",
       "interfaces":[
-        {"bridge":"transit-a", "address":"10.180.0.30/24"},
-        {"bridge":"transit-b", "address":"10.181.0.30/24"},
-        {"bridge":"opendns-lan", "address":"10.10.10.1/24"}
+        {"bridge":"transit-a", "address":"100.64.0.30/24"},
+        {"bridge":"transit-b", "address":"100.64.1.30/24"},
+        {"bridge":"opendns-lan", "address":"100.100.100.1/24"}
       ]
     }]},
     "milxc": {
-      "templates":[{"template":"as-bgp", "asn":"8", "asdev":"eth1", "neighbors":"10.180.0.1 as 30",
+      "templates":[{"template":"as-bgp", "asn":"8", "asdev":"eth1", "neighbors":"100.64.0.1 as 30",
       "interfaces":[
-        {"bridge":"transit-a", "address":"10.180.0.40/24"},
-        {"bridge":"milxc-lan", "address":"10.10.20.1/24"}
+        {"bridge":"transit-a", "address":"100.64.0.40/24"},
+        {"bridge":"milxc-lan", "address":"100.100.20.1/24"}
       ]
     }]}
   }

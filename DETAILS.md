@@ -1,16 +1,16 @@
 # Current list of AS
 
-* NS ROOT O (ASN 5, 10.10.0.0/24) is a root DNS nameserver
-* NS ROOT P (ASN 6, 10.10.1.0/24) is a root DNS nameserver
-* OpenDNS (ASN 7, 10.10.10.0/24) is an open DNS resolver
-* TLD milxc (ASN 8, 10.10.20.0/24) is the TLD operator for .milxc
-* Target (ASN 10, 10.100.0.0/16, target.milxc) is some cool enterprise to attack
-* Ecorp (ASN 11, 10.101.0.0/16, ecorp.milxc) is some evil enterprise used to attack
-* MICA (ASN 12, 10.102.0.0/16, mica.milxc) is a CA, ready for ACME (let's encrypt-style)
-* Gozilla (ASN 13, 10.103.0.0/16, gozilla.milxc) is a web browser editor (ie, Mozilla), allowed to spread new root CA certificates to browsers
-* ISP-A (ASN 20, 10.150.0.0/16, ispa.milxc) is some end-user ISP
-* Transit-A (ASN 30, 10.180.0.0/24) is a transit operator
-* Transit-B (ASN 31, 10.181.0.0/24) is a transit operator
+* NS ROOT O (ASN 5, 100.100.0.0/24) is a root DNS nameserver
+* NS ROOT P (ASN 6, 100.100.1.0/24) is a root DNS nameserver
+* OpenDNS (ASN 7, 100.100.100.0/24) is an open DNS resolver
+* TLD milxc (ASN 8, 100.100.20.0/24) is the TLD operator for .milxc
+* Target (ASN 10, 100.80.0.0/16, target.milxc) is some cool enterprise to attack
+* Ecorp (ASN 11, 100.81.0.0/16, ecorp.milxc) is some evil enterprise used to attack
+* MICA (ASN 12, 100.82.0.0/16, mica.milxc) is a CA, ready for ACME (let's encrypt-style)
+* Gozilla (ASN 13, 100.83.0.0/16, gozilla.milxc) is a web browser editor (ie, Mozilla), allowed to spread new root CA certificates to browsers
+* ISP-A (ASN 20, 100.120.0.0/16, ispa.milxc) is some end-user ISP
+* Transit-A (ASN 30, 100.64.0.0/24) is a transit operator
+* Transit-B (ASN 31, 100.64.1.0/24) is a transit operator
 
 # Details of AS
 

@@ -7,6 +7,6 @@
                       ],
                       "gateway":"$gateway",
                       "templates":[{"template":"rootns"},
-                                  {"template":"nodhcp", "domain":"$domain", "ns":"10.10.10.10"}]}
+                                  {"template":"nodhcp", "domain":"$domain", "ns":"100.100.100.100"}]}
   }
 }

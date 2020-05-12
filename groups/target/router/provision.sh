@@ -26,12 +26,12 @@ sed -i "s/pass: prelude/pass:$PASS/" /etc/prewikka/prewikka.conf
 sed -i "s/botcc.rules/local.rules/" /etc/suricata/suricata.yaml
 #rm /etc/suricata/rules/*
 cp local.rules /etc/suricata/rules/
-sed -i -e 's/    HOME_NET:.*$/    HOME_NET: "[10.100.0.0\/16]"/' /etc/suricata/suricata.yaml
+sed -i -e 's/    HOME_NET:.*$/    HOME_NET: "[100.80.0.0\/16]"/' /etc/suricata/suricata.yaml
 
 sed -i -e "s/RUN=no/RUN=yes/" /etc/default/prelude-manager || true # fails on buster, must be started manually
 sed -i -e "s/RUN=no/RUN=yes/" /etc/default/prelude-correlator  || true # fails on buster, must be started manually
 
-echo "listen = 10.100.0.1" >> /etc/prelude-manager/prelude-manager.conf
+echo "listen = 100.80.0.1" >> /etc/prelude-manager/prelude-manager.conf
 
 
 # only for stretch
@@ -42,7 +42,7 @@ systemctl enable suricata
 # Firewall setup
 echo -e '#!/bin/sh
 iptables -P FORWARD DROP
-iptables -A FORWARD -i eth0 -o eth1 -d 10.100.1.2 -j ACCEPT
+iptables -A FORWARD -i eth0 -o eth1 -d 100.80.1.2 -j ACCEPT
 iptables -A FORWARD -i eth0 -o eth1 -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
 exit 0' > /etc/rc.local

@@ -3,10 +3,10 @@
   "containers": {
           "resolver":{"container":"resolver",
                             "interfaces":[
-                            {"bridge":"lan", "address":"10.10.10.10/24"}
+                            {"bridge":"lan", "address":"100.100.100.100/24"}
                             ],
-                            "gateway":"10.10.10.1",
-                            "templates":[{"template":"resolverns", "root":"10.10.0.10"},
-                                    {"template":"nodhcp", "domain":"opendns.milxc", "ns":"10.10.10.10"}]}
+                            "gateway":"100.100.100.1",
+                            "templates":[{"template":"resolverns"},
+                                    {"template":"nodhcp", "domain":"opendns.milxc", "ns":"100.100.100.100"}]}
   }
 }

@@ -549,7 +549,7 @@ def printgraph():
         G2.add_node("b"+bridge, colorscheme='brbg9', color='4', label=bridge[len(prefixbr):])
 
     G2.add_node("b"+lxcbr, colorscheme='brbg9', color='6', label=lxcbr)
-    # 69A2B0, A1C084, FFCAB1, 659157, E05263, https://coolors.co/ffcab1-69a2b0-659157-a1c084-e05263
+    # 69A2B0, A1C084, FFCAB1, 659157, E05263
 
     for cname in containers:
         global nics

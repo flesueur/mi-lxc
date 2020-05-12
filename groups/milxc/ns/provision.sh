@@ -28,15 +28,15 @@ echo -e "\$TTL	86400
 			      3h ; nxdomain ttl
 			     )
        IN  NS     ns.milxc.
-ns    IN  A      10.10.20.10  ;name server definition
+ns    IN  A      100.100.20.10  ;name server definition
 target.milxc.		IN	NS	ns.target.milxc.
-ns.target.milxc.	IN	A 10.100.1.2
+ns.target.milxc.	IN	A 100.80.1.2
 isp-a.milxc.	IN	NS	ns.isp-a.milxc.
-ns.isp-a.milxc.	IN	A 10.150.1.2
+ns.isp-a.milxc.	IN	A 100.120.1.2
 mica.milxc.	IN	NS	ns.mica.milxc.
-ns.mica.milxc.	IN	A 10.102.0.2
+ns.mica.milxc.	IN	A 100.82.0.2
 ecorp.milxc.	IN	NS	ns.ecorp.milxc.
-ns.ecorp.milxc.	IN	A 10.101.0.2
+ns.ecorp.milxc.	IN	A 100.81.0.2
 gozilla.milxc.	IN	NS	ns.gozilla.milxc.
-ns.gozilla.milxc.	IN	A 10.103.0.2
+ns.gozilla.milxc.	IN	A 100.83.0.2
 " >> /etc/nsd/milxc.zone

@@ -33,6 +33,6 @@ sed -i "s/protocol kernel {/protocol kernel { metric 2000;/" /etc/bird.conf
 echo -e "
 protocol static {
 	ipv4;
-	route 0.0.0.0/0 via 10.180.0.1;
+	route 0.0.0.0/0 via 100.64.0.1;
 }
 " >> /etc/bird.conf

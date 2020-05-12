@@ -4,11 +4,11 @@
     "infra":
         {"container":"infra",
           "interfaces":[
-            {"bridge":"lan", "address":"10.101.0.2/16"}
+            {"bridge":"lan", "address":"100.81.0.2/16"}
           ],
-          "gateway":"10.101.0.1",
+          "gateway":"100.81.0.1",
           "templates":[
             {"template":"updatecaroots"},
-            {"template":"nodhcp", "domain":"ecorp.milxc", "ns":"10.10.10.10"}]}
+            {"template":"nodhcp", "domain":"ecorp.milxc", "ns":"100.100.100.100"}]}
   }
 }
