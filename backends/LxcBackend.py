@@ -1,3 +1,7 @@
+"""
+LXC backend interface
+"""
+
 from .HostBackend import Host, Master
 import lxc
 import ipaddress
@@ -12,6 +16,9 @@ def getInterpreter(file):
     return interpreter
 
 class LxcBackend:
+    """
+    This class defines a few methods common to LxcHost and LxcMaster
+    """
     nextid = 0
 
     def provision(self, isMaster=False, isRenet=False):
@@ -87,7 +94,10 @@ class LxcBackend:
 
 
 
-class LxcHost(LxcBackend):
+class LxcHost(LxcBackend,Host):
+    """
+    This class defines methods to manage LXC hosts
+    """
     def __repr__(self):
         return("{" + self.backend + ":" + self.prefix + self.name
                 + ", master: " + self.master.name
@@ -242,7 +252,10 @@ class LxcHost(LxcBackend):
         lxccontainer.attach_wait(lxc.attach_run_command, run_command, env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
 
 
-class LxcMaster(LxcBackend):
+class LxcMaster(LxcBackend,Master):
+    """
+    This class defines methods to manage LXC masters
+    """
     def __repr__(self):
         return("{Master " + self.backend + ":" + self.prefix + self.name
                 + "}")
