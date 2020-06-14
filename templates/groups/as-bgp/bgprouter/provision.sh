@@ -13,6 +13,9 @@ apk add bird
 rc-update add bird
 
 echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+echo "net.ipv6.conf.all.forwarding=1" >> /etc/sysctl.conf
+echo -e "\n*\t*\t*\t*\t*\t/sbin/sysctl -p" >> /etc/crontabs/root
+
 
 
 # get iface name from internal ip
@@ -34,12 +37,33 @@ if [ ! -z $asdev ]
  done
 fi
 IFS=';'
-for i in $neighbors; do
+for i in $neighbors4; do
   echo -e "
 protocol bgp {
   local as $asn;
   neighbor $i;
   ipv4 {
+    import all;
+    export all;
+  };
+}" >>  /etc/bird.conf
+done
+
+# bird6
+if [ ! -z $asdev ]
+ then
+ IFS=';'
+ for i in $asdev; do
+   echo "protocol direct {  ipv6; interface \"$i\"; } " >> /etc/bird.conf
+ done
+fi
+IFS=';'
+for i in $neighbors6; do
+  echo -e "
+protocol bgp {
+  local as $asn;
+  neighbor $i;
+  ipv6 {
     import all;
     export all;
   };

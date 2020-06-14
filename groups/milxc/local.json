@@ -3,9 +3,9 @@
   "containers": {
         "ns":{"container":"ns",
                             "interfaces":[
-                            {"bridge":"lan", "address":"100.100.20.10/24"}
+                            {"bridge":"lan", "ipv4":"100.100.20.10/24"}
                             ],
-                            "gateway":"100.100.20.1",
+                            "gatewayv4":"100.100.20.1",
                             "templates":[{"template":"nodhcp", "domain":"reg.milxc", "ns":"100.100.100.100"}]}
   }
 }

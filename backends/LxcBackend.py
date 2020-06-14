@@ -35,13 +35,15 @@ class LxcBackend:
         else:
             path = self.folder
 
-        c.start()
-        if not isRenet and not c.get_ips(timeout=60):
-            print("Container seems to have failed to start (no IP)")
-            sys.exit(1)
-
         filesdir = os.path.dirname(os.path.realpath(sys.modules['__main__'].__file__)) + "/" + path + scriptname
         if os.path.isfile(filesdir):
+            c.start()
+            if not isRenet and not c.get_ips(timeout=60):
+                print("Container seems to have failed to start (no IP)")
+                sys.exit(1)
+
+        #filesdir = os.path.dirname(os.path.realpath(sys.modules['__main__'].__file__)) + "/" + path + scriptname
+        #if os.path.isfile(filesdir):
             ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["MILXCGUARD=TRUE", "HOSTLANG="+os.getenv("LANG")] + [
                             getInterpreter(filesdir), "/mnt/lxc/" + path + scriptname], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
             if ret != 0:
@@ -65,6 +67,10 @@ class LxcBackend:
 
             filesdir = os.path.dirname(os.path.realpath(sys.modules['__main__'].__file__)) + "/" + path + scriptname
             if os.path.isfile(filesdir):
+                c.start()
+                if not isRenet and not c.get_ips(timeout=60):
+                    print("Container seems to have failed to start (no IP)")
+                    sys.exit(1)
                 args = ["MILXCGUARD=TRUE", "HOSTLANG="+os.getenv("LANG")]
                 for arg in template:
                     args.append(arg + "=" + template[arg])
@@ -142,8 +148,9 @@ class LxcHost(LxcBackend,Host):
 
     def configNet(self):
         interfaces = self.nics["interfaces"]
-        gateway = self.nics["gateway"]
-        print("Configuring NICs of " + self.name + " to " + str(interfaces) + " / gw:" + gateway)
+        gatewayv4 = self.nics["gatewayv4"]
+        gatewayv6 = self.nics["gatewayv6"]
+        print("Configuring NICs of " + self.name + " to " + str(interfaces) + " / gwv4: " + gatewayv4 + " / gwv6: " + gatewayv6)
         c = self.getContainer()
         c.clear_config_item("lxc.net")
         i = 0
@@ -152,26 +159,47 @@ class LxcHost(LxcBackend,Host):
             v = cnic[1]
             c.network.add("veth")
             c.network[i].link = k
-            if not (v == 'dhcp'):
-                try:
-                    c.network[i].ipv4_address = v
-                except:
-                    # c.append_config_item("lxc.network."+str(i)+".ipv4", v)
-                    c.append_config_item(
-                        "lxc.net." + str(i) + ".ipv4.address", v)
-                #if (getGateway(v) == nics[c.name]['gateway']):
-                #    c.network[i].ipv4_gateway = getGateway(v)
-                try:
-                    if ipaddress.ip_address(gateway) in ipaddress.ip_network(v,strict=False):
-                        c.network[i].ipv4_gateway = gateway
-                except ValueError:  #gateway is not a valid address, no gateway to set
-                    pass
-            # c.network[i].script_up = "upscript"
             c.network[i].flags = "up"
+
+            if 'ipv4' in v:
+                ipv4 = v['ipv4']
+                if not (ipv4 == 'dhcp'):
+                    try:
+                        c.network[i].ipv4_address = ipv4
+                    except:
+                        # c.append_config_item("lxc.network."+str(i)+".ipv4", v)
+                        c.append_config_item(
+                            "lxc.net." + str(i) + ".ipv4.address", ipv4)
+                    try:
+                        if ipaddress.ip_address(gatewayv4) in ipaddress.ip_network(ipv4,strict=False):
+                            c.network[i].ipv4_gateway = gatewayv4
+                    except ValueError:  #gateway is not a valid address, no gateway to set
+                        pass
+
+            if 'ipv6' in v:
+                ipv6 = v['ipv6']
+                if not (ipv6 == 'dhcp'):
+                    # compress IPv6 since Lxc does not accept 2001:db8::0:1
+                    (ippart, netmask) = ipv6.split('/')
+                    ippart = ipaddress.ip_address(ippart)
+                    ipv6 = str(ippart) + '/' + netmask
+                    try:
+                        c.network[i].ipv6_address = ipv6
+                    except:
+                        # c.append_config_item("lxc.network."+str(i)+".ipv4", v)
+                        c.append_config_item(
+                            "lxc.net." + str(i) + ".ipv6.address", ipv6)
+                    try:
+                        if ipaddress.ip_address(gatewayv6) in ipaddress.ip_network(ipv6,strict=False):
+                            c.network[i].ipv6_gateway = str(ipaddress.ip_address(gatewayv6)) # recompress ipv6
+                    except ValueError:  #gateway is not a valid address, no gateway to set
+                        pass
+
             i += 1
+
         c.save_config()
 
-    def renet():
+    def renet(self):
         c = self.getContainer()
 
         # clear network config
@@ -180,8 +208,9 @@ class LxcHost(LxcBackend,Host):
 
         # add nated bridge
         c.network.add("veth")
-        c.network[0].link = lxcbr
+        c.network[0].link = self.lxcbr
         c.network[0].flags = "up"
+        c.save_config()
 
         # execs renet.sh
         self.provision(isRenet=True)

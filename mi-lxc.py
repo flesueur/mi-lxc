@@ -139,9 +139,22 @@ def getNics(data):
                 iface = lxcbr
             else:
                 iface = prefixbr + iface
-            interfaces.append((iface, interface["address"]))
-        nics[cname] = {'gateway': container[
-            "gateway"], 'interfaces': interfaces}
+
+            ips = {}
+            #for ipv, address in interface["address"]:
+            #    ips[ipv]=address
+            ips['ipv4'] = interface['ipv4']
+            if 'ipv6' in interface:
+                ips['ipv6'] = interface['ipv6']
+
+            interfaces.append((iface, ips))
+
+            if not 'gatewayv6' in container:
+                container["gatewayv6"]='None'
+
+            nics[cname] = {'gatewayv4': container["gatewayv4"],
+                            'gatewayv6': container["gatewayv6"],
+                            'interfaces': interfaces}
     return
 
 
@@ -367,7 +380,12 @@ def printgraph():
             #     nicname = nic[0]
 
 #            G2.add_edge(container[len(prefixc):],nicname)
-            G2.add_edge("c"+host.name,"b"+nic[0], label = nic[1])  # with IPs
+            label = ""
+            if 'ipv4' in nic[1]:
+                label += nic[1]['ipv4']
+            if 'ipv6' in nic[1]:
+                label += "\n" + nic[1]['ipv6']
+            G2.add_edge("c"+host.name,"b"+nic[0], label = label, fontsize = 10)  # with IPs
 
     #G2.write("test.dot")
     #G2.draw("test.png", prog="neato")
