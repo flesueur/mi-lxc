@@ -364,12 +364,12 @@ def printgraph():
     G2.node_attr['style'] = "filled"
 
     for host in hosts:
-        G2.add_node("c"+host.name, colorscheme='brbg9', color='2', shape='box', label=host.name)
+        G2.add_node("c"+host.name, colorscheme='brbg9', color='2', shape='box', label=host.name, fontsize=10, height=0.2)
 
     for bridge in bridges:
-        G2.add_node("b"+bridge, colorscheme='brbg9', color='4', label=bridge[len(prefixbr):])
+        G2.add_node("b"+bridge, colorscheme='brbg9', color='4', label=bridge[len(prefixbr):], fontsize=10, height=0.1)
 
-    G2.add_node("b"+lxcbr, colorscheme='brbg9', color='6', label=lxcbr)
+    G2.add_node("b"+lxcbr, colorscheme='brbg9', color='6', label=lxcbr, fontsize=10, height=0.2)
     # 69A2B0, A1C084, FFCAB1, 659157, E05263
 
     for host in hosts:
@@ -385,7 +385,7 @@ def printgraph():
                 label += nic[1]['ipv4']
             if 'ipv6' in nic[1]:
                 label += "\n" + nic[1]['ipv6']
-            G2.add_edge("c"+host.name,"b"+nic[0], label = label, fontsize = 10)  # with IPs
+            G2.add_edge("c"+host.name,"b"+nic[0], label = label, fontsize = 8)  # with IPs
 
     #G2.write("test.dot")
     #G2.draw("test.png", prog="neato")
@@ -469,6 +469,9 @@ if __name__ == '__main__':
     elif (command == "destroy"):
         if len(sys.argv) > 2:
             host = getHost(sys.argv[2])
+            if host is None:
+                print("Unexisting container " + sys.argv[2] + ", valid containers are " + listHosts(), file=sys.stderr)
+                exit(1)
             host.destroy()
         else:
             destroyInfra()

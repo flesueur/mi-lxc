@@ -22,7 +22,7 @@ else
 fi
 
 if [ -z $mynetworks ] ; then
-  sed -i -e "s/mynetworks = /mynetworks = 0.0.0.0\/0 /" /etc/postfix/main.cf
+  sed -i -e "s/mynetworks = /mynetworks = 0.0.0.0\/0 [::]\/0 /" /etc/postfix/main.cf
 else
   sed -i -e "s/mynetworks = /mynetworks = $mynetworks /" /etc/postfix/main.cf
 fi

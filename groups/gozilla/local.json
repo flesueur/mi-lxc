@@ -4,9 +4,10 @@
     "infra":
         {"container":"infra",
           "interfaces":[
-            {"bridge":"lan", "ipv4":"100.83.0.2/16"}
+            {"bridge":"lan", "ipv4":"100.83.0.2/16", "ipv6":"2001:db8:83::2/48"}
           ],
           "gatewayv4":"100.83.0.1",
+          "gatewayv6":"2001:db8:83::1",
           "templates":[{"template":"nodhcp", "domain":"gozilla.milxc", "ns":"100.100.100.100"}]}
   }
 }

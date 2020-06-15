@@ -4,9 +4,10 @@
     "infra":
         {"container":"infra",
           "interfaces":[
-            {"bridge":"lan", "ipv4":"100.82.0.2/16"}
+            {"bridge":"lan", "ipv4":"100.82.0.2/16", "ipv6":"2001:db8:82::2/48"}
           ],
           "gatewayv4":"100.82.0.1",
+          "gatewayv6":"2001:db8:82::1",
           "templates":[{"template":"nodhcp", "domain":"mica.milxc", "ns":"100.100.100.100"}]}
   }
 }

@@ -16,8 +16,10 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y unbound dnsutils
 #wget "http://www.internic.net/domain/named.root" -O /etc/unbound/root.hints
 echo -e ".                        3600000      NS    O.ROOT-SERVERS.NET.
 O.ROOT-SERVERS.NET.      3600000      A     100.100.0.10
-3600000      NS    P.ROOT-SERVERS.NET.
+O.ROOT-SERVERS.NET.      3600000      AAAA     2001:db8:a000::10
+.												3600000      NS    P.ROOT-SERVERS.NET.
 P.ROOT-SERVERS.NET.      3600000      A     100.100.1.10
+P.ROOT-SERVERS.NET.      3600000      AAAA     2001:db8:a001::10
 " > /etc/unbound/root.hints
 
 # customize unbound config

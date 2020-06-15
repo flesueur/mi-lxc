@@ -4,9 +4,10 @@
     "infra":
         {"container":"infra",
           "interfaces":[
-            {"bridge":"lan", "ipv4":"100.81.0.2/16"}
+            {"bridge":"lan", "ipv4":"100.81.0.2/16", "ipv6":"2001:db8:81::2/48"}
           ],
           "gatewayv4":"100.81.0.1",
+          "gatewayv6":"2001:db8:81::1",
           "templates":[
             {"template":"updatecaroots"},
             {"template":"nodhcp", "domain":"ecorp.milxc", "ns":"100.100.100.100"}]}

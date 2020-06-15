@@ -30,7 +30,7 @@
   "groups": {
     "transit-a": {
       "templates":[{"template":"as-bgp", "asn":"30", "neighbors4":"100.64.0.10 as 10;100.64.0.30 as 7;100.64.0.40 as 8; 100.64.0.2 as 31; 100.64.0.20 as 6; 100.64.0.50 as 13",
-                                                    "neighbors6":"2001:db8:b000::10 as 10; 2001:db8:b000::20 as 6",
+                  "neighbors6":"2001:db8:b000::10 as 10; 2001:db8:b000::30 as 7;2001:db8:b000::40 as 8; 2001:db8:b000::2 as 31; 2001:db8:b000::20 as 6; 2001:db8:b000::50 as 13",
       "interfaces":[
         {"bridge":"nat-bridge", "ipv4":"dhcp"},
         {"bridge":"transit-a", "ipv4":"100.64.0.1/24", "ipv6":"2001:db8:b000::1/48"}
@@ -38,9 +38,10 @@
       }]},
     "transit-b": {
       "templates":[{"template":"as-bgp", "asn":"31", "neighbors4":"100.64.0.1 as 30;100.64.1.20 as 5;100.64.1.10 as 20;100.64.1.30 as 7;100.64.1.40 as 12;100.64.1.50 as 11",
+                          "neighbors6":"2001:db8:b000::1 as 30;2001:db8:b001::20 as 5;2001:db8:b001::10 as 20;2001:db8:b001::30 as 7;2001:db8:b001::40 as 12;2001:db8:b001::50 as 11",
       "interfaces":[
-        {"bridge":"transit-b", "ipv4":"100.64.1.1/24"},
-        {"bridge":"transit-a", "ipv4":"100.64.0.2/24"}
+        {"bridge":"transit-b", "ipv4":"100.64.1.1/24", "ipv6":"2001:db8:b001::1/48"},
+        {"bridge":"transit-a", "ipv4":"100.64.0.2/24", "ipv6":"2001:db8:b000::2/48"}
         ]
     }]},
     "target": {
@@ -51,39 +52,39 @@
       ]
     }]},
     "mica": {
-      "templates":[{"template":"as-bgp", "asn":"12", "asdev":"eth1", "neighbors4":"100.64.1.1 as 31",
+      "templates":[{"template":"as-bgp", "asn":"12", "asdev":"eth1", "neighbors4":"100.64.1.1 as 31", "neighbors6":"2001:db8:b001::1 as 31",
       "interfaces":[
-        {"bridge":"transit-b", "ipv4":"100.64.1.40/24"},
-        {"bridge":"mica-lan", "ipv4":"100.82.0.1/16"}
+        {"bridge":"transit-b", "ipv4":"100.64.1.40/24", "ipv6":"2001:db8:b001::40/48"},
+        {"bridge":"mica-lan", "ipv4":"100.82.0.1/16", "ipv6":"2001:db8:82::1/48"}
       ]
     }]},
     "ecorp": {
-      "templates":[{"template":"as-bgp", "asn":"11", "asdev":"eth1", "neighbors4":"100.64.1.1 as 31",
+      "templates":[{"template":"as-bgp", "asn":"11", "asdev":"eth1", "neighbors4":"100.64.1.1 as 31","neighbors6":"2001:db8:b001::1 as 31",
       "interfaces":[
-        {"bridge":"transit-b", "ipv4":"100.64.1.50/24"},
-        {"bridge":"ecorp-lan", "ipv4":"100.81.0.1/16"}
+        {"bridge":"transit-b", "ipv4":"100.64.1.50/24", "ipv6":"2001:db8:b001::50/48"},
+        {"bridge":"ecorp-lan", "ipv4":"100.81.0.1/16", "ipv6":"2001:db8:81::1/48"}
       ]
     }]},
     "gozilla": {
-      "templates":[{"template":"as-bgp", "asn":"13", "asdev":"eth1", "neighbors4":"100.64.0.1 as 30",
+      "templates":[{"template":"as-bgp", "asn":"13", "asdev":"eth1", "neighbors4":"100.64.0.1 as 30","neighbors6":"2001:db8:b000::1 as 30",
       "interfaces":[
-        {"bridge":"transit-a", "ipv4":"100.64.0.50/24"},
-        {"bridge":"gozilla-lan", "ipv4":"100.83.0.1/16"}
+        {"bridge":"transit-a", "ipv4":"100.64.0.50/24", "ipv6":"2001:db8:b000::50/48"},
+        {"bridge":"gozilla-lan", "ipv4":"100.83.0.1/16", "ipv6":"2001:db8:83::1/48"}
       ]
     }]},
     "isp-a": {
-      "templates":[{"template":"as-bgp", "asn":"20", "asdev":"eth1;eth2", "neighbors4":"100.64.1.1 as 31",
+      "templates":[{"template":"as-bgp", "asn":"20", "asdev":"eth1;eth2", "neighbors4":"100.64.1.1 as 31","neighbors6":"2001:db8:b001::1 as 31",
       "interfaces":[
-          {"bridge":"transit-b", "ipv4":"100.64.1.10/24"},
+          {"bridge":"transit-b", "ipv4":"100.64.1.10/24", "ipv6":"2001:db8:b001::10/48"},
           {"bridge":"isp-a-cust", "ipv4":"100.120.0.1/24"},
-          {"bridge":"isp-a-infra", "ipv4":"100.120.1.1/24"}
+          {"bridge":"isp-a-infra", "ipv4":"100.120.1.1/24", "ipv6":"2001:db8:120:1::1/64"}
       ]
     }]},
     "root-o": {
-      "templates":[{"template":"as-bgp", "asn":"5", "asdev":"eth1", "neighbors4":"100.64.1.1 as 31",
+      "templates":[{"template":"as-bgp", "asn":"5", "asdev":"eth1", "neighbors4":"100.64.1.1 as 31", "neighbors6":"2001:db8:b001::1 as 31",
               "interfaces":[
-                {"bridge":"transit-b", "ipv4":"100.64.1.20/24"},
-                {"bridge":"root-o-lan", "ipv4":"100.100.0.1/24", "ipv6":"2001:db8:a000::10/48"}
+                {"bridge":"transit-b", "ipv4":"100.64.1.20/24", "ipv6":"2001:db8:b001::20/48"},
+                {"bridge":"root-o-lan", "ipv4":"100.100.0.1/24", "ipv6":"2001:db8:a000::1/48"}
               ]
             },
             {"template":"dns-root", "ipv4":"100.100.0.10/24", "gatewayv4":"100.100.0.1", "ipv6":"2001:db8:a000::10/48", "gatewayv6":"2001:db8:a000::1", "domain":"ns-root-o.milxc"}
@@ -98,18 +99,18 @@
             {"template":"dns-root", "ipv4":"100.100.1.10/24", "gatewayv4":"100.100.1.1", "ipv6":"2001:db8:a001::10/48", "gatewayv6":"2001:db8:a001::1", "domain":"ns-root-p.milxc"}
     ]},
     "opendns": {
-      "templates":[{"template":"as-bgp", "asn":"7", "asdev":"eth2", "neighbors4":"100.64.0.1 as 30;100.64.1.1 as 31",
+      "templates":[{"template":"as-bgp", "asn":"7", "asdev":"eth2", "neighbors4":"100.64.0.1 as 30;100.64.1.1 as 31","neighbors6":"2001:db8:b000::1 as 30;2001:db8:b001::1 as 31",
       "interfaces":[
-        {"bridge":"transit-a", "ipv4":"100.64.0.30/24"},
-        {"bridge":"transit-b", "ipv4":"100.64.1.30/24"},
-        {"bridge":"opendns-lan", "ipv4":"100.100.100.1/24"}
+        {"bridge":"transit-a", "ipv4":"100.64.0.30/24", "ipv6":"2001:db8:b000::30/48"},
+        {"bridge":"transit-b", "ipv4":"100.64.1.30/24", "ipv6":"2001:db8:b001::30/48"},
+        {"bridge":"opendns-lan", "ipv4":"100.100.100.1/24", "ipv6":"2001:db8:a100::1/48"}
       ]
     }]},
     "milxc": {
-      "templates":[{"template":"as-bgp", "asn":"8", "asdev":"eth1", "neighbors4":"100.64.0.1 as 30",
+      "templates":[{"template":"as-bgp", "asn":"8", "asdev":"eth1", "neighbors4":"100.64.0.1 as 30","neighbors6":"2001:db8:b000::1 as 30",
       "interfaces":[
-        {"bridge":"transit-a", "ipv4":"100.64.0.40/24"},
-        {"bridge":"milxc-lan", "ipv4":"100.100.20.1/24"}
+        {"bridge":"transit-a", "ipv4":"100.64.0.40/24", "ipv6":"2001:db8:b000::40/48"},
+        {"bridge":"milxc-lan", "ipv4":"100.100.20.1/24", "ipv6":"2001:db8:a020::1/48"}
       ]
     }]}
   }

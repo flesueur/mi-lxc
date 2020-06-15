@@ -4,9 +4,10 @@
     "infra":
         {"container":"infra",
           "interfaces":[
-            {"bridge":"infra", "ipv4":"100.120.1.2/24"}
+            {"bridge":"infra", "ipv4":"100.120.1.2/24", "ipv6":"2001:db8:120:1::2/64"}
           ],
           "gatewayv4":"100.120.1.1",
+          "gatewayv6":"2001:db8:120:1::1",
           "templates":[
             {"template":"mailserver", "domain":"isp-a.milxc"},
             {"template":"resolverns"},

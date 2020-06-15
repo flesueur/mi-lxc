@@ -29,6 +29,7 @@ echo -e "\n*\t*\t*\t*\t*\t/sbin/sysctl -p" >> /etc/crontabs/root
 
 echo "router id $asn;" >> /etc/bird.conf
 
+OLDIFS=$IFS
 if [ ! -z $asdev ]
  then
  IFS=';'
@@ -50,6 +51,7 @@ protocol bgp {
 done
 
 # bird6
+IFS=$OLDIFS
 if [ ! -z $asdev ]
  then
  IFS=';'
