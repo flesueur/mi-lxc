@@ -320,12 +320,12 @@ class LxcMaster(LxcBackend,Master):
         print("Master " + self.name + " created successfully")
         return c
 
-    def update(master):
-        print("Updating master " + master['name'])
-        c = lxc.Container(prefixc + "masters" + sep + master['name'])
+    def update(self):
+        print("Updating master " + self.name)
+        c = self.getContainer()
         if c.defined:
-            print("Master container " +master['name']+ " exists, updating...", file=sys.stdout)
-            path = "masters/" + master['name']
+            print("Master container " + self.name + " exists, updating...", file=sys.stdout)
+            path = "masters/" + self.name
             filesdir = os.path.dirname(os.path.realpath(sys.modules['__main__'].__file__)) + "/" + path + "/update.sh"
             if not os.path.isfile(filesdir):
                 print("\033[31mNo update script for master !\033[0m", file=sys.stderr)
@@ -345,7 +345,7 @@ class LxcMaster(LxcBackend,Master):
                 exit(1)
 
             c.stop()
-            print("Master " + master['name'] + " updated successfully")
+            print("Master " + self.name + " updated successfully")
         return c
 
     def configure(self):

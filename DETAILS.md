@@ -24,6 +24,7 @@
   * http on www.target.milxc (weak password)
   * certbot pre-installed for ACME with MICA
   * OSSEC HIDS
+  * MISP instance listening on misp.target.milxc (admin@admin.test/admin)
 * target-ldap :
   * ldap server
   * All hosts simply rely on this centralized authentication (every user can thus connect to any internal host)
@@ -62,6 +63,8 @@
 
 * gozilla-infra :
   * addcatofox.sh root.crt to push root.crt to future browser updates
+  * MISP instance listening on misp.gozilla.milxc (admin@admin.test/admin)
+
 
 
 ## ISP-A
