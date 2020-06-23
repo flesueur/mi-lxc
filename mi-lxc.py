@@ -8,7 +8,7 @@ import json
 import re
 import ipaddress
 import pprint
-from backends import LxcBackend
+from backends import LxcBackend, DynamipsBackend
 
 def flushArp():
     os.system("ip neigh flush dev " + lxcbr)
@@ -190,6 +190,9 @@ def getMasters2():
             if master['backend'] == "lxc":
                 masterc = LxcBackend.LxcMaster(name=master['name'], parameters=master['parameters'], template=master['template'], family=master['family'])
                 masters2.append(masterc)
+            elif master['backend'] == "dynamips":
+                masterc = DynamipsBackend.DynamipsMaster(name=master['name'], rom=master['rom'], family=master['family'])
+                masters2.append(masterc)
             else:
                 print("Backend " + master['backend'] + " not supported, exiting", file=sys.stderr)
                 exit(1)
@@ -213,6 +216,9 @@ def getHosts():
         master = getMaster(mastername)
         if master.backend == "lxc":
             newcont = LxcBackend.LxcHost(name=container, nics=nics[container], templates=mitemplates[container], master=master, folder=folders[container])
+            hosts.append(newcont)
+        elif master.backend == "dynamips":
+            newcont = DynamipsBackend.DynamipsHost(name=container, nics=nics[container], templates=mitemplates[container], master=master, folder=folders[container])
             hosts.append(newcont)
         else:
             print("Backend " + master.backend + " not supported, exiting", file=sys.stderr)

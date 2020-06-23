@@ -26,6 +26,13 @@
 "name":"alpine",
 "family":"alpine",
 "status":"enabled"
+},
+{
+"backend":"dynamips",
+"rom":"templates/groups/as-bgp-dynamips/bgprouter/bins/c3640-js-m.124-3g.bin",
+"name":"cisco-3640",
+"family":"c3640",
+"status":"disabled"
 }],
   "groups": {
     "transit-a": {

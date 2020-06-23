@@ -1,0 +1,9 @@
+{
+  "comment":"AS BGP template",
+  "containers": {"router":
+                  { "interfaces": "$interfaces",
+                    "gatewayv4":"None",
+                    "master":"cisco-3640",
+                    "templates":[{"template":"bgprouter", "asn":"$asn", "neighbors4":"$neighbors4", "neighbors6":"$neighbors6", "asdev":"$asdev"}]}
+    }
+}
