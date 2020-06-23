@@ -10,6 +10,7 @@ cp /vagrant/files/keyboard /etc/default/keyboard
 echo "USE_LXC_BRIDGE=\"true\"" > /etc/default/lxc-net
 
 # MAJ et install
+sed -i -e 's/main/main contrib non-free/' /etc/apt/sources.list
 apt-get --allow-releaseinfo-change update
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
@@ -17,14 +18,15 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y apt-cacher-ng
 echo "Acquire::http::Proxy \"http://127.0.0.1:3142\";" > /etc/apt/apt.conf.d/01proxy;  # utilisation de apt-cacher-ng
 #data=`uname -r`
 #arch=${data##*-}
-DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-`dpkg --print-architecture` curl dkms apt-cacher-ng python3-pygraphviz python3-pil imagemagick linux-headers-amd64 curl git lxc python3-lxc apache2 vim xfce4 lightdm firefox-esr gnome-terminal tcpdump dsniff whois postgresql wireshark dkms net-tools zerofree mousepad # keyboard-configuration  wireshark
+DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-`dpkg --print-architecture` virtualbox-guest-additions-iso dynamips screen curl dkms apt-cacher-ng python3-pygraphviz python3-pil imagemagick linux-headers-amd64 curl git lxc python3-lxc apache2 vim xfce4 lightdm firefox-esr gnome-terminal tcpdump dsniff whois postgresql wireshark dkms net-tools zerofree mousepad # keyboard-configuration  wireshark
 apt-get clean
 # linux-headers-4.9.0-7-amd64 firmware-atheros firmware-misc-nonfree
 
 # vbox guest utils
-VERSION=`curl https://download.virtualbox.org/virtualbox/LATEST-STABLE.TXT`
-curl https://download.virtualbox.org/virtualbox/$VERSION/VBoxGuestAdditions_$VERSION.iso -o /tmp/vbox.iso
-mount -o loop /tmp/vbox.iso /mnt
+#VERSION=`curl https://download.virtualbox.org/virtualbox/LATEST-STABLE.TXT`
+#curl https://download.virtualbox.org/virtualbox/$VERSION/VBoxGuestAdditions_$VERSION.iso -o /tmp/vbox.iso
+#mount -o loop /tmp/vbox.iso /mnt
+mount -o loop /usr/share/virtualbox/VBoxGuestAdditions.iso /mnt
 /mnt/VBoxLinuxAdditions.run || true # vboxsf module will fail to load before reboot, expected behavior
 /sbin/rcvboxadd quicksetup all || true
 
