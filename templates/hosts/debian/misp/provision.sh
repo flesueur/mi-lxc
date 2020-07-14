@@ -6,12 +6,13 @@ DIR=`dirname $0`
 cd `dirname $0`
 
 apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y mariadb-server git debhelper dh-apache2 sudo
+DEBIAN_FRONTEND=noninteractive apt-get install -y mariadb-server git debhelper dh-apache2 sudo libapache2-mod-php ca-certificates python3 python3-setuptools python3-wheel composer mariadb-client openssl zip unzip moreutils php-mysql php-pear php-redis php-gd php-gnupg php-json php-xml php-readline php-mbstring php7.3-opcache libfuzzy-dev
 
-cd /root
-git clone --branch v2.4.126 https://github.com/MISP/MISP.git
-mv MISP misp-2.4.220
-cd misp-2.4.220
+cd /tmp
+git clone --branch v2.4.128 https://github.com/MISP/MISP.git
+#mv MISP misp-2.4.220
+#cd misp-2.4.220
+cd MISP
 git submodule init
 git submodule update
 
@@ -32,8 +33,14 @@ misp  misp/configure_mariadb  select  Yes
 misp  misp/mariadb_host string 127.0.0.1
 misp  misp/mariadb_mispdbuser string misp" | debconf-set-selections
 
-DEBIAN_FRONTEND=noninteractive apt-get -f install -y libapache2-mod-php ca-certificates python3 python3-setuptools python3-wheel composer mariadb-client openssl zip unzip moreutils php-mysql php-pear php-redis php-gd php-gnupg php-json php-xml php-readline php-mbstring php7.3-opcache libfuzzy-dev
-DEBIAN_FRONTEND=noninteractive dpkg -i misp_2.4.125-1_all.deb
+#DEBIAN_FRONTEND=noninteractive apt-get -f install -y libapache2-mod-php ca-certificates python3 python3-setuptools python3-wheel composer mariadb-client openssl zip unzip moreutils php-mysql php-pear php-redis php-gd php-gnupg php-json php-xml php-readline php-mbstring php7.3-opcache libfuzzy-dev
+#DEBIAN_FRONTEND=noninteractive dpkg -i misp_2.4.125-1_all.deb
+DEBIAN_FRONTEND=noninteractive dpkg -i misp*.deb
+
+# Re-enable default site
+a2ensite 000-default
+
 #DEBIAN_FRONTEND=noninteractive apt-get -f install -y
 
 #sed -i -e 's/http:\/\/127.0.0.1/http:\/\/filer.target.milxc/' /usr/share/misp/app/Config/config.php
+# default credentials : admin@admin.test / admin
