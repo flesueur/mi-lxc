@@ -15,7 +15,7 @@ apt-get update
 DEB_VERSION=`cat /etc/debian_version | cut -d'.' -f1`
 if [ $DEB_VERSION -eq "10" ] # DEB 10 aka Buster
 then
-  DEBIAN_FRONTEND=noninteractive apt-get install -y certbot nsd dovecot-imapd proftpd apt-transport-https wget prelude-utils libprelude-dev build-essential php7.3-mbstring php7.3 libevent-dev libpcre2-dev zlib1g-dev libssl-dev
+  DEBIAN_FRONTEND=noninteractive apt-get install -y dokuwiki certbot nsd dovecot-imapd proftpd apt-transport-https wget prelude-utils libprelude-dev build-essential php7.3-mbstring php7.3 libevent-dev libpcre2-dev zlib1g-dev libssl-dev
 else # DEB 9 aka stretch
   DEBIAN_FRONTEND=noninteractive apt-get install -y nsd dovecot-imapd proftpd apt-transport-https wget libprelude2 libprelude-dev build-essential  php7.0-mbstring php7.0
 fi
@@ -38,26 +38,40 @@ chmod +x /etc/rc.local
 
 
 # Install de dokuwiki
-rm -f /var/www/html/index.html
-#cp -ar /mnt/lxc/dmz/dokuwiki/* /var/www/html/
-wget https://github.com/splitbrain/dokuwiki/archive/release_stable_2018-04-22b.tar.gz -O /tmp/dokuwiki.tar.gz
-tar zxf /tmp/dokuwiki.tar.gz -C /var/www/html --strip 1
-echo "sh      application/x-sh" >> /var/www/html/conf/mime.conf
-PASS=`mkpasswd -5 superman`
-echo "admin:$PASS:admin:admin@target.milxc:admin,user" >> /var/www/html/conf/users.auth.php
-echo "* @ALL  1" > /var/www/html/conf/acl.auth.php
-echo "* @user  8" >> /var/www/html/conf/acl.auth.php
-cp doku/local.php /var/www/html/conf/
-cp doku/start.txt /var/www/html/data/pages/
-chown -R www-data /var/www/html/*
+# rm -f /var/www/html/index.html
+# wget https://github.com/splitbrain/dokuwiki/archive/release_stable_2018-04-22b.tar.gz -O /tmp/dokuwiki.tar.gz
+# tar zxf /tmp/dokuwiki.tar.gz -C /var/www/html --strip 1
+# echo "sh      application/x-sh" >> /var/www/html/conf/mime.conf
+# PASS=`mkpasswd -5 superman`
+# echo "admin:$PASS:admin:admin@target.milxc:admin,user" >> /var/www/html/conf/users.auth.php
+# echo "* @ALL  1" > /var/www/html/conf/acl.auth.php
+# echo "* @user  8" >> /var/www/html/conf/acl.auth.php
+# cp doku/local.php /var/www/html/conf/
+# cp doku/start.txt /var/www/html/data/pages/
+# chown -R www-data /var/www/html/*
+
+echo "sh      application/x-sh" >> /etc/dokuwiki/mime.conf
+#PASS=`mkpasswd -5 superman`
+PASS=`echo -n superman | sha1sum | awk '{print $1}'`
+echo "admin:$PASS:admin:admin@target.milxc:admin,user" > /etc/dokuwiki/users.auth.php
+cp doku/local.php /etc/dokuwiki/
+cp doku/start.txt /var/lib/dokuwiki/data/pages/
+chown www-data /var/lib/dokuwiki/data/pages/start.txt
+sed -i -e 's/Allow from .*/Allow from All/' /etc/apache2/conf-available/dokuwiki.conf
+sed -i -e 's/DocumentRoot .*/DocumentRoot \/usr\/share\/dokuwiki/' /etc/apache2/sites-available/000-default.conf
 a2enmod headers
 echo "RequestHeader unset If-Modified-Since" >> /etc/apache2/apache2.conf
+# des chown ?
+# Points d'entrée : le BF, le leak de mdp, une RCE pour webshell ajouté manuellement
+# de là : rebond vers le commercial, ou direct depuis DMZ. Si webshell, il faut le mdp du commercial : récup du fichier doku users.auth.php
+# le pass est stocké en MD5 hashé : le brute-forcer en local, c'est rapide
+
 
 # Install de OSSEC avec support prelude
 cd /tmp
-wget https://github.com/ossec/ossec-hids/archive/3.4.0.tar.gz
-tar zxvf 3.4.0.tar.gz
-cd ossec-hids-3.4.0
+wget https://github.com/ossec/ossec-hids/archive/3.6.0.tar.gz
+tar zxvf 3.6.0.tar.gz
+cd ossec-hids-3.6.0
 cp $DIR/preloaded-vars.conf etc/
 USE_PRELUDE=yes ./install.sh
 
