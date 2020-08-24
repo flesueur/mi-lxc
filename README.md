@@ -47,7 +47,7 @@ More precise details on what is installed and configured on hosts is in [DETAILS
 
 ## Installation on Linux
 
-On Debian (Strech/Buster), you need lxc, python3-lxc, dnsmasq-base, python3-pil and python3-pygraphviz (`apt-get install lxc python3-lxc dnsmasq-base python3-pil python3-pygraphviz`) and then to enable networking in the LXC configuration (`USE_LXC_BRIDGE="true"` in `/etc/default/lxc-net`). Finally, you need to restart LXC networking (`service lxc-net restart`).
+On Debian (Strech/Buster), you need lxc, python3-lxc, dnsmasq-base, bridge-utils, python3-pil and python3-pygraphviz (`apt-get install lxc python3-lxc dnsmasq-base bridge-utils python3-pil python3-pygraphviz`) and then to enable networking in the LXC configuration (`USE_LXC_BRIDGE="true"` in `/etc/default/lxc-net`). Finally, you need to restart LXC networking (`service lxc-net restart`).
 
 On Ubuntu Bionic (2018.04 LTS), you first need to enable the multiverse repository. Then you need to install lxc-utils, python3-lxc dnsmasq-base, python3-pil and python3-pygraphviz (`apt-get install lxc-utils python3-lxc dnsmasq-base python3-pil python3-pygraphviz`). You may need to restart lxc-net or apparmor. If you are using Ubuntu as a live CD, you need some mounted storage (4GB should be ok) and then to configure LXC to use this space : create the `/etc/lxc/lxc.conf` with the content `lxc.lxcpath=/mnt` (location where you mounted your storage)
 
