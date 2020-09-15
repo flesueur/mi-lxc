@@ -9,6 +9,9 @@ set -e
 cp /vagrant/files/keyboard /etc/default/keyboard
 echo "USE_LXC_BRIDGE=\"true\"" > /etc/default/lxc-net
 
+# Lock grub (https://www.mail-archive.com/debian-bugs-dist@lists.debian.org/msg1758060.html)
+DEBIAN_FRONTEND=noninteractive apt-mark hold grub*
+
 # MAJ et install
 sed -i -e 's/main/main contrib non-free/' /etc/apt/sources.list
 apt-get --allow-releaseinfo-change update
@@ -56,7 +59,27 @@ useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 debian` debian
 echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
 sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
 
-
+# VPN and x2go
+# echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+# echo -e "x2goserver-desktopsharing	x2goserver-desktopsharing/use-existing-group-for-sharing	boolean	false
+# x2goserver-desktopsharing	x2goserver-desktopsharing/auto-start-on-logon	boolean	true
+# x2goserver-desktopsharing	x2goserver-desktopsharing/auto-activate-on-logon	boolean	true
+# x2goserver-desktopsharing	x2goserver-desktopsharing/create-group-for-sharing	boolean	true
+# x2goserver-desktopsharing	x2goserver-desktopsharing/group-sharing	string	x2godesktopsharing" | debconf-set-selections
+#
+# DEBIAN_FRONTEND=noninteractive apt-get install -y x2goserver-desktopsharing openvpn
+#
+# echo "ip addr show dev tun1 1>/dev/null 2>&1 && (echo -n 'IP VPN : ' && ip -4 addr show tun1 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')" >> /root/.bashrc
+#
+# source vpn.conf
+# echo -e "$LOGIN\n$PASSWORD" > /root/.pass
+# chmod 600 /root/.pass
+# wget "$CACERT" -O /root/.ca.crt
+# echo -e "#!/bin/sh
+# openvpn --remote $SERVER --dev tun1 --client --ca /root/.ca.crt --auth-user-pass /root/.pass --comp-lzo --mute-replay-warnings &
+# exit 0" > /etc/rc.local
+# chmod +x /etc/rc.local
+# Fin VPN/X2GO
 
 #/vagrant/files/VBoxLinuxAdditions.run
 
