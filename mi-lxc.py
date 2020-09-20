@@ -471,7 +471,14 @@ if __name__ == '__main__':
     flushArp()
 
     if (command == "create"):
-        createInfra()
+        if len(sys.argv) > 2:
+            host = getHost(sys.argv[2])
+            if host is None:
+                print("Unexisting container " + sys.argv[2] + ", valid containers are " + listHosts(), file=sys.stderr)
+                exit(1)
+            host.create()
+        else:
+            createInfra()
     elif (command == "destroy"):
         if len(sys.argv) > 2:
             host = getHost(sys.argv[2])
