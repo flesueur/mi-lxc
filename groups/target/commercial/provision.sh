@@ -49,4 +49,11 @@ CuWb/rpKmc5PEOlRH51izH25BUQjlei43O95ZFT6lrs4iOXPXRoXi+eV1RyUener
 VHFxVmACJ+LkGXkCA9AYMidtgb1Kti2z09rtV2Tvs1//g5kbMIQi
 -----END RSA PRIVATE KEY-----" > /home/commercial/.ssh/id_rsa
 chmod 600 /home/commercial/.ssh/id_rsa
+
+# don't check server's SSH key so "sshpass" works the first time, even if
+# the commercial user never connected to "intranet" and haven't already
+# trusted its key (necessary for attack scenario)
+echo "Host *" > /home/commercial/.ssh/config
+echo -e "\tStrictHostKeyChecking no" >> /home/commercial/.ssh/config
+
 chown -R 1001:1001 /home/commercial
