@@ -8,7 +8,7 @@ cd `dirname $0`
 # systemctl set-default graphical.target
 
 apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pyasn1 python3-psutil sshpass
+DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pyasn1 python3-psutil sshpass python3-pycryptodome
 
 #cp -ar /mnt/lxc/commercial/homedir/* /home/debian/
 #ln -sf /home/debian/background.jpg /usr/share/images/desktop-base/default
@@ -20,6 +20,12 @@ chown -R 1001:1001 /home/commercial
 # remove nmap binary
 rm /usr/bin/nmap
 
+# pycryptodome gives us "Crypto" Python3 module required by lazagne (used by hacker)
+# however the Debian package actually installs "pypcrytodomex" which puts it
+# under the "Cryptodome" instead of "Crypto" and thus "import Crypto" fails
+# Cf. https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=886291
+# Fix it by adding a symbolic link
+ln -s /usr/lib/python3/dist-packages/Cryptodome /usr/lib/python3/dist-packages/Crypto
 
 echo -e "-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA5gMaCpCamrAgfNy/P2g/Q++fNzStR6CLiSb+Bquq+h82iJIH
