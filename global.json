@@ -2,7 +2,7 @@
   "prefix-containers":"mi-",
   "prefix-bridges":"mi-",
   "nat-bridge":"lxcbr0",
-  "comment":"An interconnected network of different AS with internety services",
+  "comment":"An interconnected network of different AS with internet services",
   "masters": [
     {
     "backend":"lxc",
