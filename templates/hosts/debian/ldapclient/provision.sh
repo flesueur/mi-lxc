@@ -36,4 +36,4 @@ echo "bind_timelimit 2" >> /etc/libnss-ldap.conf
 echo "bind_policy soft" >> /etc/libnss-ldap.conf
 
 # auto create home dir when an LDAP user connects for the first time
-echo "session required pam_mkhomedir.so skel=/etc/skel umask=0077" >> /etc/pam.d/common-session
+echo "session required pam_mkhomedir.so skel=/etc/skel umask=0022" >> /etc/pam.d/common-session
