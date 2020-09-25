@@ -16,7 +16,7 @@ ln -sf /home/debian/background.jpg /usr/share/images/desktop-base/default
 chown -R debian:debian /home/debian
 
 # allow anyone, including "debian" used by hacker, to write into web root
-chown 777 /var/www/html
+chmod 777 /var/www/html
 
 # Disable DHCP and do DNS config
 #sed -i "s/.*dhcp.*//" /etc/network/interfaces
