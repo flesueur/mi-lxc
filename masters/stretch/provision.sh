@@ -43,6 +43,10 @@ sed -i "/mesg n/d" /root/.profile
 echo "echo -e \"\n  Successfully attached to \`hostname | cut -d'-' -f'2-'\`\n\"" >> /root/.profile
 echo "echo -e \"\n  Successfully attached to \`hostname | cut -d'-' -f'2-'\`\n\"" >> /etc/skel/.profile
 
+# XFCE4 panel: use default config
+# source: https://forum.xfce.org/viewtopic.php?pid=36585#p36585
+cp /etc/xdg/xfce4/panel/default.xml /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
+
 # Creation des utilisateurs
 usermod -p `mkpasswd --method=sha-512 root` root
 grep -q debian /etc/passwd || useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 debian` debian
