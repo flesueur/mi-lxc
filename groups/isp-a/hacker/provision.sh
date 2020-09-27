@@ -18,6 +18,7 @@ ln -sf /home/debian/background.jpg /usr/share/images/desktop-base/default
 chmod 777 /var/www/html
 
 # store EICAR as base64 and decode it in the machine, instead of storing it as a file that triggers the AV when cloning this repository
+mkdir -p /home/debian/tp/ids/
 echo "WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo=" | base64 -d > /home/debian/tp/ids/eicar.txt
 
 chown -R debian:debian /home/debian
