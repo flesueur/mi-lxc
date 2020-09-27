@@ -15,8 +15,8 @@ echo "user_allow_other" >> /etc/fuse.conf
 
 cp pam_mount.conf.xml /etc/security/
 sed -i -e "s/\$server/$server/" /etc/security/pam_mount.conf.xml
-
-
+# do not ask for password when attaching
+sed -i -e "s/pam_mount\.so/pam_mount\.so\tdisable_interactive/" /etc/pam.d/common-{auth,session}
 
 
 # avec clés SSH
