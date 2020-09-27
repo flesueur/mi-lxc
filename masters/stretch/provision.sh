@@ -38,6 +38,10 @@ echo "LANG=\"$HOSTLANG\"">/etc/default/locale
 dpkg-reconfigure --frontend=noninteractive locales || true  # don't fail for a locales problem
 update-locale LANG=$HOSTLANG || true   # don't fail for a locales problem
 
+# prevents "mesg: ttyname failed: No such device" error message when attaching
+sed -i "/mesg n/d" /root/.profile
+echo "echo -e \"\n  Successfully attached to \`hostname | cut -d'-' -f'2-'\`\n\"" >> /root/.profile
+echo "echo -e \"\n  Successfully attached to \`hostname | cut -d'-' -f'2-'\`\n\"" >> /etc/skel/.profile
 
 # Creation des utilisateurs
 usermod -p `mkpasswd --method=sha-512 root` root
@@ -48,7 +52,3 @@ echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
 sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
 service ssh restart
-
-# prevents "mesg: ttyname failed: No such device" error message when connection as root
-sed -i "/mesg n/d" /root/.profile
-echo "echo -e \"\n  Successfully attached to \`hostname | cut -d'-' -f'2-'\`\n\"" >> /root/.profile

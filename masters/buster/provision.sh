@@ -38,6 +38,10 @@ echo "LANG=\"$HOSTLANG\"">/etc/default/locale
 dpkg-reconfigure --frontend=noninteractive locales || true  # don't fail for a locales problem
 update-locale LANG=$HOSTLANG || true   # don't fail for a locales problem
 
+# prevents "mesg: ttyname failed: No such device" error message when attaching
+sed -i "/mesg n/d" /root/.profile
+echo "echo -e \"\n  Successfully attached to \`hostname | cut -d'-' -f'2-'\`\n\"" >> /root/.profile
+echo "echo -e \"\n  Successfully attached to \`hostname | cut -d'-' -f'2-'\`\n\"" >> /etc/skel/.profile
 
 # Creation des utilisateurs
 usermod -p `mkpasswd --method=sha-512 root` root
@@ -54,7 +58,3 @@ echo "ALWAYS_SET_PATH yes" >> /etc/login.defs
 
 # allows non-root users to run ping (getcap /bin/ping does not list cap_net_raw+ep)
 DEBIAN_FRONTEND=noninteractive dpkg-reconfigure iputils-ping
-
-# prevents "mesg: ttyname failed: No such device" error message when connection as root
-sed -i "/mesg n/d" /root/.profile
-echo "echo -e \"\n  Successfully attached to \`hostname | cut -d'-' -f'2-'\`\n\"" >> /root/.profile
