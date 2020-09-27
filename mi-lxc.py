@@ -406,10 +406,7 @@ def usage():
     print(listHosts())
 
 def listHosts():
-    str = ""
-    for host in hosts:
-            str += host.name + ', '
-    return str
+    return ", ".join(host.name for host in hosts)
 
 def terminal_size():
     import fcntl, termios, struct
