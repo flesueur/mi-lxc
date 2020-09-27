@@ -45,4 +45,4 @@ qi5rJDmBWURpzyutQVoUt2Mkqx+DnMwGze4pZRthVJG1e2bUL/RmoA+t
 -----END RSA PRIVATE KEY-----" > /home/dev/.ssh/id_rsa
 chmod 600 /home/dev/.ssh/id_rsa
 
-# chown -R 1002:1001 /home/commercial
+chown -R 1002:1001 /home/dev
