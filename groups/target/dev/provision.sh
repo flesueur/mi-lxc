@@ -12,6 +12,7 @@ cd `dirname $0`
 
 #cp -ar /mnt/lxc/commercial/homedir/* /home/debian/
 #ln -sf /home/debian/background.jpg /usr/share/images/desktop-base/default
+cp -r /etc/skel /home/dev
 mkdir -p /home/dev/.ssh
 
 chown -R 1002:1001 /home/dev
@@ -45,4 +46,4 @@ qi5rJDmBWURpzyutQVoUt2Mkqx+DnMwGze4pZRthVJG1e2bUL/RmoA+t
 -----END RSA PRIVATE KEY-----" > /home/dev/.ssh/id_rsa
 chmod 600 /home/dev/.ssh/id_rsa
 
-# chown -R 1002:1001 /home/commercial
+chown -R 1002:1001 /home/dev

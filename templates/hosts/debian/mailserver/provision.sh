@@ -29,6 +29,7 @@ fi
 
 # create mail directories for already created users
 for i in `ls /home`; do
+  cp -r /etc/skel /home/$i
   mkdir -p /home/$i/mail
   touch /home/$i/mail/Drafts /home/$i/mail/Queue /home/$i/mail/Sent /home/$i/mail/Trash
   echo -e "Trash\nDrafts\nQueue\nSent" >> /home/$i/mail/.subscriptions

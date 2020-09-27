@@ -11,6 +11,7 @@ apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y python3
 DEBIAN_FRONTEND=noninteractive apt-get install -y python3-requests
 
+cp -r /etc/skel /home/debian
 cp -ar homedir/* /home/debian/
 ln -sf /home/debian/background.jpg /usr/share/images/desktop-base/default
 

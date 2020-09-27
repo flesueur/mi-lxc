@@ -12,7 +12,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pyasn1 python3-psutil 
 
 #cp -ar /mnt/lxc/commercial/homedir/* /home/debian/
 #ln -sf /home/debian/background.jpg /usr/share/images/desktop-base/default
-mkdir /home/commercial
+cp -r /etc/skel /home/commercial
 mkdir -p /home/commercial/.ssh
 
 chown -R 1001:1001 /home/commercial

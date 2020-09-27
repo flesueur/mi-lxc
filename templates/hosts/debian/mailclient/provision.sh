@@ -14,6 +14,7 @@ if [ -z $login ] ; then
   login="debian"
 fi
 
+[[ ! -d /home/$login ]] && cp -r /etc/skel /home/$login
 cp -ar claws-mail /home/$login/.claws-mail
 #chown -R $login /home/$login/.claws-mail
 chmod -R 777 /home/$login/.claws-mail
