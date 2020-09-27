@@ -48,3 +48,7 @@ echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
 sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
 service ssh restart
+
+# prevents "mesg: ttyname failed: No such device" error message when connection as root
+sed -i "/mesg n/d" /root/.profile
+echo "echo -e \"\n  Successfully attached to \`hostname | cut -d'-' -f'2-'\`\n\"" >> /root/.profile
