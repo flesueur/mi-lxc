@@ -32,6 +32,7 @@ apt-get clean
 mount -o loop /usr/share/virtualbox/VBoxGuestAdditions.iso /mnt
 /mnt/VBoxLinuxAdditions.run || true # vboxsf module will fail to load before reboot, expected behavior
 /sbin/rcvboxadd quicksetup all || true
+umount /mnt
 
 # Localisation du $LANG, en par défaut, timezone Paris
 if [ -z $HOSTLANG ] ; then
@@ -49,11 +50,15 @@ update-locale LANG=$HOSTLANG || true   # don't fail for a locales problem
 
 # Creation des utilisateurs
 usermod -p `mkpasswd --method=sha-512 root` root
-useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 debian` debian
+useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 debian` debian || true # don't fail if user already exists
 
 # augmentation de la taille de /run si lowmem
 #echo "tmpfs /run tmpfs nosuid,noexec,size=26M 0  0" >> /etc/fstab
 #mount -o remount /run
+
+# Désactivation de la mise en veille de l'écran
+mkdir /etc/X11/xorg.conf.d/
+cp /vagrant/files/10-monitor.conf /etc/X11/xorg.conf.d/
 
 #login ssh avec mot de passe
 echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
