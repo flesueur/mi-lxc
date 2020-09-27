@@ -54,3 +54,6 @@ echo "ALWAYS_SET_PATH yes" >> /etc/login.defs
 
 # allows non-root users to run ping (getcap /bin/ping does not list cap_net_raw+ep)
 DEBIAN_FRONTEND=noninteractive dpkg-reconfigure iputils-ping
+
+# prevents "mesg: ttyname failed: No such device" error message when connection as root
+sed -i "/mesg n/d" /root/.profile
