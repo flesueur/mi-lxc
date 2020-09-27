@@ -43,4 +43,6 @@ NN5bIQKBgB7UV8UgXIV54fy9DPQS70vNRNzOawNS1IvrlbZ64MUZiZkdO5E1LufK
 3YNbjTwYGcrSszwlqFCftf2zJ+mEMSZY2BEcmpWSert4cOjUEOSxfpww9mXn7PD+
 BBp9fHDQ/VFmP35vkh0a2HvSMcr9ISbW59LJrSzHJVY7HLrSB+wl
 -----END RSA PRIVATE KEY-----" > /home/admin/.ssh/id_rsa
+chmod 600 /home/admin/.ssh/id_rsa
+
 chown -R 1003:1001 /home/admin
