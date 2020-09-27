@@ -18,6 +18,10 @@ chown -R debian:debian /home/debian
 # allow anyone, including "debian" used by hacker, to write into web root
 chmod 777 /var/www/html
 
+# store EICAR as base64 and decode it in the machine, instead of storing it as a file that triggers the AV when cloning this repository
+mkdir -p /root/tp/ids/
+echo "WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo=" | base64 -d > /root/tp/ids/eicar.txt
+
 # Disable DHCP and do DNS config
 #sed -i "s/.*dhcp.*//" /etc/network/interfaces
 #echo -e "domain internet.virt\nsearch internet.virt\nnameserver 10.0.0.1" > /etc/resolv.conf
