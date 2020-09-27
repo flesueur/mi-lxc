@@ -39,6 +39,7 @@
 
 <mkmountpoint enable="1" remove="true" />
 
-<volume ssh="1" fstype="fuse" path="sshfs#%(USER)@$server:/home/shared" mountpoint="~/shared" options="nonempty,StrictHostKeyChecking=no" />
-<!-- options="nonempty,StrictHostKeyChecking=no"  -->
+<volume ssh="1" fstype="fuse" path="sshfs#%(USER)@$server:/home/shared" mountpoint="~/shared" options="nonempty,StrictHostKeyChecking=no">
+	<not><uid>0</uid></not> <!-- skip for "root" since it isn't configured for sshfs -->
+</volume>
 </pam_mount>
