@@ -40,8 +40,7 @@ update-locale LANG=$HOSTLANG || true   # don't fail for a locales problem
 
 # prevents "mesg: ttyname failed: No such device" error message when attaching
 sed -i "/mesg n/d" /root/.profile
-echo "echo -e \"\n  Successfully attached to \`hostname | cut -d'-' -f'2-'\`\n\"" >> /root/.profile
-echo "echo -e \"\n  Successfully attached to \`hostname | cut -d'-' -f'2-'\`\n\"" >> /etc/skel/.profile
+echo "echo -e \"\n  Successfully attached to \`hostname | cut -d'-' -f'2-'\`\n\"" > /etc/profile.d/milxc_attach.sh
 
 # XFCE4 panel: use default config
 # source: https://forum.xfce.org/viewtopic.php?pid=36585#p36585
