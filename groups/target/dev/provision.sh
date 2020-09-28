@@ -14,8 +14,6 @@ cd `dirname $0`
 #ln -sf /home/debian/background.jpg /usr/share/images/desktop-base/default
 mkdir -p /home/dev/.ssh
 
-chown -R 1002:1001 /home/dev
-
 echo -e "-----BEGIN RSA PRIVATE KEY-----
 MIIEpgIBAAKCAQEA2uHZfBCuK2jMLI7nrIyq2ZTEbkjgC9ibojnYnUN2ZybCotnL
 Cw9Wo7h4sSyQqTZHasIKL3SuofzyVgkTKf+S5CWvnauO8WJFzakJwDkxvh28JT8b
@@ -45,4 +43,4 @@ qi5rJDmBWURpzyutQVoUt2Mkqx+DnMwGze4pZRthVJG1e2bUL/RmoA+t
 -----END RSA PRIVATE KEY-----" > /home/dev/.ssh/id_rsa
 chmod 600 /home/dev/.ssh/id_rsa
 
-# chown -R 1002:1001 /home/commercial
+chown -R 1002:1001 /home/dev
