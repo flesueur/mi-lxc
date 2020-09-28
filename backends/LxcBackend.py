@@ -251,9 +251,7 @@ class LxcHost(LxcBackend,Host):
         c = self.getContainer()
         cdisplay = ":" + str(self.id + 2)
         hostdisplay = os.getenv("DISPLAY")
-        print("Using display " + cdisplay +
-              " on " + hostdisplay + " with user " + user)
-        os.system("xhost local:")
+        os.system("xhost local: >/dev/null 2>&1")
         command="DISPLAY=" + hostdisplay + " Xephyr -title \"Xephyr " + self.name + "\" -br -ac -dpms -s 0 -resizeable " + cdisplay + " 2>/dev/null & \
             export DISPLAY=" + cdisplay + " ; \
             while ! setxkbmap -query 1>/dev/null 2>/dev/null ; do sleep 0.1s ; done ; \

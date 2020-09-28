@@ -517,6 +517,7 @@ if __name__ == '__main__':
         if not host.isRunning():
             print("Container " + container + " is not running. You need to run \"./mi-lxc.py start\" before attaching to a container", file=sys.stderr)
             exit(1)
+        print("\n  Attaching to " + host.name + " as user " + user + "\n")
         host.attach(user, command)
 
     elif (command == "display"):
@@ -538,6 +539,7 @@ if __name__ == '__main__':
         if not host.isRunning():
             print("Container " + container + " is not running. You need to run \"./mi-lxc.py start\" before attaching to a container", file=sys.stderr)
             exit(1)
+        print("\n  Displaying " + host.name + " as user " + user + "\n")
         host.display(user)
     elif (command == "updatemaster"):
         updateMasters()
