@@ -15,18 +15,6 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pyasn1 python3-psutil 
 mkdir /home/commercial
 mkdir -p /home/commercial/.ssh
 
-chown -R 1001:1001 /home/commercial
-
-# remove nmap binary
-rm /usr/bin/nmap
-
-# pycryptodome gives us "Crypto" Python3 module required by lazagne (used by hacker)
-# however the Debian package actually installs "pypcrytodomex" which puts it
-# under the "Cryptodome" instead of "Crypto" and thus "import Crypto" fails
-# Cf. https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=886291
-# Fix it by adding a symbolic link
-ln -s /usr/lib/python3/dist-packages/Cryptodome /usr/lib/python3/dist-packages/Crypto
-
 echo -e "-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA5gMaCpCamrAgfNy/P2g/Q++fNzStR6CLiSb+Bquq+h82iJIH
 G2lFs4r7sj1xImOnmlQCRy6+CFDDnxq9stWqeR5VzSfmZPY38HF0Q8Fp50ST66JC
@@ -63,3 +51,13 @@ echo "Host *" > /home/commercial/.ssh/config
 echo -e "\tStrictHostKeyChecking no" >> /home/commercial/.ssh/config
 
 chown -R 1001:1001 /home/commercial
+
+# remove nmap binary
+rm /usr/bin/nmap
+
+# pycryptodome gives us "Crypto" Python3 module required by lazagne (used by hacker)
+# however the Debian package actually installs "pypcrytodomex" which puts it
+# under the "Cryptodome" instead of "Crypto" and thus "import Crypto" fails
+# Cf. https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=886291
+# Fix it by adding a symbolic link
+ln -s /usr/lib/python3/dist-packages/Cryptodome /usr/lib/python3/dist-packages/Crypto
