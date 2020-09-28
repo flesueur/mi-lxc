@@ -35,3 +35,5 @@ class Host:
         pass
     def attach(self, user, run_command):
         pass
+    def isReady(self):
+        pass

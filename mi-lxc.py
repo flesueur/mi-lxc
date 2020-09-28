@@ -329,6 +329,10 @@ def startInfra():
     for host in hosts:
         print("Starting " + host.name)
         host.start()
+# Commented out since it quite works but is too long for each container already ready. Will have to be parallelized
+#    print("Waiting for containers to be ready...")
+#    for host in reversed(hosts):
+#        host.isReady()
 
 
 def stopInfra():

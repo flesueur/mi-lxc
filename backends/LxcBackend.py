@@ -97,8 +97,11 @@ class LxcBackend:
         c = self.getContainer()
         return c.defined
 
-
-
+    def isReady(self):
+        c = self.getContainer()
+        if not c.get_ips(timeout=60):
+            return False
+        return True
 
 class LxcHost(LxcBackend,Host):
     """
