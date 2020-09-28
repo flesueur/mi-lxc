@@ -14,8 +14,6 @@ cd `dirname $0`
 #ln -sf /home/debian/background.jpg /usr/share/images/desktop-base/default
 mkdir -p /home/admin/.ssh
 
-chown -R 1003:1001 /home/admin
-
 echo -e "-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAw3eBHMQxKhK57cfV4Yq2tzpEWOPsG2R7TNNx1uipoYY4KSGb
 j1HJUq4obevv/IbQcajXeh+NWmZZWPXOoourB0bC49J/f/5llci0GYSGrccpxRJp
