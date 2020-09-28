@@ -36,4 +36,6 @@ echo "bind_timelimit 2" >> /etc/libnss-ldap.conf
 echo "bind_policy soft" >> /etc/libnss-ldap.conf
 
 # auto create home dir when an LDAP user connects for the first time
-echo "session required pam_mkhomedir.so skel=/etc/skel umask=0022" >> /etc/pam.d/common-session
+# it absolutely needs to be before "pam_mount" because it creates a folder in the home dir to mount the share,
+# and thus create the homedir if it doesn't already exist but mkhomedir won't run if the home dir already exists...
+sed -i '/pam_mount.so/i session required pam_mkhomedir.so skel=\/etc\/skel umask=0022' /etc/pam.d/common-session
