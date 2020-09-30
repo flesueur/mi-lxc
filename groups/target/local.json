@@ -12,7 +12,6 @@
       "gatewayv6":"2001:db8:80::0:1",
       "templates":[{"template":"ldapclient", "domain":"target.milxc", "server":"ldap"},
                   {"template":"mailserver", "domain":"target.milxc"},
-                  {"template":"misp", "hostname":"misp.target.milxc"},
                   {"template":"nodhcp", "domain":"target.milxc", "ns":"100.80.0.1"},
                   {"template":"updatecaroots"}]},
                   "ldap":
