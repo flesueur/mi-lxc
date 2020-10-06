@@ -83,6 +83,11 @@ sed -i -e 's/<frequency>79200<\/frequency>/<frequency>60<\/frequency>/' /var/oss
 sed -i -e 's/<directories check_all="yes">/<directories check_all="yes" realtime="no">/' /var/ossec/etc/ossec.conf
 sed -i -e 's/server-addr = 127.0.0.1/server-addr = 100.80.0.1/' /etc/prelude/default/client.conf
 
+# OSSEC timing : https://github.com/ossec/ossec-hids/blob/da6814e6e7320abc878feecd44ed4f3901eb343f/src/syscheckd/run_check.c#L266
+# https://github.com/ossec/ossec-hids/blob/da6814e6e7320abc878feecd44ed4f3901eb343f/src/syscheckd/run_check.c#L78
+# https://github.com/ossec/ossec-hids/blob/da6814e6e7320abc878feecd44ed4f3901eb343f/src/syscheckd/run_check.c#L122-L124
+# https://github.com/ossec/ossec-hids/blob/da6814e6e7320abc878feecd44ed4f3901eb343f/src/syscheckd/syscheck.c#L54
+
 # create prelude-admin spool directory
 mkdir /var/spool/prelude
 
