@@ -6,10 +6,10 @@ It is based on the infrastructure-as-code principle: these scripts programmatica
 
 Example practical work using this environment (in french) :
 
-* [Intrusion scenario](https://github.com/flesueur/srs/blob/master/tp1-intrusion.md)
-* [Firewall](https://github.com/flesueur/srs/blob/master/tp2-firewall.md)
-* [IDS](https://github.com/flesueur/srs/blob/master/tp3-ids.md)
-* [CA](https://github.com/flesueur/csc/blob/master/tp1-openssl.md)
+* [Intrusion scenario](https://github.com/flesueur/srs/blob/master/tp1-intrusion.md) (adapted to MI-LXC v1.3.0)
+* [Firewall](https://github.com/flesueur/srs/blob/master/tp2-firewall.md) (adapted to MI-LXC v1.3.0)
+* [IDS](https://github.com/flesueur/srs/blob/master/tp3-ids.md) (adapted to MI-LXC v1.3.0)
+* [CA](https://github.com/flesueur/csc/blob/master/tp1-openssl.md) (adapted to MI-LXC v1.2.0)
 
 ![Topology](https://github.com/flesueur/mi-lxc/blob/master/topologie.png)
 
