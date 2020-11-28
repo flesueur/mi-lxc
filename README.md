@@ -1,4 +1,4 @@
-<img src="https://github.com/flesueur/mi-lxc/blob/master/logo.png" width="100">
+<img src="https://github.com/flesueur/mi-lxc/blob/master/logo.png" width="100" style="float: right;">
 
 # MI-LXC : Mini-Internet using LXC
 
