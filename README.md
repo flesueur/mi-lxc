@@ -1,4 +1,4 @@
-# ![Logo](https://github.com/flesueur/mi-lxc/blob/master/logo.png|width=100px) Mini-Internet using LXC
+# ![Logo](https://github.com/flesueur/mi-lxc/blob/master/logo.png | width=100px) Mini-Internet using LXC
 
 MI-LXC uses LXC to simulate an internet-like environment. I use this environment for (infosec) practical work (intrusion, firewall, IDS, etc.). The small memory footprint of LXC combined with differential images allows to run it on modest hardware.
 
