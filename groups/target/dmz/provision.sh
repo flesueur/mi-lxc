@@ -15,7 +15,7 @@ apt-get update
 DEB_VERSION=`cat /etc/debian_version | cut -d'.' -f1`
 if [ $DEB_VERSION -eq "10" ] # DEB 10 aka Buster
 then
-  DEBIAN_FRONTEND=noninteractive apt-get install -y dokuwiki certbot nsd dovecot-imapd proftpd apt-transport-https wget prelude-utils libprelude-dev build-essential php7.3-mbstring php7.3 libevent-dev libpcre2-dev zlib1g-dev libssl-dev
+  DEBIAN_FRONTEND=noninteractive apt-get install -y dokuwiki certbot python3-certbot-apache nsd dovecot-imapd proftpd apt-transport-https wget prelude-utils libprelude-dev build-essential php7.3-mbstring php7.3 libevent-dev libpcre2-dev zlib1g-dev libssl-dev
 else # DEB 9 aka stretch
   DEBIAN_FRONTEND=noninteractive apt-get install -y nsd dovecot-imapd proftpd apt-transport-https wget libprelude2 libprelude-dev build-essential  php7.0-mbstring php7.0
 fi
@@ -59,6 +59,7 @@ cp doku/start.txt /var/lib/dokuwiki/data/pages/
 chown www-data /var/lib/dokuwiki/data/pages/start.txt
 sed -i -e 's/Allow from .*/Allow from All/' /etc/apache2/conf-available/dokuwiki.conf
 sed -i -e 's/DocumentRoot .*/DocumentRoot \/usr\/share\/dokuwiki/' /etc/apache2/sites-available/000-default.conf
+sed -i -e 's/DocumentRoot .*/DocumentRoot \/usr\/share\/dokuwiki/' /etc/apache2/sites-available/default-ssl.conf
 a2enmod headers
 echo "RequestHeader unset If-Modified-Since" >> /etc/apache2/apache2.conf
 # des chown ?
