@@ -47,7 +47,7 @@ Vagrant.configure("2") do |config|
     vb.memory = "3072"
     vb.cpus="2"
     vb.name = "milxc-debian-amd64"
-    vb.customize ["modifyvm", :id, "--vram", "16", "--clipboard-mode", "bidirectional", '--graphicscontroller', 'vmsvga']
+    vb.customize ["modifyvm", :id, "--vram", "64", "--clipboard-mode", "bidirectional", '--graphicscontroller', 'vmsvga']
     vb.gui = true
   end
 
