@@ -25,11 +25,11 @@ II-Avant de démarrer
     * `cd mi-lxc`
     * `./mi-lxc.py start`
     * `./mi-lxc.py display isp-a-hacker`
-  * La création de la VM via Vagrant (VM d'environ 11GO, 15-30 minutes pour la création) : [ici](https://github.com/flesueur/mi-lxc#installation-on-windowsmacoslinux-using-vagrant). Les conteneurs LXC sont automatiquement générés lors de la création de la VM. Une fois Vagrant fini, il faut ensuite se connecter à la VM en root/root puis, avec un terminal :
+  * La création de la VM via Vagrant (VM d'environ 11GO, 15-30 minutes pour la création) : [ici](INSTALL.md#installation-on-windowsmacoslinux-using-vagrant). Les conteneurs LXC sont automatiquement générés lors de la création de la VM. Une fois Vagrant fini, il faut ensuite se connecter à la VM en root/root puis, avec un terminal :
     * `cd mi-lxc`
     * `./mi-lxc.py start`
     * `./mi-lxc.py display isp-a-hacker`
-  * L'installation directe sous Linux (15-30 minutes pour la création) : [ici](https://github.com/flesueur/mi-lxc#installation-on-linux). Les conteneurs LXC seront installés sur l'hôte :
+  * L'installation directe sous Linux (15-30 minutes pour la création) : [ici](INSTALL.md#installation-on-linux). Les conteneurs LXC seront installés sur l'hôte :
     * `git clone https://github.com/flesueur/mi-lxc.git`
     * `cd mi-lxc`
     * `./mi-lxc.py create`
