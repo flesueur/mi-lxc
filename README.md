@@ -1,4 +1,4 @@
-# MI-LXC : Mini-Internet using LXC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://github.com/flesueur/mi-lxc/blob/master/logo.png" width="100" style="float: right;">
+# MI-LXC : Mini-Internet using LXC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://github.com/flesueur/mi-lxc/blob/master/doc/logo.png" width="100" style="float: right;">
 
 MI-LXC uses LXC to simulate an internet-like environment. I use this environment for (infosec) practical work (intrusion, firewall, IDS, etc.). The small memory footprint of LXC combined with differential images allows to run it on modest hardware.
 
@@ -11,7 +11,7 @@ Example practical work using this environment (in french) :
 * [IDS](https://github.com/flesueur/srs/blob/master/tp3-ids.md) (adapted to MI-LXC v1.3.0)
 * [CA](https://github.com/flesueur/csc/blob/master/tp1-https.md) (adapted to MI-LXC v1.3.0)
 
-![Topology](https://github.com/flesueur/mi-lxc/blob/master/topologie.png)
+![Topology](https://github.com/flesueur/mi-lxc/blob/master/doc/topologie.png)
 
 
 # Features and composition
