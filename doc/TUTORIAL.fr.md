@@ -89,20 +89,136 @@ Nous allons segmenter le réseau target pour y déployer un firewall entre des z
 IV-Concepteur - La spécification d'une infrastructure
 =====================================================
 
-L'idée générale n'est, a priori, pas de repartir from scratch mais d'enrichir une infrastructure de base (actuellement, un mix infra de base + usagers). L'infra de base, c'est typiquement le backbone + les services DNS.
+MI-LXC permet le prototypage rapide d'une infrastructure. A priori, l'idée est d'enrichir le cœur existant plutôt que de repartir from scratch. Typiquement, le backbone et l'infrastructure DNS ont vocation à justement permettre le bootstrap rapide d'un nouvel AS. Dans ce tutorial, nous allons ainsi ajouter un AS à l'infrastructure existante.
 
-On va ajouter un AS ACME. Il faut :
-* Lui attribuer un numéro d'AS + plage d'IP : MI-IANA.txt
-* Lui faire utiliser le template d'AS : global.json
-* Faire un create : on voit déjà qu'un conteneur s'ajoute, router : template d'AS
-* Créer le dossier + local.json
-* Faire la base du JSON
-* Créer un hôte supplémentaire :
-  * son provision.sh : shebang, garde MI-LXC, installer des packages, configurer. Favoriser les modifs aux remplacements de fichiers (donc sed concat etc.)
-  * Faire un create, voir le nouveau conteneur
-  * maintenant on ajoute un fichier à copier : destroy spécifique puis create (gaffe à la boulette du destroy global !). Snapshot de VM avant ?
-  * templates : spécifier que c'est un client mail, destroy puis create
-  * faire un template et l'utiliser (ajouter un greeting dans le .bashrc ?)
+Le déroulement va être le suivant :
+* Déclarer un numéro d'AS, une plage d'adresses IP et un nom de domaine pour cette nouvelle organisation
+* Créer cet AS minimaliste dans MI-LXC
+* Ajouter un autre hôte à cet AS
+* L'enregistrer dans le DNS
+* Explorer le mécanisme des templates
+
+IV.1-Déclaration d'un nouvel AS
+-------------------------------
+
+Le fichier `doc/MI-IANA.txt` représente l'annuaire de l'IANA. Vous pouvez y trouver un numéro d'AS libre ainsi qu'une plage d'IP libre. Les IPv4 routables sont attribuées dans l'espace 100.64.0.0/10 (réservé au CG-NAT et donc normalement sans risque de conflit local).
+
+Vous pouvez aussi en profiter pour prévoir un nom de domaine en .milxc
+
+
+IV.2-Création de cet AS dans MI-LXC
+-----------------------------------
+
+Un AS est représenté par un groupe d'hôtes. La première étape est ainsi de déclarer ce nouveau groupe dans le fichier de topologie globale `global.json`. Ajoutez-y un groupe simple en partant d'un modèle existant. Par exemple, le groupe existant "milxc" est défini de la manière suivante :
+
+```
+"milxc": {
+  "templates":[{"template":"as-bgp", "asn":"8", "asdev":"eth1", "neighbors4":"100.64.0.1 as 30","neighbors6":"2001:db8:b000::1 as 30",
+  "interfaces":[
+    {"bridge":"transit-a", "ipv4":"100.64.0.40/24", "ipv6":"2001:db8:b000::40/48"},
+    {"bridge":"milxc-lan", "ipv4":"100.100.20.1/24", "ipv6":"2001:db8:a020::1/48"}
+  ]
+}]}
+```
+
+Le champ _template_ décrit le template du groupe, ici ce sera également un as-bgp. Les champs _asn, asdev, neighbors4, neighbors6_ et _interfaces_ doivent être ajustés :
+* _asn_ est le numéro d'AS, tel que déclaré dans `MI-IANA.txt`
+* _asdev_ est l'interface réseau qui sera relié au réseau _interne_ de l'organisation (celle qui a les IP liées à l'AS, ce sera eth1 dans l'exemple)
+* _neighbors4_ sont les pairs BGP4 pour le routage IPv4 (au format _IP\_du\_pair as ASN\_du\_pair_)
+* _neighbors6_ sont les pairs BGP6 pour le routage IPv6 (optionnel, au format _IP\_du\_pair as ASN\_du\_pair_)
+* _interfaces_ décrit les interfaces réseau du routeur de cet AS (malgré l'indentation trompeuse, c'est bien un paramètre du template as-bgp). Pour chaque interface, il faut spécifier son bridge, son ipv4 et son ipv6 (optionnelle) de manière statique ici. Dans cet exemple :
+  * _transit-a_ est le bridge opéré par l'opérateur Transit-A, s'y connecter permet d'aller vers les autres AS, il faut utiliser une IP libre dans son réseau 100.64.0.40/24 et cette interface sera l'interface externe _eth0_
+  * _milxc-lan_ est le bridge interne de cette organisation, on y associe une IP de son AS. Son nom doit **impérativement** commencer par le nom du groupe + "-", ici "milxc-", et ne pas être trop long (max 15 caractères, contrainte de nommage des interfaces réseau niveau noyau)
+
+Pour intégrer votre nouvel AS, il faudra donc choisir à quel point de transit le connecter et avec quelle IP. Un `./mi-lxc.py print` vous donne une vue générale des connexions et IP utilisées (tant que le JSON est bien formé...). Il faut également déclarer ce nouveau pair de l'autre côté du tunnel BGP (ici, ce routeur du groupe "milxc" est par exemple listé dans les pairs BGP du groupe "transit-a").
+
+Une fois ceci défini, un `./mi-lxc.py print` pour vérifier la topologie, puis `./mi-lxc.py create` permet de créer la machine routeur associée à cet AS (ce sera un Alpine Linux). L'opération create est paresseuse, elle ne crée que les conteneurs non existants et sera donc rapide. Ensuite, il faut ajouter un `./mi-lxc.py renet` qui va mettre à jour le pair BGP (l'autre bout du tunnel BGP mis à jour dans le JSON, par exemple le conteneur transit-a-router). On peut enfin faire un `./mi-lxc.py start` et vérifier le bon démarrage.
+
+> `renet` est une opération rapide qui évite de devoir supprimer et re-générer l'infrastructure. Elle met à jour les IP et certaines configurations. Typiquement, nous verrons le script provision.sh dans la suite, renet exécute à la place le script renet.sh (présent dans certains répertoires).
+
+> Attention, pour des raisons de gestion des IP et des routes, étonnamment, il n'y a pas de façon simple pour que le routeur puisse lui-même initier des communications. C'est-à-dire que si tout fonctionne bien il sera démarré, aura de bonnes tables de routage, mais pour autant ne pourra pas ping en dehors du subnet du transitaire. C'est le comportement attendu et donc vérifier la connectivité du routeur ne peut pas se faire comme ça. On verra ensuite comment vérifier cela depuis un poste interne et nous utiliserons, sur le routeur ou ses voisins BGP, les commandes `birdc show route all`et `birdc show protocols` pour inspecter les tables de routage et vérifier l'établissement des sessions BGP.
+
+IV.3-Ajout d'un hôte dans le nouvel AS
+--------------------------------------
+
+Nous allons maintenant ajouter un nouvel hôte dans cet AS. Si le groupe a été nommé "acme" dans global.json, il faut créer le dossier `groups/acme` pour l'accueillir. Dans ce dossier nous allons avoir :
+* un fichier `local.json` qui décrit la topologie interne du groupe
+* un sous-dossier pour le provisionning de chacun de ces hôtes
+
+Un exemple de `local.json` minimal (groups/gozilla/local.json) :
+```
+{
+  "comment":"Gozilla AS",
+  "containers": {
+    "infra":
+        {"container":"infra",
+          "interfaces":[
+            {"bridge":"lan", "ipv4":"100.83.0.2/16", "ipv6":"2001:db8:83::2/48"}
+          ],
+          "gatewayv4":"100.83.0.1",
+          "gatewayv6":"2001:db8:83::1",
+          "templates":[{"template":"nodhcp", "domain":"gozilla.milxc", "ns":"100.100.100.100"}]}
+  }
+}
+```
+
+Ce JSON définit :
+* qu'il y a un conteneur qui s'appelle infra (et qui sera donc provisionné dans le sous-dossier infra)
+* qu'il a une interface réseau branchée sur le bridge _gozilla-lan_ avec les IP spécifiées (le préfixe _groupname-_ est automatiquement ajouté au nom écrit dans ce JSON)
+* que sa passerelle IPv4 est 100.83.0.1
+* qu'il utilise un template (nous détaillerons cela plus tard) qui désactive le DHCP et fixe le domaine et le serveur DNS
+
+Pour provisionner ce conteneur, il faut créer le sous-dossier _infra_ et y écrire un script _provision.sh_ du type :
+```
+#!/bin/bash
+set -e
+if [ -z $MILXCGUARD ] ; then exit 1; fi
+DIR=`dirname $0`
+cd `dirname $0`
+
+# do something visible
+```
+* Le shebang est obligatoire au début et sera utilisé (et un script python, tant qu'il s'appelle provision.sh, fonctionne probablement)
+* Le `set -e` est très fortement recommandé (il permet d'arrêter le script dès qu'une commande renvoie un code d'erreur, et de retourner à son tour un code d'erreur. Sans ce `set -e`, l'exécution continue et le résultat pourra vous étonner...)
+* la variable _$MILXCGUARD_ est automatiquement positionnée lors de l'exécution dans MI-LXC, la vérifier permet d'éviter qu'un script puisse s'exécuter sur sa propre machine par inadvertance (aïe !)
+* En général, se positionner dans le bon répertoire aide pour la suite et évite de multiples cafouillages. Ce dossier peut contenir des fichiers à copier sur le nouveau conteneur, etc.
+
+Par bonne pratique en terme de maintenance, il faut privilégier les modifications de fichiers (à coût de sed, >>, etc.) plutôt que l'écrasement pur et simple. Exemple de sed kivabien : `sed -i -e 's/Allow from .*/Allow from All/' /etc/apache2/conf-available/dokuwiki.conf`. On trouve également dans groups/target/ldap/provision.sh les manipulations permettant de préconfigurer (_preseed_) les installations de packages Debian.
+
+Une fois tout ceci fait, on peut faire `./mi-lxc.py print` pour vérifier que le JSON est bien formé et que la topologie est conforme. Un `./mi-lxc.py create` créera ce conteneur, puis `./mi-lxc.py start` le lancera (inutile d'avoir stoppé les autres avant).
+
+
+IV.4-Modification de cet hôte
+-----------------------------
+
+Maintenant que cet hôte est créé, nous allons le modifier. Ajoutons :
+* l'utilisation d'un autre template, par exemple `mailclient` (il est défini dans templates/hosts/debian/mailclient, il suffit de le nommer mailclient dans le local.json). Ce template a 4 paramètres, vous pouvez en voir un usage dans groups/target/local.json . Configurez-le avec des valeurs fictives
+* une autre action dans le provision.sh
+
+> **DANGER ZONE** On va détruire un conteneur et uniquement un. Si vous faîtes une fausse manipulation, vous risquez de détruire l'infra complète et de mettre ensuite 15 minutes à tout reconstruire, ce n'est pas le but. Donc spécifiez bien le nom du conteneur à détruire et, si vous êtes dans une VM, ça peut être le moment de faire un snapshot...
+
+Pour mettre à jour ce conteneur de ces modifications sans tout reconstruire, il faut :
+* `./mi-lxc.py destroy acme-monconteneur` # détruit _uniquement_ le conteneur acme-monconteneur
+* `./mi-lxc.py create` # reconstruit uniquement ce conteneur manquant
+* `./mi-lxc.py start` # redémarre ce nouveau conteneur
+
+
+IV.5-L'enregistrer dans le DNS
+-----------------------------
+
+Cet hôte a une IP publique et vous avez prévu un nom de domaine, acme.milxc (le TLD interne est .milxc). Pour avoir une entrée DNS fonctionnelle pour acme.milxc il faudra évidemment mettre en place un serveur DNS pour cette zone (exemple dans groups/isp-a/infra), ce que nous ne ferons pas ici. Il faut également enregistrer ce serveur DNS sur le serveur qui gère .milxc.
+
+Ceci se passe dans groups/milxc/ns/provision.sh, il suffit de reproduire l'exemple de isp-a.milxc. Ensuite, `./mi-lxc.py destroy milxc-ns && ./mi-lxc.py create`
+
+
+IV.6-Faire un nouveau template
+-----------------------------
+
+MI-LXC propose deux mécanismes de templates :
+* des templates de groupe, définis dans `templates/groups/`. Nous avons utilisé ici as-bgp par exemple, qui crée un routeur de bordure d'AS avec Alpine Linux. Le template as-bgp-debian produit la même fonctionnalité mais avec un routeur Debian.
+* des templates d'hôtes, définis dans `templates/hosts/<family>/`. Quand on dérive d'un master Debian (ce qui est le défaut, les masters sont définis dans global.json), les templates sont recherchés dans `templates/hosts/debian/`
+
+Nous allons ajouter un template d'hôte permettant de faire un greeting dans le .bashrc, identique pour de nombreuses machines. Créez un sous-dossier pour ce template, un script provision.sh similaire à celui d'un hôte, puis appelez ce template dans l'hôte précédemment créé.
 
 
 V-Développeur - Le développement du moteur de MI-LXC
