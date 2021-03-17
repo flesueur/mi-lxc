@@ -224,8 +224,29 @@ Nous allons ajouter un template d'hôte permettant de faire un greeting dans le 
 V-Développeur - Le développement du moteur de MI-LXC
 ====================================================
 
-On va regarder comment ajouter un backend de virtualisation (autre que LXC) :
-* on crée un nouveau master avec un autre backend
-* on remonte les erreurs
-* le switch de mi-lxc.py, on le résout
-* puis on crée le backend depuis l'interface
+Enfin, nous allons explorer un peu le code Python du framework, en regardant le chemin pour ajouter un backend d'exécution. Aujourd'hui, MI-LXC support l'exécution de conteneurs LXC et l'émulation de routeurs Cisco (dynamips), ces deux éléments étant définis dans le dossier backends/.
+
+Nous allons voir comment on pourrait ajouter un backend Vagrant/VirtualBox pour virtualiser des hôtes Windows par exemple. Tout d'abord, il faut créer un nouveau master dans `global.json`. Par exemple :
+```
+{
+"backend":"lxc",
+"template":"download",
+"parameters":{"dist": "debian", "release": "buster", "arch": "amd64", "no-validate": "true"},
+"family":"debian",
+"name":"buster"
+},
+```
+spécifie que :
+* Le nom du backend à utiliser est "lxc" (à changer, donc)
+* Le champ family indique que les templates seront à chercher dans le dossier `templates/hosts/<family>`
+* Le champ name nomme le template
+* Le reste (template, parameters ici) est libre et sera lu par le backend spécifié
+
+Créez donc un nouveau master avec un autre backend inexistant. Ensuite, `./mi-lxc.py print` va vous indiquer la ligne de `mi-lxc.py` où il faut rajouter le cas de ce nouveau backend (dans getMasters2()). En vous inspirant des 2 cas existants, vous serez amené à ajouter un cas et à créer un objet d'un nouveau type, à définir dans le dossier backends. Vous pouvez repartir de backends/HostBackend pour avoir un squelette vide et ainsi une idée des fonctions qui seront à remplir.
+
+L'idée dans ce tutoriel n'est, évidemment, pas d'écrire ce nouveau backend, mais il devra :
+* proposer 2 classes : une pour les masters, une pour les hôtes
+* les exemples LXC et Dynamips montrent comment mutualiser une partie de ces deux classes dans une classe commune
+* il faudra rajouter le paramètre `master:LeNouveauMaster` aux hôtes qui devraient utiliser ce nouveau master
+* l'ajout sur les hôtes fera apparaître une seconde condition (dans getHosts()) dans laquelle il faut rajouter le cas de ce backend
+* YOLO !
