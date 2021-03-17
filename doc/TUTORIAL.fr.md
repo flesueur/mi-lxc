@@ -246,7 +246,7 @@ Créez donc un nouveau master avec un autre backend inexistant. Ensuite, `./mi-l
 
 L'idée dans ce tutoriel n'est, évidemment, pas d'écrire ce nouveau backend, mais il devra :
 * proposer 2 classes : une pour les masters, une pour les hôtes
-* les exemples LXC et Dynamips montrent comment mutualiser une partie de ces deux classes dans une classe commune
+* les exemples LXC et Dynamips montrent comment mutualiser une partie de ces deux classes dans une classe commune. La fichier LxcBackend.py peut d'ailleurs être repris pour le début de nombreuses fonctions.
 * il faudra rajouter le paramètre `master:LeNouveauMaster` aux hôtes qui devraient utiliser ce nouveau master
 * l'ajout sur les hôtes fera apparaître une seconde condition (dans getHosts()) dans laquelle il faut rajouter le cas de ce backend
 * YOLO !
