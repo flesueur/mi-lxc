@@ -61,27 +61,33 @@ Pour vous connecter à une machine :
 
 Toutes les machines ont les deux comptes suivants : debian/debian et root/root (login/mot de passe).
 
-Depuis la machine isp-a-home, ouvrez un navigateur pour vous connecter à `http://www.target.milxc`. Vous accédez à une page Dokuwiki, qui est bien la page attendue.
+Depuis la machine isp-a-home, ouvrez un navigateur pour vous connecter à `http://www.target.milxc`. Vous accédez à une page Dokuwiki, qui est bien la page attendue hébergée sur target-dmz.
 
 Nous allons maintenant attaquer depuis l'AS ecorp cette communication en clair, non sécurisée, entre isp-a-home et target-dmz. L'objectif est que le navigateur, lorsqu'il souhaite se connecter à l'URL `http://www.target.milxc`, arrive en fait sur la machine ecorp-infra. Cette attaque BGP consiste donc à dérouter les paquets à destination de l'AS target vers l'AS ecorp (un [exemple de BGP hijacking réel en 2020](https://radar.qrator.net/blog/as1221-hijacking-266asns)) :
-* Sur la machine ecorp-router : prendre une IP de l'AS target qui déclenchera l'annonce du réseau en BGP (`ifconfig eth1:0 100.80.1.1 netmask 255.255.255.0`)
+* Sur la machine ecorp-router : prendre une IP de l'AS target, ce qui déclenchera automatiquement l'annonce de ce réseau en BGP (`ifconfig eth1:0 100.80.1.1 netmask 255.255.255.0`)
 * Sur la machine ecorp-infra : prendre l'IP de `www.target.milxc` (`ifconfig eth0:0 100.80.1.2 netmask 255.255.255.0`)
 
-Nous constatons ainsi un cas d'attaque BGP : un utilisateur sur isp-a-home qui, en tapant l'URL `www.target.milxc`, arrive en fait sur un autre service que celui attendu. Remettez le système en bon ordre de marche pour continuer (désactivez l'interface eth1:0 sur ecorp-router `ifconfig eth1:0 down`).
+Nous constatons ainsi un cas d'attaque BGP : un utilisateur sur isp-a-home qui, en tapant l'URL `www.target.milxc`, arrive en fait sur un autre service que celui attendu (ici, la machine ecorp-infra). Remettez le système en bon ordre de marche pour continuer (désactivez l'interface eth1:0 sur ecorp-router `ifconfig eth1:0 down`).
+
+> Le site [Is BGP safe yet?](https://isbgpsafeyet.com/), opéré par Cloudflare, décrit de manière très claire ces attaques BGP, et donne une synthèse de l'état actuel de la sécurité de BGP et du déploiement de RPKI, contre-mesure à ces attaques BGP.
 
 III.2-Segmentation réseau
 -------------------------
 
 (Extrait de [TP Firewall](https://github.com/flesueur/srs/blob/master/tp2-firewall.md))
 
-Nous allons segmenter le réseau target pour y déployer un firewall entre des zones distinctes. La segmentation aura lieu autour de la machine "target-router". Vous aurez besoin de procéder en deux étapes :
+Nous allons segmenter le réseau target pour y déployer un firewall entre des zones distinctes. La segmentation aura lieu autour de la machine "target-router". Au départ, le réseau interne est totalement à plat, connecté au bridge target-lan et dans l'espace d'adressage 100.80.0.1/16. Nous allons simplement rajouter une DMZ sur ce réseau à plat (un nouveau bridge réseau et un redécoupage de l'espace d'adressage). Vous aurez besoin de procéder en deux étapes :
 
 * Segmenter le réseau "target" (**Prenez le temps de regarder le [tuto vidéo](https://mi-lxc.citi-lab.fr/data/media/segmentation_milxc.mp4) !!!**) :
-	* Éditer `global.json` (dans le dossier mi-lxc) pour spécifier les interfaces sur le routeur, dans la section "target". Il faut ajouter des bridges (dont le nom doit commencer par "target-") et découper l'espace 100.80.0.1/16. Enfin, il faut ajouter les interfaces eth2, eth3... ainsi créées à la liste des `asdev` definie juste au-dessus (avec des ';' de séparation entre interfaces)
-	* Éditer `groups/target/local.json` pour modifier les adresses des interfaces et les bridges des machines internes (attention, pour un bridge nommé précédemment "target-dmz", il faut simplement écrire "dmz" ici, la partie "target-" est ajoutée automatiquement). Dans le même fichier vous devrez aussi mettre à jour les serveurs mentionnés dans les paramètres des templates "ldapclient", "sshfs" et "nodhcp", soit en remplaçant les noms de serveurs par leurs nouvelles adresses IP, soit en mettant à jour les enregistrements DNS correspondants (fichier `/etc/nsd/target.milxc.zone` sur "target-dmz")
+	* Éditer `global.json` (dans le dossier mi-lxc) pour spécifier les interfaces sur le routeur, dans la section "target". Il faut ajouter un bridge target-dmz (le nom doit commencer par "target-") et découper l'espace 100.80.0.0/16 : 100.80.0.0/24 sur le bridge target-lan pré-existant (donc spécifier une IPv4 de 100.80.0.1/24), 100.80.1.0/24 sur le nouveau bridge target-dmz (donc spécifier une IPv4 de 100.80.1.1/24). Enfin, il faut ajouter l'interface eth2 ainsi créée à la liste des `asdev` definie juste au-dessus (avec des ';' de séparation entre interfaces, il y a des exemples autour)
+	* Éditer `groups/target/local.json` pour modifier les adresses des interfaces et les bridges des machines internes (attention, pour un bridge nommé précédemment "target-dmz", il faut simplement écrire "dmz" ici, la partie "target-" est ajoutée automatiquement). Il faut :
+      * Passer la machine dmz sur le bridge dmz, passer son adresse à 100.80.1.2/24, mettre à jour sa gatewayv4 (100.80.1.1) juste en-dessous
+      * Pour toutes les autres machines, mettre à jour le netmask en /24
 	* Exécuter `./mi-lxc.py print` pour visualiser la topologie redéfinie
 	* Exécuter `./mi-lxc.py stop && ./mi-lxc.py renet && ./mi-lxc.py start` pour mettre à jour l'infrastructure déployée
-* (Étape non nécessaire pour réaliser le tutoriel) Implémenter de manière adaptée les commandes iptables sur la machine "target-router" (dans la chaîne FORWARD). Si possible dans un script (qui nettoie les règles au début), en cas d'erreur.
+* Implémenter de manière adaptée les commandes iptables sur la machine "target-router" (dans la chaîne FORWARD) pour autoriser les routages nécessaires entre les interfaces (eth0 est l'interface de sortie, eth1 est sur le bridge target-lan et eth2 est la nouvelle interface sur le bridge target-dmz). Si possible dans un script (qui nettoie les règles au début), en cas d'erreur.
+
+> `renet` est une opération rapide qui évite de devoir supprimer et re-générer l'infrastructure. Elle met à jour les IP et certaines configurations. Typiquement, nous verrons le script provision.sh dans la suite, renet exécute à la place le script renet.sh (présent dans certains répertoires).
 
 > L'arborescence de MI-LXC et les fichiers json manipulés ici sont décrits [ici](https://github.com/flesueur/mi-lxc#how-to-extend).
 
@@ -89,12 +95,13 @@ Nous allons segmenter le réseau target pour y déployer un firewall entre des z
 IV-Concepteur - La spécification d'une infrastructure
 =====================================================
 
-MI-LXC permet le prototypage rapide d'une infrastructure. A priori, l'idée est d'enrichir le cœur existant plutôt que de repartir from scratch. Typiquement, le backbone et l'infrastructure DNS ont vocation à justement permettre le bootstrap rapide d'un nouvel AS. Dans ce tutorial, nous allons ainsi ajouter un AS à l'infrastructure existante.
+MI-LXC permet le prototypage rapide d'une infrastructure. A priori, l'idée est d'enrichir le cœur existant plutôt que de repartir from scratch. Typiquement, le backbone, l'infrastructure DNS et un minimum de services d'accès ont vocation à justement permettre le bootstrap rapide d'un nouvel AS (donc au minimum les groupes transit-a, transit-b, isp-a, root-o, root-p, opendns, milxc, décrits dans DETAILS.md). Dans ce tutorial, nous allons ainsi ajouter un AS à l'infrastructure existante.
 
 Le déroulement va être le suivant :
 * Déclarer un numéro d'AS, une plage d'adresses IP et un nom de domaine pour cette nouvelle organisation
 * Créer cet AS minimaliste dans MI-LXC
 * Ajouter un autre hôte à cet AS
+* Modifier ce nouvel hôte
 * L'enregistrer dans le DNS
 * Explorer le mécanisme des templates
 
@@ -132,9 +139,13 @@ Le champ _template_ décrit le template du groupe, ici ce sera également un as-
 
 Pour intégrer votre nouvel AS, il faudra donc choisir à quel point de transit le connecter et avec quelle IP. Un `./mi-lxc.py print` vous donne une vue générale des connexions et IP utilisées (tant que le JSON est bien formé...). Il faut également déclarer ce nouveau pair de l'autre côté du tunnel BGP (ici, ce routeur du groupe "milxc" est par exemple listé dans les pairs BGP du groupe "transit-a").
 
-Une fois ceci défini, un `./mi-lxc.py print` pour vérifier la topologie, puis `./mi-lxc.py create` permet de créer la machine routeur associée à cet AS (ce sera un Alpine Linux). L'opération create est paresseuse, elle ne crée que les conteneurs non existants et sera donc rapide. Ensuite, il faut ajouter un `./mi-lxc.py renet` qui va mettre à jour le pair BGP (l'autre bout du tunnel BGP mis à jour dans le JSON, par exemple le conteneur transit-a-router). On peut enfin faire un `./mi-lxc.py start` et vérifier le bon démarrage.
+Une fois ceci défini, un `./mi-lxc.py print` pour vérifier la topologie, puis `./mi-lxc.py create` permet de créer la machine routeur associée à cet AS (ce sera un Alpine Linux). L'opération create est paresseuse, elle ne crée que les conteneurs non existants et sera donc rapide.
 
-> `renet` est une opération rapide qui évite de devoir supprimer et re-générer l'infrastructure. Elle met à jour les IP et certaines configurations. Typiquement, nous verrons le script provision.sh dans la suite, renet exécute à la place le script renet.sh (présent dans certains répertoires).
+> **DANGER ZONE** On va détruire un conteneur et uniquement un. Si vous faîtes une fausse manipulation, vous risquez de détruire l'infra complète et de mettre ensuite 15 minutes à tout reconstruire, ce n'est pas le but. Donc spécifiez bien le nom du conteneur à détruire et, si vous êtes dans une VM, ça peut être le moment de faire un snapshot...
+
+À ce moment, par contre, le pair BGP (l'autre bout du tunnel BGP mis à jour dans le JSON, par exemple le conteneur transit-a-router) ne connaît pas encore ce nouveau routeur. Il faut le détruire et le re-générer : `./mi-lxc.py destroy transit-a-router` (détruit _uniquement_ le conteneur transit-a-router) puis `./mi-lxc.py create` pour le re-générer. (à terme, un renet pourrait suffire, mais ce n'est pas implémenté actuellement pour les routeurs BGP AlpineLinux)
+
+On peut enfin faire un `./mi-lxc.py start` et vérifier le bon démarrage.
 
 > Attention, pour des raisons de gestion des IP et des routes, étonnamment, il n'y a pas de façon simple pour que le routeur puisse lui-même initier des communications. C'est-à-dire que si tout fonctionne bien il sera démarré, aura de bonnes tables de routage, mais pour autant ne pourra pas ping en dehors du subnet du transitaire. C'est le comportement attendu et donc vérifier la connectivité du routeur ne peut pas se faire comme ça. On verra ensuite comment vérifier cela depuis un poste interne et nous utiliserons, sur le routeur ou ses voisins BGP, les commandes `birdc show route all`et `birdc show protocols` pour inspecter les tables de routage et vérifier l'établissement des sessions BGP.
 
@@ -192,15 +203,16 @@ IV.4-Modification de cet hôte
 -----------------------------
 
 Maintenant que cet hôte est créé, nous allons le modifier. Ajoutons :
-* l'utilisation d'un autre template, par exemple `mailclient` (il est défini dans templates/hosts/debian/mailclient, il suffit de le nommer mailclient dans le local.json). Ce template a 4 paramètres, vous pouvez en voir un usage dans groups/target/local.json . Configurez-le avec des valeurs fictives
+* l'utilisation d'un autre template, par exemple `mailclient` (il est défini dans templates/hosts/debian/mailclient, il suffit de le nommer mailclient dans le local.json). Ce template a 4 paramètres, vous pouvez en voir un usage dans groups/target/local.json . Configurez-le avec des valeurs fictives (mettez juste 'debian' comme valeur pour login, c'est le nom du compte Linux local qui sera configuré pour le mail et ce compte doit déjà exister. Le compte debian existe et est celui utilisé par défaut pour la commande display)
 * une autre action dans le provision.sh
 
-> **DANGER ZONE** On va détruire un conteneur et uniquement un. Si vous faîtes une fausse manipulation, vous risquez de détruire l'infra complète et de mettre ensuite 15 minutes à tout reconstruire, ce n'est pas le but. Donc spécifiez bien le nom du conteneur à détruire et, si vous êtes dans une VM, ça peut être le moment de faire un snapshot...
 
 Pour mettre à jour ce conteneur de ces modifications sans tout reconstruire, il faut :
 * `./mi-lxc.py destroy acme-monconteneur` # détruit _uniquement_ le conteneur acme-monconteneur
 * `./mi-lxc.py create` # reconstruit uniquement ce conteneur manquant
 * `./mi-lxc.py start` # redémarre ce nouveau conteneur
+* `./mi-lxc.py display acme-monconteneur` # constatez que claws-mail a été configuré par vos paramètres
+
 
 
 IV.5-L'enregistrer dans le DNS
