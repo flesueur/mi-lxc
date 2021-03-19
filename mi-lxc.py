@@ -347,7 +347,7 @@ def createBridges():
     #os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
     for bridge in bridges:
         os.system("brctl addbr " + bridge)
-        os.system("ifconfig " + bridge + " up")
+        os.system("ip link set " + bridge + " up")
         os.system("iptables -A FORWARD -i " +
                   bridge + " -o " + bridge + " -j ACCEPT")
 
@@ -357,7 +357,7 @@ def deleteBridges():
     print("Deleting bridges")
     #os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
     for bridge in bridges:
-        os.system("ifconfig " + bridge + " down")
+        os.system("ip link set " + bridge + " down")
         os.system("brctl delbr " + bridge)
         os.system("iptables -D FORWARD -i " +
                   bridge + " -o " + bridge + " -j ACCEPT")
