@@ -11,6 +11,8 @@ Example practical work using this environment (in french) :
 * [IDS](https://github.com/flesueur/srs/blob/master/tp3-ids.md) (adapted to MI-LXC v1.3.0)
 * [CA](https://github.com/flesueur/csc/blob/master/tp1-https.md) (adapted to MI-LXC v1.3.0)
 
+There is also a [walkthrough tutorial](doc/TUTORIAL.fr.md) (in French).
+
 ![Topology](https://github.com/flesueur/mi-lxc/blob/master/doc/topologie.png)
 
 
@@ -39,29 +41,18 @@ A few things you can do and observe :
 * You can query the DNS entry `smtp.target.milxc` from `isp-a-hacker`. `isp-a-hacker` will ask the resolver at `isp-a-infra`, which will recursively resolve from the DNS root `ns-root-o`, then from `reg-milxc` and finally from `target-dmz`
 * You can send an email from `hacker@isp-a.milxc` (or another forged address...), using claws-mail on `isp-a-hacker`, to `commercial@target.milxc`, which can be read using claws-mail on `target-commercial` (with X11 sessions in both containers)
 
-The "IANA-type" numbering (AS numbers, IP space, TLDs) is described in [MI-IANA.txt](https://github.com/flesueur/mi-lxc/blob/master/MI-IANA.txt). There is currently no cryptography deployed anywhere (no HTTPS, no IMAPS, no DNSSEC, etc.). This will probably be added at some point but in the meantime, deploying this is part of the expected work from students.
+The "IANA-type" numbering (AS numbers, IP space, TLDs) is described in [doc/MI-IANA.txt](https://github.com/flesueur/mi-lxc/blob/master/doc/MI-IANA.txt). There is currently no cryptography deployed anywhere (no HTTPS, no IMAPS, no DNSSEC, etc.). This will probably be added at some point but in the meantime, deploying this is part of the expected work from students.
 
-More precise details on what is installed and configured on hosts is in [DETAILS.md](DETAILS.md).
+More precise details on what is installed and configured on hosts is in [doc/DETAILS.md](doc/DETAILS.md).
 
 # How to use
 
-## Installation on Linux
+## Installation
 
-On Debian (Strech/Buster), you need lxc, python3-lxc, dnsmasq-base, bridge-utils, python3-pil and python3-pygraphviz (`apt-get install lxc python3-lxc dnsmasq-base bridge-utils python3-pil python3-pygraphviz`) and then to enable networking in the LXC configuration (`USE_LXC_BRIDGE="true"` in `/etc/default/lxc-net`). Finally, you need to restart LXC networking (`service lxc-net restart`).
-
-On Ubuntu Bionic (2018.04 LTS), you first need to enable the multiverse repository. Then you need to install lxc-utils, python3-lxc dnsmasq-base, python3-pil and python3-pygraphviz (`apt-get install lxc-utils python3-lxc dnsmasq-base python3-pil python3-pygraphviz`). You may need to restart lxc-net or apparmor. If you are using Ubuntu as a live CD, you need some mounted storage (4GB should be ok) and then to configure LXC to use this space : create the `/etc/lxc/lxc.conf` with the content `lxc.lxcpath=/mnt` (location where you mounted your storage)
-
-On Kali 2018.2, you need lxc (`apt-get install lxc`) and then to enable networking in the LXC configuration (`USE_LXC_BRIDGE="true"` in `/etc/default/lxc-net`). Finally, you need to restart LXC and AppArmor (`service lxc restart && service apparmor restart`). If you are using Kali as a live CD, you need some mounted storage (4GB should be ok) and then to configure LXC to use this space : create the `/etc/lxc/lxc.conf` with the content `lxc.lxcpath=/mnt` (location where you mounted your storage)
-
-On Arch Linux, you need to downgrade LXC to LXC 2.0.7 (it should now work with LXC 3, reports welcome), then to install python3-lxc from the official lxc github. You also need dnsmasq and python-graphviz. Rest of the configuration is quite similar (network configuration, service restart, etc.)
-
-> Optionally, you can:
-> * install `apt-cacher-ng` on your host (port 3142) to speed up the creation of the containers. This proxy is detected in [masters/buster/detect_proxy.sh](https://github.com/flesueur/mi-lxc/blob/master/masters/buster/detect_proxy.sh).
-> * install the bash autocompletion script `milxc-completion.bash`, either by sourcing it in your current shell (`source milxc-completion.bash`) or by copying it in `/etc/bash_completion.d/`
-
-## Installation on Windows/MacOS/Linux (using Vagrant)
-
-The `vagrant` subdirectory contains a `Vagrantfile` suited to generate a VirtualBox VM running MI-LXC inside. You need to install [Vagrant](https://www.vagrantup.com/downloads.html) and then, in the `vagrant` subdirectory, run `vagrant up`. You can then login as root/root. MI-LXC is installed in `/root/mi-lxc` and already provisionned (no need to `create`, you can directly `start`).
+You can either:
+* Download the [latest ready-to-run VirtualBox VM](https://github.com/flesueur/mi-lxc/releases/latest). Login with root/root, then MI-LXC is already installed and provisionned in `/root/mi-lxc/` (i.e., you can directly `./mi-lxc.py start`, no need to `./mi-lxc.py create`)
+* Create a [VirtualBox VM using Vagrant](doc/INSTALL.md#installation-on-windowsmacoslinux-using-vagrant). Login with root/root, then MI-LXC is already installed and provisionned in `/root/mi-lxc/` (i.e., you can directly `./mi-lxc.py start`, no need to `./mi-lxc.py create`)
+* Install [directly on your Linux host system](doc/INSTALL.md#installation-on-linux)
 
 
 Usage
@@ -78,6 +69,7 @@ The `mi-lxc.py` script generates and uses containers (as *root*, since it manipu
 * `./mi-lxc.py renet         # Updates containers network interfaces and setups to reflect topology changes (global.json/local.json)`
 * `./mi-lxc.py                # Usage and list of container names`
 * `./mi-lxc.py destroy && ./mi-lxc.py destroymaster   # Destroys everything (master containers and all linked containers)`
+* There is also a [walkthrough tutorial](doc/TUTORIAL.fr.md) (in French).
 
 
 ## What is done with root permissions ?
@@ -91,7 +83,7 @@ This is not ideal but is currently needed. An [issue](https://github.com/flesueu
 
 # How to extend
 
-The address space is explained in `MI-IANA.txt` and the global topology is defined in `global.json`. It describes:
+The address space is explained in [MI-IANA.txt](doc/MI-IANA.txt) and the global topology is defined in [global.json](global.json). It describes:
 
 * masters, in the `masters/` subfolder (currently a Debian Buster and an Alpine Linux)
 * groups of hosts, typically AS interconnected with BGP
