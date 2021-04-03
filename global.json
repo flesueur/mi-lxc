@@ -36,7 +36,7 @@
 }],
   "groups": {
     "transit-a": {
-      "templates":[{"template":"as-bgp", "asn":"30", "neighbors4":"100.64.0.10 as 10;100.64.0.30 as 7;100.64.0.40 as 8; 100.64.0.2 as 31; 100.64.0.20 as 6; 100.64.0.50 as 13",
+      "templates":[{"template":"as-bgp", "asn":"30", "neighbors4":"100.64.0.10 as 10;100.64.0.30 as 7;100.64.0.40 as 8; 100.64.0.2 as 31; 100.64.0.20 as 6; 100.64.0.50 as 13;100.64.0.11 as 21",
                   "neighbors6":"2001:db8:b000::10 as 10; 2001:db8:b000::30 as 7;2001:db8:b000::40 as 8; 2001:db8:b000::2 as 31; 2001:db8:b000::20 as 6; 2001:db8:b000::50 as 13",
       "interfaces":[
         {"bridge":"nat-bridge", "ipv4":"dhcp"},
@@ -50,13 +50,6 @@
         {"bridge":"transit-b", "ipv4":"100.64.1.1/24", "ipv6":"2001:db8:b001::1/48"},
         {"bridge":"transit-a", "ipv4":"100.64.0.2/24", "ipv6":"2001:db8:b000::2/48"}
         ]
-    }]},
-    "target": {
-      "templates":[{"template":"as-bgp-debian", "asn":"10", "asdev":"eth1", "neighbors4":"100.64.0.1 as 30", "neighbors6":"2001:db8:b000::1 as 30",
-      "interfaces":[
-        {"bridge":"transit-a", "ipv4":"100.64.0.10/24", "ipv6":"2001:db8:b000::10/48"},
-        {"bridge":"target-lan", "ipv4":"100.80.0.1/16", "ipv6":"2001:db8:80::0:1/48"}
-      ]
     }]},
     "mica": {
       "templates":[{"template":"as-bgp", "asn":"12", "asdev":"eth1", "neighbors4":"100.64.1.1 as 31", "neighbors6":"2001:db8:b001::1 as 31",
@@ -72,19 +65,20 @@
         {"bridge":"ecorp-lan", "ipv4":"100.81.0.1/16", "ipv6":"2001:db8:81::1/48"}
       ]
     }]},
-    "gozilla": {
-      "templates":[{"template":"as-bgp", "asn":"13", "asdev":"eth1", "neighbors4":"100.64.0.1 as 30","neighbors6":"2001:db8:b000::1 as 30",
-      "interfaces":[
-        {"bridge":"transit-a", "ipv4":"100.64.0.50/24", "ipv6":"2001:db8:b000::50/48"},
-        {"bridge":"gozilla-lan", "ipv4":"100.83.0.1/16", "ipv6":"2001:db8:83::1/48"}
-      ]
-    }]},
-    "isp-a": {
+    "rouge": {
       "templates":[{"template":"as-bgp", "asn":"20", "asdev":"eth1;eth2", "neighbors4":"100.64.1.1 as 31","neighbors6":"2001:db8:b001::1 as 31",
       "interfaces":[
           {"bridge":"transit-b", "ipv4":"100.64.1.10/24", "ipv6":"2001:db8:b001::10/48"},
-          {"bridge":"isp-a-cust", "ipv4":"100.120.0.1/24"},
-          {"bridge":"isp-a-infra", "ipv4":"100.120.1.1/24", "ipv6":"2001:db8:120:1::1/64"}
+          {"bridge":"rouge-cust", "ipv4":"100.120.0.1/24"},
+          {"bridge":"rouge-infra", "ipv4":"100.120.1.1/24", "ipv6":"2001:db8:120:1::1/64"}
+      ]
+    }]},
+    "libre": {
+      "templates":[{"template":"as-bgp", "asn":"21", "asdev":"eth1;eth2", "neighbors4":"100.64.0.1 as 30","neighbors6":"2001:db8:b000::1 as 30",
+      "interfaces":[
+          {"bridge":"transit-a", "ipv4":"100.64.0.11/24", "ipv6":"2001:db8:b000::11/48"},
+          {"bridge":"libre-cust", "ipv4":"100.121.0.1/24"},
+          {"bridge":"libre-infra", "ipv4":"100.121.1.1/24", "ipv6":"2001:db8:121:1::1/64"}
       ]
     }]},
     "root-o": {

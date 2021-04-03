@@ -1,0 +1,24 @@
+{
+  "comment":"libre AS",
+  "containers": {
+    "infra":
+        {"container":"infra",
+          "interfaces":[
+            {"bridge":"infra", "ipv4":"100.121.1.2/24", "ipv6":"2001:db8:121:1::2/64"}
+          ],
+          "gatewayv4":"100.121.1.1",
+          "gatewayv6":"2001:db8:121:1::1",
+          "templates":[
+            {"template":"mailserver", "domain":"libre.milxc"},
+            {"template":"resolverns"},
+            {"template":"nodhcp", "domain":"libre.milxc", "ns":"100.121.1.2"}]},
+          "home":{"container":"louisette",
+            "interfaces":[
+              {"bridge":"cust", "ipv4":"100.121.0.3/24"}
+            ],
+            "gatewayv4":"100.121.0.1",
+            "templates":[{"template":"mailclient", "domain":"libre.milxc", "mailname":"louisette", "password":"louisette"},
+                        {"template":"nodhcp", "domain":"libre.milxc", "ns":"100.121.1.2"},
+                        {"template":"updatecaroots"}]}
+  }
+}

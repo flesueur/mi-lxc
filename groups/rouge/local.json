@@ -1,0 +1,24 @@
+{
+  "comment":"ISP-A AS",
+  "containers": {
+    "infra":
+        {"container":"infra",
+          "interfaces":[
+            {"bridge":"infra", "ipv4":"100.120.1.2/24", "ipv6":"2001:db8:120:1::2/64"}
+          ],
+          "gatewayv4":"100.120.1.1",
+          "gatewayv6":"2001:db8:120:1::1",
+          "templates":[
+            {"template":"mailserver", "domain":"rouge.milxc"},
+            {"template":"resolverns"},
+            {"template":"nodhcp", "domain":"rouge.milxc", "ns":"100.120.1.2"}]},
+          "home":{"container":"home",
+            "interfaces":[
+              {"bridge":"cust", "ipv4":"100.120.0.3/24"}
+            ],
+            "gatewayv4":"100.120.0.1",
+            "templates":[{"template":"mailclient", "domain":"rouge.milxc", "mailname":"hacker", "password":"hacker"},
+                      {"template":"nodhcp", "domain":"rouge.milxc", "ns":"100.120.1.2"},
+                        {"template":"updatecaroots"}]}
+  }
+}

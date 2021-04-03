@@ -33,8 +33,10 @@ ns	IN	AAAA	2001:db8:a020::10
 target.milxc.		IN	NS	ns.target.milxc.
 ns.target.milxc.	IN	A 100.80.1.2
 ns.target.milxc.	IN	AAAA 2001:db8:80::1:2
-isp-a.milxc.	IN	NS	ns.isp-a.milxc.
-ns.isp-a.milxc.	IN	A 100.120.1.2
+rouge.milxc.	IN	NS	ns.rouge.milxc.
+ns.rouge.milxc.	IN	A 100.120.1.2
+libre.milxc.	IN	NS	ns.libre.milxc.
+ns.libre.milxc.	IN	A 100.121.1.2
 ns.isp-a.milxc.	IN	AAAA 2001:db8:120:1::2
 mica.milxc.	IN	NS	ns.mica.milxc.
 ns.mica.milxc.	IN	A 100.82.0.2
