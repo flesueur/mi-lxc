@@ -261,6 +261,7 @@ class LxcHost(LxcBackend,Host):
             #xkbcomp " + str(hostdisplay) + " :" + str(displaynum)
             #setxkbmap " + getxkbmap()
             # to set a cookie in xephyr : xauth list puis ajout -cookie
+            # https://unix.stackexchange.com/questions/313234/how-to-launch-xephyr-without-sleep-ing
         #print(command)
         #c.attach(lxc.attach_run_command, ["/usr/bin/pkill", "-f", "Xephyr", "-u", user], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
         c.attach(lxc.attach_run_command, ["/bin/su", "-l", "-c",

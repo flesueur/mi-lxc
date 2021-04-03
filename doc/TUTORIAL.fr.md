@@ -36,6 +36,8 @@ II-Avant de démarrer
     * `./mi-lxc.py start`
     * `./mi-lxc.py display isp-a-hacker`
 
+> Pour sortir une souris coincée dans un Xephyr, Ctrl+Shift
+
 
 
 III-Apprenant - L'apprentissage du fonctionnement d'internet et des problèmes de sécurité
