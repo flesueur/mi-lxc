@@ -6,8 +6,8 @@ DIR=`dirname $0`
 cd `dirname $0`
 
 # Hacker's mail account hacker@isp-a.milxc
-useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 louisette` louisette || true
-addgroup louisette mail
+useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 papa` papa || true
+addgroup papa mail
 #mkdir /home/hacker/mail
 #touch /home/hacker/mail/Drafts /home/hacker/mail/Queue /home/hacker/mail/Sent /home/hacker/mail/Trash
 

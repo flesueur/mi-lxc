@@ -17,7 +17,7 @@
               {"bridge":"cust", "ipv4":"100.120.0.3/24"}
             ],
             "gatewayv4":"100.120.0.1",
-            "templates":[{"template":"mailclient", "domain":"rouge.milxc", "mailname":"hacker", "password":"hacker"},
+            "templates":[{"template":"mailclient", "domain":"rouge.milxc", "mailname":"hackncrack", "password":"hacker"},
                       {"template":"nodhcp", "domain":"rouge.milxc", "ns":"100.120.1.2"},
                         {"template":"updatecaroots"}]}
   }

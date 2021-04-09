@@ -17,7 +17,7 @@
               {"bridge":"cust", "ipv4":"100.121.0.3/24"}
             ],
             "gatewayv4":"100.121.0.1",
-            "templates":[{"template":"mailclient", "domain":"libre.milxc", "mailname":"louisette", "password":"louisette"},
+            "templates":[{"template":"mailclient", "domain":"libre.milxc", "mailname":"papa", "password":"papa"},
                         {"template":"nodhcp", "domain":"libre.milxc", "ns":"100.121.1.2"},
                         {"template":"updatecaroots"}]}
   }
