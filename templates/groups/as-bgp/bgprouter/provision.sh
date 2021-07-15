@@ -7,7 +7,7 @@ cd `dirname $0`
 
 #sed -i "s/dhcp/manual/" /etc/network/interfaces
 
-echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+#echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 apk update
 apk add bird
 rc-update add bird

@@ -22,7 +22,7 @@
 {
 "backend":"lxc",
 "template":"download",
-"parameters":{"dist": "alpine", "release": "3.11", "arch": "amd64", "no-validate": "true"},
+"parameters":{"dist": "alpine", "release": "3.14", "arch": "amd64", "no-validate": "true"},
 "name":"alpine",
 "family":"alpine",
 "status":"enabled"
