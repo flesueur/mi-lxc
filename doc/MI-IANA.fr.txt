@@ -1,0 +1,24 @@
+100.64.0.0/10 est un subnet routable en IPv4. Ils imitent l'espace public IPv4 (100.64.0.0 à 100.127.255.255).
+192.168.0.0/16 sont réservés à un usage privé (non routable), comme dans l'Internet réel.
+2001:db8::/32 est un subnet routable en IPv6. Ils imitent l'espace public IPv6 (2001:0db8:0000:0000:0000:0000 à 2001:0db8:ffff:ffff:ffff:ffff:ffff:ffff).
+
+TLDs : milxc, evil # evil pas encore déployé
+
+NS ROOT O : ASN 5, 100.100.0.0/24, 2001:db8:a000::/48 # Un serveur de noms root alternatif
+NS ROOT P : ASN 6, 100.100.1.0/24, 2001:db8:a001::/48 # Un serveur de noms root alternatif
+OpenDNS : ASN 7, 100.100.100.0/24, 100.100.100.100, 2001:db8:a100::/48 # Un résolveur ouvert
+TLD milxc : ASN 8, 100.100.20.0/24, 2001:db8:a020::/48 # Un opérateur TLD pour .milxc
+TLD evil : ASN 9, 100.100.21.0/24, 2001:db8:a021::/48 # Un opérateur TLD pour .evil, pas encore déployé
+
+Cible : ASN 10, 100.80.0.0/16, 2001:db8:80::/48, target.milxc # Une entreprise cool à attaquer
+Ecorp : ASN 11, 100.81.0.0/16, 2001:db8:81::/48, ecorp.milxc # Une entreprise maléfique
+MICA : ASN 12, 100.82.0.0/16, 2001:db8:82::/48, mica.milxc # Un CA faisant de son mieux
+Gozilla : ASN 13, 100.83.0.0/16, 2001:db8:83::/48, gozilla.milxc # Un éditeur de navigateur web (ie, Mozilla), autorisé à diffuser de nouveaux certificats racine de CA
+
+ISP-A : ASN 20, 100.120.0.0/16, 2001:db8:120::/48, ispa.milxc # Un ISP d'utilisateur final, .0.x pour les utilisateurs, .1.x pour l'infra
+ISP-B : ASN 21, 100.121.0.0/16, 2001:db8:121::/48, ispb.milxc # Un ISP d'utilisateur final, .0.x pour les utilisateurs, .1.x pour l'infra, pas encore déployé
+
+Transit-A : ASN 30, 100.64.0.0/24, 2001:db8:b000::/48 # Quelques opérateurs de transit, seulement A et B pour le moment
+Transit-B : ASN 31, 100.64.1.0/24, 2001:db8:b001::/48
+
+Peering-A : ASN 40, 100.65.0.0/24, 2001:db8:c000::/48 # Quelques opérateurs de peering, pas encore déployés

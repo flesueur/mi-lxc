@@ -1,5 +1,7 @@
 # MI-LXC : Mini-Internet using LXC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://github.com/flesueur/mi-lxc/blob/master/doc/logo.png" width="100" style="float: right;">
 
+[![fr](https://img.shields.io/badge/lang-fr-informational)](https://github.com/flesueur/mi-lxc/blob/master/doc/README.fr.md)
+
 MI-LXC uses LXC to simulate an internet-like environment. I use this environment for (infosec) practical work (intrusion, firewall, IDS, etc.). The small memory footprint of LXC combined with differential images allows to run it on modest hardware.
 
 It is based on the infrastructure-as-code principle: these scripts programmatically generate the target environment.
@@ -11,7 +13,7 @@ Example practical work using this environment (in french) :
 * [IDS](https://github.com/flesueur/srs/blob/master/tp3-ids.md) (adapted to MI-LXC v1.3.0)
 * [CA](https://github.com/flesueur/csc/blob/master/tp1-https.md) (adapted to MI-LXC v1.3.0)
 
-There is also a [walkthrough tutorial](doc/TUTORIAL.fr.md) (in French).
+There is also a [walkthrough tutorial](doc/TUTORIAL.md).
 
 ![Topology](https://github.com/flesueur/mi-lxc/blob/master/doc/topologie.png)
 
@@ -69,7 +71,7 @@ The `mi-lxc.py` script generates and uses containers (as *root*, since it manipu
 * `./mi-lxc.py renet         # Updates containers network interfaces and setups to reflect topology changes (global.json/local.json)`
 * `./mi-lxc.py                # Usage and list of container names`
 * `./mi-lxc.py destroy && ./mi-lxc.py destroymaster   # Destroys everything (master containers and all linked containers)`
-* There is also a [walkthrough tutorial](doc/TUTORIAL.fr.md) (in French).
+* There is also a [walkthrough tutorial](doc/TUTORIAL.md).
 
 
 ## What is done with root permissions ?
