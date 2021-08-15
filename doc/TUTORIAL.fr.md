@@ -1,6 +1,6 @@
 # Tutoriel MI-LXC
 
-[![en](https://img.shields.io/badge/lang-en-informational)](https://github.com/flesueur/mi-lxc/blob/master/doc/TUTORIAL.en.md)
+[![en](https://img.shields.io/badge/lang-en-informational)](https://github.com/flesueur/mi-lxc/blob/master/doc/TUTORIAL.md)
 
 I-Déroulement de ce tutoriel
 =============================
