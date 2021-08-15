@@ -43,7 +43,7 @@ Quelques éléments que vous pouvez faire et observer :
 * Vous pouvez interroger l'entrée DNS `smtp.target.milxc` depuis `isp-a-hacker`. `isp-a-hacker` demandera au résolveur de `isp-a-infra`, qui résoudra récursivement à partir de la racine DNS `ns-root-o`, puis de `reg-milxc` et enfin de `target-dmz`.
 * Vous pouvez envoyer un email de `hacker@isp-a.milxc` (ou une autre fausse adresse...), en utilisant claws-mail sur `isp-a-hacker`, à `commercial@target.milxc`, qui peut être lu en utilisant claws-mail sur `target-commercial` (avec des sessions X11 dans les deux conteneurs).
 
-La numérotation de type "IANA" (numéros d'AS, espace IP, TLD) est décrite dans [doc/MI-IANA.fr.txt](https://github.com/flesueur/mi-lxc/blob/master/doc/MI-IANA.txt). Actuellement, aucune cryptographie n'est déployée nulle part (pas de HTTPS, pas d'IMAPS, pas de DNSSEC, etc.). Cela sera probablement ajouté à un moment donné, mais en attendant, le déploiement fait partie du travail attendu des étudiants.
+La numérotation de type "IANA" (numéros d'AS, espace IP, TLD) est décrite dans [doc/MI-IANA.fr.txt](https://github.com/flesueur/mi-lxc/blob/master/doc/MI-IANA.fr.txt). Actuellement, aucune cryptographie n'est déployée nulle part (pas de HTTPS, pas d'IMAPS, pas de DNSSEC, etc.). Cela sera probablement ajouté à un moment donné, mais en attendant, le déploiement fait partie du travail attendu des étudiants.
 
 Des détails plus précis sur ce qui est installé et configuré sur les hôtes se trouvent dans [doc/DETAILS.fr.md](doc/DETAILS.fr.md).
 
