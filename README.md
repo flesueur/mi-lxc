@@ -13,7 +13,7 @@ Example practical work using this environment (in french) :
 * [IDS](https://github.com/flesueur/srs/blob/master/tp3-ids.md) (adapted to MI-LXC v1.3.0)
 * [CA](https://github.com/flesueur/csc/blob/master/tp1-https.md) (adapted to MI-LXC v1.3.0)
 
-There is also a [walkthrough tutorial](doc/TUTORIAL.fr.md) (in French).
+There is also a [walkthrough tutorial](doc/TUTORIAL.md).
 
 ![Topology](https://github.com/flesueur/mi-lxc/blob/master/doc/topologie.png)
 
@@ -43,7 +43,7 @@ A few things you can do and observe :
 * You can query the DNS entry `smtp.target.milxc` from `isp-a-hacker`. `isp-a-hacker` will ask the resolver at `isp-a-infra`, which will recursively resolve from the DNS root `ns-root-o`, then from `reg-milxc` and finally from `target-dmz`
 * You can send an email from `hacker@isp-a.milxc` (or another forged address...), using claws-mail on `isp-a-hacker`, to `commercial@target.milxc`, which can be read using claws-mail on `target-commercial` (with X11 sessions in both containers)
 
-The "IANA-type" numbering (AS numbers, IP space, TLDs) is described in [doc/MI-IANA.en.txt](https://github.com/flesueur/mi-lxc/blob/master/doc/MI-IANA.en.txt). There is currently no cryptography deployed anywhere (no HTTPS, no IMAPS, no DNSSEC, etc.). This will probably be added at some point but in the meantime, deploying this is part of the expected work from students.
+The "IANA-type" numbering (AS numbers, IP space, TLDs) is described in [doc/MI-IANA.txt](https://github.com/flesueur/mi-lxc/blob/master/doc/MI-IANA.txt). There is currently no cryptography deployed anywhere (no HTTPS, no IMAPS, no DNSSEC, etc.). This will probably be added at some point but in the meantime, deploying this is part of the expected work from students.
 
 More precise details on what is installed and configured on hosts is in [doc/DETAILS.md](doc/DETAILS.md).
 
@@ -71,7 +71,7 @@ The `mi-lxc.py` script generates and uses containers (as *root*, since it manipu
 * `./mi-lxc.py renet         # Updates containers network interfaces and setups to reflect topology changes (global.json/local.json)`
 * `./mi-lxc.py                # Usage and list of container names`
 * `./mi-lxc.py destroy && ./mi-lxc.py destroymaster   # Destroys everything (master containers and all linked containers)`
-* There is also a [walkthrough tutorial](doc/TUTORIAL.en.md).
+* There is also a [walkthrough tutorial](doc/TUTORIAL.md).
 
 
 ## What is done with root permissions ?
@@ -85,7 +85,7 @@ This is not ideal but is currently needed. An [issue](https://github.com/flesueu
 
 # How to extend
 
-The address space is explained in [MI-IANA.en.txt](doc/MI-IANA.en.txt) and the global topology is defined in [global.json](global.json). It describes:
+The address space is explained in [MI-IANA.txt](doc/MI-IANA.txt) and the global topology is defined in [global.json](global.json). It describes:
 
 * masters, in the `masters/` subfolder (currently a Debian Buster and an Alpine Linux)
 * groups of hosts, typically AS interconnected with BGP
