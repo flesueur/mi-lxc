@@ -1,5 +1,6 @@
 # Tutoriel MI-LXC
 
+[![en](https://img.shields.io/badge/lang-en-informational)](https://github.com/flesueur/mi-lxc/blob/master/doc/TUTORIAL.en.md)
 
 I-Déroulement de ce tutoriel
 =============================
@@ -110,7 +111,7 @@ Le déroulement va être le suivant :
 IV.1-Déclaration d'un nouvel AS
 -------------------------------
 
-Le fichier `doc/MI-IANA.txt` représente l'annuaire de l'IANA. Vous pouvez y trouver un numéro d'AS libre ainsi qu'une plage d'IP libre. Les IPv4 routables sont attribuées dans l'espace 100.64.0.0/10 (réservé au CG-NAT et donc normalement sans risque de conflit local).
+Le fichier `doc/MI-IANA.fr.txt` représente l'annuaire de l'IANA. Vous pouvez y trouver un numéro d'AS libre ainsi qu'une plage d'IP libre. Les IPv4 routables sont attribuées dans l'espace 100.64.0.0/10 (réservé au CG-NAT et donc normalement sans risque de conflit local).
 
 Vous pouvez aussi en profiter pour prévoir un nom de domaine en .milxc
 
@@ -131,7 +132,7 @@ Un AS est représenté par un groupe d'hôtes. La première étape est ainsi de 
 ```
 
 Le champ _template_ décrit le template du groupe, ici ce sera également un as-bgp. Les champs _asn, asdev, neighbors4, neighbors6_ et _interfaces_ doivent être ajustés :
-* _asn_ est le numéro d'AS, tel que déclaré dans `MI-IANA.txt`
+* _asn_ est le numéro d'AS, tel que déclaré dans `MI-IANA.fr.txt`
 * _asdev_ est l'interface réseau qui sera relié au réseau _interne_ de l'organisation (celle qui a les IP liées à l'AS, ce sera eth1 dans l'exemple)
 * _neighbors4_ sont les pairs BGP4 pour le routage IPv4 (au format _IP\_du\_pair as ASN\_du\_pair_)
 * _neighbors6_ sont les pairs BGP6 pour le routage IPv6 (optionnel, au format _IP\_du\_pair as ASN\_du\_pair_)
