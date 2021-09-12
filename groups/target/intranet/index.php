@@ -1,17 +1,23 @@
-<html><head><meta charset="UTF-8"><title>Données internes</title></head>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Données internes</title>
+</head>
 
 <body>
 
-Clients :<br>
+    Clients :<br>
 
-<?php
-readfile("/var/www/html/clients.txt");
-?>
+    <?php
+    readfile("/var/www/html/clients.txt");
+    ?>
 
-Compta :<br>
-<?php
-readfile("/var/www/html/compta.txt");
-?>
+    Compta :<br>
+    <?php
+    readfile("/var/www/html/compta.txt");
+    ?>
 
 </body>
+
 </html>
