@@ -1,8 +1,7 @@
 {
   "comment":"AS of the Target organization",
   "containers": {"router":
-    { "master":"buster",
-      "templates":[{"template":"resolverns"}]},
+    { "templates":[{"template":"resolverns"}]},
                   "dmz":
     {"container":"dmz",
       "interfaces":[

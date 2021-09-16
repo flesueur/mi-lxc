@@ -252,7 +252,7 @@ class LxcHost(LxcBackend,Host):
         cdisplay = ":" + str(self.id + 2)
         hostdisplay = os.getenv("DISPLAY")
         os.system("xhost local: >/dev/null 2>&1")
-        command="DISPLAY=" + hostdisplay + " Xephyr -title \"Xephyr " + self.name + "\" -br -ac -dpms -s 0 -resizeable " + cdisplay + " 2>/dev/null & \
+        command="DISPLAY=" + hostdisplay + " Xephyr -title \"Xephyr " + self.name + "\" -br -ac -dpms -s 0 -no-host-grab -resizeable " + cdisplay + " 2>/dev/null & \
             export DISPLAY=" + cdisplay + " ; \
             while ! setxkbmap -query 1>/dev/null 2>/dev/null ; do sleep 0.1s ; done ; \
             xfce4-session 2>/dev/null & \

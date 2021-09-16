@@ -13,11 +13,18 @@ systemctl stop systemd-resolved
 
 apt-get update
 DEB_VERSION=`cat /etc/debian_version | cut -d'.' -f1`
-if [ $DEB_VERSION -eq "10" ] # DEB 10 aka Buster
+if [ $DEB_VERSION -eq "11" ] # DEB 11 aka Bullseye
+then
+  DEBIAN_FRONTEND=noninteractive apt-get install -y dokuwiki certbot python3-certbot-apache nsd dovecot-imapd proftpd apt-transport-https wget prelude-utils libprelude-dev build-essential php-mbstring php libevent-dev libpcre2-dev zlib1g-dev libssl-dev libsystemd-dev
+elif [ $DEB_VERSION -eq "10" ] # DEB 10 aka Buster
 then
   DEBIAN_FRONTEND=noninteractive apt-get install -y dokuwiki certbot python3-certbot-apache nsd dovecot-imapd proftpd apt-transport-https wget prelude-utils libprelude-dev build-essential php7.3-mbstring php7.3 libevent-dev libpcre2-dev zlib1g-dev libssl-dev
-else # DEB 9 aka stretch
+elif [ $DEB_VERSION -eq "9" ] # DEB 9 aka stretch
+then
   DEBIAN_FRONTEND=noninteractive apt-get install -y nsd dovecot-imapd proftpd apt-transport-https wget libprelude2 libprelude-dev build-essential  php7.0-mbstring php7.0
+else
+  echo "Unsupported Debian version"
+  exit 1
 fi
 
 # DNS server
@@ -70,9 +77,11 @@ echo "RequestHeader unset If-Modified-Since" >> /etc/apache2/apache2.conf
 
 # Install de OSSEC avec support prelude
 cd /tmp
-wget https://github.com/ossec/ossec-hids/archive/3.6.0.tar.gz
-tar zxvf 3.6.0.tar.gz
-cd ossec-hids-3.6.0
+# wget https://github.com/ossec/ossec-hids/archive/3.6.0.tar.gz
+wget https://github.com/ossec/ossec-hids/archive/356562583ba7242f46c4c8adb1350f5f9509b759.zip -O ossec.zip
+#tar zxvf 3.6.0.tar.gz
+unzip ossec.zip
+cd ossec-hids-* #3.6.0
 cp $DIR/preloaded-vars.conf etc/
 USE_PRELUDE=yes ./install.sh
 
