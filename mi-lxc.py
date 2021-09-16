@@ -406,8 +406,25 @@ def printgraph():
 
 def usage():
     print(
-        "No argument given, usage with: create, renet, destroy, destroymaster, updatemaster, start, stop, attach [user@]<name> [command], display [user@]<name>, print.\nNames are: ", end='')
-    print(listHosts())
+        """\nError: wrong or unsufficient arguments.
+
+./mi-lxc.py should be followed by:
+    create <name>                    creates the <name> container
+    createall                        creates all the containers
+    renet                            renets all the containers
+    destroy <name>                   destroys the <name> container
+    destroyall                       destroys all the containers
+    destroymaster                    destroys all the master containers
+    updatemaster                     updates all the master containers
+    start                            starts the created infrastructure
+    stop                             stops the created infrastructure
+    attach [user@]<name> [command]   attaches a term on <name> as [user](defaults to root) and executes [command](defaults to interactive shell)
+    display [user@]<name>            displays a graphical desktop on <name> as [user](defaults to debian)
+    print                            graphically displays the defined architecture
+        (<arguments> are mandatory and [arguments] are optional)
+
+Container names are: """, end='')
+    print(listHosts()+".\n")
 
 def listHosts():
     return ", ".join(host.name for host in hosts)
@@ -471,24 +488,26 @@ if __name__ == '__main__':
     command = sys.argv[1]
     flushArp()
 
-    if (command == "create"):
-        if len(sys.argv) > 2:
-            host = getHost(sys.argv[2])
-            if host is None:
-                print("Unexisting container " + sys.argv[2] + ", valid containers are " + listHosts(), file=sys.stderr)
-                exit(1)
-            host.create()
-        else:
-            createInfra()
-    elif (command == "destroy"):
-        if len(sys.argv) > 2:
-            host = getHost(sys.argv[2])
-            if host is None:
-                print("Unexisting container " + sys.argv[2] + ", valid containers are " + listHosts(), file=sys.stderr)
-                exit(1)
-            host.destroy()
-        else:
+    if (command == "create" and len(sys.argv) > 2):
+        host = getHost(sys.argv[2])
+        if host is None:
+            print("Unexisting container " + sys.argv[2] + ", valid containers are " + listHosts(), file=sys.stderr)
+            exit(1)
+        host.create()
+    elif (command == "createall"):
+        createInfra()
+    elif (command == "destroy" and len(sys.argv) > 2):
+        host = getHost(sys.argv[2])
+        if host is None:
+            print("Unexisting container " + sys.argv[2] + ", valid containers are " + listHosts(), file=sys.stderr)
+            exit(1)
+        host.destroy()
+    elif (command == "destroyall"):
+        answer = input("Are you sure you want to destroy the whole infrastructure? [y/n] ")
+        if answer.lower() in ["y","yes"]:
             destroyInfra()
+        else:
+            pass
     elif (command == "start"):
         startInfra()
     elif (command == "stop"):
@@ -551,3 +570,4 @@ if __name__ == '__main__':
         renetInfra()
     else:
         usage()
+        exit(1)
