@@ -13,7 +13,7 @@ Exemple de travaux pratiques utilisant cet environnement :
 * [IDS](https://github.com/flesueur/srs/blob/master/tp3-ids.md) (adapté à MI-LXC v1.3.0)
 * [CA](https://github.com/flesueur/csc/blob/master/tp1-https.md) (adapté à MI-LXC v1.3.0)
 
-Il existe également un [tutoriel pas à pas](doc/TUTORIAL.fr.md).
+Il existe également un [tutoriel pas à pas](TUTORIAL.fr.md) et une [vidéo de présentation](https://www.sstic.org/2020/presentation/mi-lxc_une_plateforme_pedagogique_pour_la_securite_reseau/).
 
 ![Topologie](https://github.com/flesueur/mi-lxc/blob/master/doc/topologie.png)
 
