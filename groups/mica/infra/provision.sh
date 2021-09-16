@@ -23,10 +23,10 @@ cp dns.conf /etc/unbound/unbound.conf.d/
 
 # Install smallstep CA / ACME server
 cd /tmp
-wget https://github.com/smallstep/cli/releases/download/v0.13.3/step-cli_0.13.3_amd64.deb
-dpkg -i step-cli_0.13.3_amd64.deb
-wget https://github.com/smallstep/certificates/releases/download/v0.13.3/step-certificates_0.13.3_amd64.deb
-dpkg -i step-certificates_0.13.3_amd64.deb
+wget https://github.com/smallstep/cli/releases/download/v0.17.2/step-cli_0.17.2_amd64.deb
+dpkg -i step-cli_0.17.2_amd64.deb
+wget https://github.com/smallstep/certificates/releases/download/v0.17.2/step-ca_0.17.2_amd64.deb
+dpkg -i step-ca_0.17.2_amd64.deb
 
 # step ca init
 # step ca root root.crt
