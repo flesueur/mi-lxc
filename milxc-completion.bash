@@ -4,7 +4,7 @@ _milxc_completions()
 {
   if [ "${#COMP_WORDS[@]}" == "2" ]; then
       #COMPREPLY=($(compgen -W "$(./mi-lxc.py | grep usage | cut -d':' -f 2 | sed 's/[,.]/ /g' | sed 's/\[[a-z@]*\]//g' | sed 's/<[a-z]*>//g')" "${COMP_WORDS[1]}"))
-      COMPREPLY=($(compgen -W "create createall renet destroy destroyall destroymaster updatemaster start stop attach display print" "${COMP_WORDS[1]}"))
+      COMPREPLY=($(compgen -W "create renet destroy destroymaster updatemaster start stop attach display print" "${COMP_WORDS[1]}"))
       # ./mi-lxc.py | grep usage | cut -d' ' -f 6- | sed 's/, / /g' | sed 's/\[[a-z@]*\]//g' | sed 's/<[a-z]*>//g'
   fi
 
