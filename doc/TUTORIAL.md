@@ -20,8 +20,8 @@ MI-LXC is a framework for designing network/system architectures in which learne
 II --- Before getting started
 ===============================
 
-1. A [general presentation (in french)](https://www.sstic.org/2020/presentation/mi-lxc_une_plateforme_pedagogique_pour_la_securite_reseau/) at SSTIC 2020 (slides + video)
-2. A [video tutorial (in french)](https://mi-lxc.citi-lab.fr/data/media/tuto1.mp4) to get started
+1. A [general presentation (in English)](https://www.youtube.com/watch?v=waCsmE7BeZs) at ETACS 2021 (video)
+2. A [video tutorial (in French)](https://mi-lxc.citi-lab.fr/data/media/tuto1.mp4) to get started
 3. A functional installation:
   * A ready-to-use VirtualBox VM (about 5GB to download and then an 11GB VM): [here](https://mi-lxc.citi-lab.fr/data/milxc-debian-amd64-1.3.1.ova). You have to connect to it as root/root then, with a terminal:
     * `cd mi-lxc`

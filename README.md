@@ -13,7 +13,7 @@ Example practical work using this environment (in french) :
 * [IDS](https://github.com/flesueur/srs/blob/master/tp3-ids.md) (adapted to MI-LXC v1.3.0)
 * [CA](https://github.com/flesueur/csc/blob/master/tp1-https.md) (adapted to MI-LXC v1.3.0)
 
-There is also a [walkthrough tutorial](doc/TUTORIAL.md).
+There is also a [walkthrough tutorial](doc/TUTORIAL.md) and a [video](https://www.youtube.com/watch?v=waCsmE7BeZs).
 
 ![Topology](https://github.com/flesueur/mi-lxc/blob/master/doc/topologie.png)
 
