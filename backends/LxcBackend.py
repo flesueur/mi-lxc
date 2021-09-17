@@ -255,8 +255,8 @@ class LxcHost(LxcBackend,Host):
         command="DISPLAY=" + hostdisplay + " Xephyr -title \"Xephyr " + self.name + "\" -br -ac -dpms -s 0 -no-host-grab -resizeable " + cdisplay + " 2>/dev/null & \
             export DISPLAY=" + cdisplay + " ; \
             while ! setxkbmap -query 1>/dev/null 2>/dev/null ; do sleep 0.1s ; done ; \
-            xfce4-session 2>/dev/null & \
-            while ! pidof xfce4-panel 1>/dev/null ; do sleep 0.1s ; done ; \
+            lxsession 2>/dev/null & \
+            while ! pidof lxpanel 1>/dev/null ; do sleep 0.1s ; done ; \
             setxkbmap -display " + hostdisplay + " -print | xkbcomp - " + cdisplay + " 2>/dev/null"
             #xkbcomp " + str(hostdisplay) + " :" + str(displaynum)
             #setxkbmap " + getxkbmap()
