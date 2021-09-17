@@ -262,8 +262,8 @@ class LxcHost(LxcBackend, Host):
 >>>>>>> f564b53... upgraded all containers to debian bullseye. Seems to mostly work, TPs need to be tested, resizing display is not fully working right now
             export DISPLAY=" + cdisplay + " ; \
             while ! setxkbmap -query 1>/dev/null 2>/dev/null ; do sleep 0.1s ; done ; \
-            xfce4-session 2>/dev/null & \
-            while ! pidof xfce4-panel 1>/dev/null ; do sleep 0.1s ; done ; \
+            lxsession 2>/dev/null & \
+            while ! pidof lxpanel 1>/dev/null ; do sleep 0.1s ; done ; \
             setxkbmap -display " + hostdisplay + " -print | xkbcomp - " + cdisplay + " 2>/dev/null"
         # xkbcomp " + str(hostdisplay) + " :" + str(displaynum)
         # setxkbmap " + getxkbmap()

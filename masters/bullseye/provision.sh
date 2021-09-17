@@ -18,7 +18,7 @@ echo "Acquire::http::Proxy-Auto-Detect \"/usr/local/sbin/detect_proxy.sh\";" > /
 
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
-DEBIAN_FRONTEND=noninteractive apt-get install -y dnsutils traceroute nftables ftp syslog-ng openssh-server bash-completion less mousepad mupdf xnest xserver-xephyr apache2 vim xfce4 firefox-esr tcpdump dsniff whois wireshark net-tools xfce4-terminal iptables iputils-ping netcat nmap socat curl wget unzip # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree
+DEBIAN_FRONTEND=noninteractive apt-get install -y man dnsutils traceroute nftables ftp syslog-ng openssh-server bash-completion less mousepad mupdf xnest xserver-xephyr apache2 vim lxde-core lxterminal firefox-esr tcpdump dsniff whois wireshark net-tools iptables iputils-ping netcat nmap socat curl wget unzip xscreensaver # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree xfce4 xfce4-terminal xscreensaver
 apt-get clean
 # firefox-esr epiphany-browser midori
 
@@ -44,7 +44,7 @@ sed -i "/mesg n/d" /root/.profile
 
 # XFCE4 panel: use default config
 # source: https://forum.xfce.org/viewtopic.php?pid=36585#p36585
-cp /etc/xdg/xfce4/panel/default.xml /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
+# cp /etc/xdg/xfce4/panel/default.xml /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
 
 # Creation des utilisateurs
 usermod -p `mkpasswd --method=sha-512 root` root
@@ -60,5 +60,8 @@ service ssh restart
 chmod u+s /bin/ping
 
 # remove colord which makes XFCE prompt for a password at first display
-DEBIAN_FRONTEND=noninteractive apt-get remove -y colord
+# DEBIAN_FRONTEND=noninteractive apt-get remove -y colord
+# DEBIAN_FRONTEND=noninteractive apt-get autoremove -y
+
+DEBIAN_FRONTEND=noninteractive apt-get remove -y pulseaudio
 DEBIAN_FRONTEND=noninteractive apt-get autoremove -y
