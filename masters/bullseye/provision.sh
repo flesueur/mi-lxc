@@ -63,5 +63,10 @@ chmod u+s /bin/ping
 # DEBIAN_FRONTEND=noninteractive apt-get remove -y colord
 # DEBIAN_FRONTEND=noninteractive apt-get autoremove -y
 
+# remove pulseaudio
 DEBIAN_FRONTEND=noninteractive apt-get remove -y pulseaudio
 DEBIAN_FRONTEND=noninteractive apt-get autoremove -y
+
+# better palette for lxterminal
+sed -i "s/Monospace 10/Monospace 12/" /usr/share/lxterminal/lxterminal.conf
+cat lxterminal.conf >> /usr/share/lxterminal/lxterminal.conf
