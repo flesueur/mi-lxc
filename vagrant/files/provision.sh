@@ -17,11 +17,14 @@ sed -i -e 's/main/main contrib non-free/' /etc/apt/sources.list
 apt-get --allow-releaseinfo-change update
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
-DEBIAN_FRONTEND=noninteractive apt-get install -y apt-cacher-ng
+DEBIAN_FRONTEND=noninteractive apt-get install -y libc-ares2 curl libevent-2.1-7 libevent-pthreads-2.1-7  # apt-cacher is currently broken in bullseye
+curl http://ftp.us.debian.org/debian/pool/main/a/apt-cacher-ng/apt-cacher-ng_3.7.2-1_amd64.deb -o apt-cacher-ng.deb
+DEBIAN_FRONTEND=noninteractive dpkg -i apt-cacher-ng.deb
 echo "Acquire::http::Proxy \"http://127.0.0.1:3142\";" > /etc/apt/apt.conf.d/01proxy;  # utilisation de apt-cacher-ng
 #data=`uname -r`
 #arch=${data##*-}
-DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-`dpkg --print-architecture` virtualbox-guest-additions-iso dynamips screen curl dkms python3-pygraphviz python3-pil imagemagick linux-headers-amd64 git lxc python3-lxc vim xfce4 lightdm firefox-esr xfce4-terminal tcpdump whois dkms net-tools mousepad wireshark xserver-xorg # apt-cacher-ng zerofree wireshark dsniff apache2 postgresql keyboard-configuration  wireshark
+DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends linux-headers-`dpkg --print-architecture` virtualbox-guest-additions-iso dynamips screen curl dkms python3-pygraphviz python3-pil imagemagick linux-headers-amd64 git lxc python3-lxc vim firefox-esr tcpdump whois net-tools mousepad wireshark # apt-cacher-ng zerofree wireshark dsniff apache2 postgresql keyboard-configuration  wireshark
+EBIAN_FRONTEND=noninteractive apt-get install -y xfce4 lightdm xfce4-terminal xserver-xorg # apt-cacher-ng zerofree wireshark dsniff apache2 postgresql keyboard-configuration  wireshark
 apt-get clean
 # linux-headers-4.9.0-7-amd64 firmware-atheros firmware-misc-nonfree
 
