@@ -18,6 +18,7 @@ apt-get --allow-releaseinfo-change update
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
 DEBIAN_FRONTEND=noninteractive apt-get install -y apt-cacher # apt-cacher-ng does not work well on bullseye
+echo "allowed_hosts = *" >> /etc/apt-cacher/apt-cacher.conf
 echo "Acquire::http::Proxy \"http://127.0.0.1:3142\";" > /etc/apt/apt.conf.d/01proxy;  # utilisation de apt-cacher-ng
 #data=`uname -r`
 #arch=${data##*-}
