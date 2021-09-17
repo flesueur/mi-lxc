@@ -7,7 +7,7 @@ set -e
 # Copie de qques fichiers
 #cp /vagrant/files/sources.list /etc/apt/sources.list
 cp /vagrant/files/keyboard /etc/default/keyboard
-echo "USE_LXC_BRIDGE=\"true\"" > /etc/default/lxc-net
+# echo "USE_LXC_BRIDGE=\"true\"" > /etc/default/lxc-net
 
 # Lock grub (https://www.mail-archive.com/debian-bugs-dist@lists.debian.org/msg1758060.html)
 DEBIAN_FRONTEND=noninteractive apt-mark hold grub*
@@ -21,7 +21,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y apt-cacher-ng
 echo "Acquire::http::Proxy \"http://127.0.0.1:3142\";" > /etc/apt/apt.conf.d/01proxy;  # utilisation de apt-cacher-ng
 #data=`uname -r`
 #arch=${data##*-}
-DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-`dpkg --print-architecture` virtualbox-guest-additions-iso dynamips screen curl dkms apt-cacher-ng python3-pygraphviz python3-pil imagemagick linux-headers-amd64 git lxc python3-lxc vim xfce4 lightdm firefox-esr gnome-terminal tcpdump whois dkms net-tools mousepad # zerofree wireshark dsniff apache2 postgresql keyboard-configuration  wireshark
+DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-`dpkg --print-architecture` virtualbox-guest-additions-iso dynamips screen curl dkms python3-pygraphviz python3-pil imagemagick linux-headers-amd64 git lxc python3-lxc vim xfce4 lightdm firefox-esr xfce4-terminal tcpdump whois dkms net-tools mousepad wireshark # apt-cacher-ng zerofree wireshark dsniff apache2 postgresql keyboard-configuration  wireshark
 apt-get clean
 # linux-headers-4.9.0-7-amd64 firmware-atheros firmware-misc-nonfree
 
@@ -57,7 +57,7 @@ useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 debian` debian || true #
 #mount -o remount /run
 
 # Désactivation de la mise en veille de l'écran
-mkdir /etc/X11/xorg.conf.d/
+mkdir -p /etc/X11/xorg.conf.d/
 cp /vagrant/files/10-monitor.conf /etc/X11/xorg.conf.d/
 # mv /etc/xdg/autostart/light-locker.desktop /etc/xdg/autostart/light-locker.desktop.bak
 DEBIAN_FRONTEND=noninteractive apt-get remove --purge -y light-locker
