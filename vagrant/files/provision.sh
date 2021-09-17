@@ -17,9 +17,7 @@ sed -i -e 's/main/main contrib non-free/' /etc/apt/sources.list
 apt-get --allow-releaseinfo-change update
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
-DEBIAN_FRONTEND=noninteractive apt-get install -y libc-ares2 curl libevent-2.1-7 libevent-pthreads-2.1-7  # apt-cacher is currently broken in bullseye
-curl http://ftp.us.debian.org/debian/pool/main/a/apt-cacher-ng/apt-cacher-ng_3.7.2-1_amd64.deb -o apt-cacher-ng.deb
-DEBIAN_FRONTEND=noninteractive dpkg -i apt-cacher-ng.deb
+DEBIAN_FRONTEND=noninteractive apt-get install -y apt-cacher # apt-cacher-ng does not work well on bullseye
 echo "Acquire::http::Proxy \"http://127.0.0.1:3142\";" > /etc/apt/apt.conf.d/01proxy;  # utilisation de apt-cacher-ng
 #data=`uname -r`
 #arch=${data##*-}
