@@ -10,6 +10,10 @@ if [ -z $MILXCGUARD ] ; then exit 1; fi
 DIR=`dirname $0`
 cd `dirname $0`
 
+# prevent apt cache (https://sleeplessbeastie.eu/2017/10/02/how-to-disable-the-apt-cache/)
+echo -e 'Dir::Cache "";\nDir::Cache::archives "";' | tee /etc/apt/apt.conf.d/00_disable-cache-directories
+apt-get clean
+
 cp detect_proxy.sh /usr/local/sbin/
 chmod a+x /usr/local/sbin/detect_proxy.sh
 apt-get update
@@ -18,8 +22,8 @@ echo "Acquire::http::Proxy-Auto-Detect \"/usr/local/sbin/detect_proxy.sh\";" > /
 
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
-DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends man dnsutils traceroute nftables ftp syslog-ng openssh-server bash-completion less mousepad mupdf xnest xserver-xephyr apache2 vim lxde-core lxterminal firefox-esr tcpdump dsniff whois wireshark net-tools iptables iputils-ping netcat nmap socat curl wget unzip xscreensaver # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree xfce4 xfce4-terminal xscreensaver
-apt-get clean
+DEBIAN_FRONTEND=noninteractive apt-get install -y man dnsutils traceroute nftables ftp syslog-ng openssh-server bash-completion less mousepad mupdf xnest xserver-xephyr apache2 vim lxde-core lxterminal firefox-esr tcpdump dsniff whois wireshark net-tools iptables iputils-ping netcat nmap socat curl wget unzip xscreensaver # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree xfce4  xfce4-terminal xscreensaver # could be with --no-install-recommends
+# apt-get clean
 # firefox-esr epiphany-browser midori
 
 # Disable user_ns which crashes firefox, see https://bugzilla.mozilla.org/show_bug.cgi?id=1565972
