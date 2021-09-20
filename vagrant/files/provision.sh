@@ -23,7 +23,7 @@ service apt-cacher restart
 echo "Acquire::http::Proxy \"http://127.0.0.1:3142\";" > /etc/apt/apt.conf.d/01proxy;  # utilisation de apt-cacher-ng
 #data=`uname -r`
 #arch=${data##*-}
-DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-`dpkg --print-architecture` virtualbox-guest-additions-iso dynamips screen curl dkms python3-pygraphviz python3-pil imagemagick linux-headers-amd64 git lxc python3-lxc vim firefox-esr tcpdump whois net-tools mousepad wireshark # apt-cacher-ng zerofree wireshark dsniff apache2 postgresql keyboard-configuration  wireshark # could be with --no-install-recommends
+DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-`dpkg --print-architecture` virtualbox-guest-additions-iso dynamips screen curl dkms python3-pygraphviz python3-pil imagemagick linux-headers-amd64 git lxc python3-lxc vim firefox-esr tcpdump whois net-tools mousepad wireshark swapspace # apt-cacher-ng zerofree wireshark dsniff apache2 postgresql keyboard-configuration  wireshark # could be with --no-install-recommends
 DEBIAN_FRONTEND=noninteractive apt-get install -y xfce4 lightdm xfce4-terminal xserver-xorg # apt-cacher-ng zerofree wireshark dsniff apache2 postgresql keyboard-configuration  wireshark
 # apt-get clean
 # linux-headers-4.9.0-7-amd64 firmware-atheros firmware-misc-nonfree
@@ -125,6 +125,10 @@ fi" >> /etc/bash.bashrc
 # XFCE4 panel: use default config
 # source: https://forum.xfce.org/viewtopic.php?pid=36585#p36585
 cp /etc/xdg/xfce4/panel/default.xml /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
+
+# free swapspace at shutdown
+sed -i -e 's/ExecStart=\/usr\/sbin\/swapspace/ExecStart=\/usr\/sbin\/swapspace\nExecStop=\/usr\/sbin\/swapspace -e/' /lib/systemd/system/swapspace.service
+systemctl daemon-reload
 
 # clear apt caches
 service apt-cacher stop
