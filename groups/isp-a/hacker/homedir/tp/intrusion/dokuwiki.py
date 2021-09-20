@@ -20,9 +20,9 @@ def bruteforce(server):
                 print("[+] Tested : " + user + " / Mot de passe : " + password)
                 if ('Admin' in r.text):
                     print("[++] Compte identifie : " + user + " / Mot de passe : " + password)
-                    return  # on s'arrête dès qu'on a trouvé un couple
-            except:
-                print("ouch")
+                    return  # we stop as soon as we have found a couple of login / password
+            except requests.exceptions.HTTPError as err:
+                raise SystemExit(err)
 
 
 if __name__ == '__main__':
