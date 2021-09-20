@@ -18,9 +18,12 @@ UUID=`vboxmanage showvminfo milxc-debian-amd64 | grep SATA | grep UUID | cut -d'
 
 echo "Old disk is at $DIR/$FILE, moving it away to $DIR/old.vmdk..."
 mv -v "$DIR/$FILE" "$DIR/old.vmdk"
+echo
 echo "Creating a new sparsed disk at $DIR/$FILE from $DIR/old.vmdk..."
 virt-sparsify "$DIR/old.vmdk" "$DIR/$FILE"
+echo
 echo "Setting UUID to $UUID..."
 vboxmanage internalcommands sethduuid "$DIR/$FILE" $UUID
+echo
 echo "Old virtual disk has been moved to $DIR/old.vmdk, you can now confirm its deletion"
 rm -iv "$DIR/old.vmdk"
