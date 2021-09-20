@@ -80,5 +80,6 @@ cat lxterminal.conf >> /usr/share/lxterminal/lxterminal.conf
 
 # limit journald log size
 mkdir -p /etc/systemd/journald.conf.d
-echo "SystemMaxUse=20M" > /etc/systemd/journald.conf.d/sizelimit.conf
+echo "[Journal]" > /etc/systemd/journald.conf.d/sizelimit.conf
+echo "SystemMaxUse=20M" >> /etc/systemd/journald.conf.d/sizelimit.conf
 echo "SystemMaxFileSize=2M" >> /etc/systemd/journald.conf.d/sizelimit.conf
