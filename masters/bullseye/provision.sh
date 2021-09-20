@@ -10,8 +10,11 @@ if [ -z $MILXCGUARD ] ; then exit 1; fi
 DIR=`dirname $0`
 cd `dirname $0`
 
-# prevent apt cache (https://sleeplessbeastie.eu/2017/10/02/how-to-disable-the-apt-cache/)
-echo -e 'Dir::Cache "";\nDir::Cache::archives "";' | tee /etc/apt/apt.conf.d/00_disable-cache-directories
+# prevent apt cache (https://sleeplessbeastie.eu/2017/10/02/how-to-disable-the-apt-cache/ https://askubuntu.com/questions/81179/how-to-prevent-apt-get-aptitude-keeping-a-cache)
+# echo -e 'Dir::Cache "";\nDir::Cache::archives "";' | tee /etc/apt/apt.conf.d/00_disable-cache-directories
+echo -e 'Dir::Cache::pkgcache "";\nDir::Cache::srcpkgcache "";' > /etc/apt/apt.conf.d/00_disable-cache-files
+echo 'DPkg::Post-Invoke {"/bin/rm -f /var/cache/apt/archives/*.deb || true";};' > /etc/apt/apt.conf.d/autoclean
+
 apt-get clean
 
 cp detect_proxy.sh /usr/local/sbin/
