@@ -130,6 +130,12 @@ cp /etc/xdg/xfce4/panel/default.xml /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xf
 sed -i -e 's/ExecStart=\/usr\/sbin\/swapspace/ExecStart=\/usr\/sbin\/swapspace\nExecStop=\/usr\/sbin\/swapspace -e/' /lib/systemd/system/swapspace.service
 systemctl daemon-reload
 
+# limit journald log size
+mkdir -p /etc/systemd/journald.conf.d
+echo "[Journal]" > /etc/systemd/journald.conf.d/sizelimit.conf
+echo "SystemMaxUse=20M" >> /etc/systemd/journald.conf.d/sizelimit.conf
+echo "SystemMaxFileSize=2M" >> /etc/systemd/journald.conf.d/sizelimit.conf
+
 # clear apt caches
 service apt-cacher stop
 rm -rf /var/cache/apt-cacher/
