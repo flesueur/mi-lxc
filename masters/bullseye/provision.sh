@@ -77,3 +77,8 @@ DEBIAN_FRONTEND=noninteractive apt-get autoremove -y
 # better palette for lxterminal
 sed -i "s/Monospace 10/Monospace 12/" /usr/share/lxterminal/lxterminal.conf
 cat lxterminal.conf >> /usr/share/lxterminal/lxterminal.conf
+
+# limit journald log size
+mkdir -p /etc/systemd/journald.conf.d
+echo "SystemMaxUse=20M" > /etc/systemd/journald.conf.d/sizelimit.conf
+echo "SystemMaxFileSize=2M" >> /etc/systemd/journald.conf.d/sizelimit.conf
