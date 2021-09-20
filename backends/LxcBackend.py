@@ -266,6 +266,7 @@ class LxcHost(LxcBackend, Host):
         # setxkbmap " + getxkbmap()
         # to set a cookie in xephyr : xauth list puis ajout -cookie
         # https://unix.stackexchange.com/questions/313234/how-to-launch-xephyr-without-sleep-ing
+
         # print(command)
         # c.attach(lxc.attach_run_command, ["/usr/bin/pkill", "-f", "Xephyr", "-u", user], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
         c.attach(
@@ -293,9 +294,7 @@ class LxcMaster(LxcBackend, Master):
     This class defines methods to manage LXC masters
     """
     def __repr__(self):
-        return(
-            "{Master " + self.backend + ":" + self.prefix + self.name
-            + "}")
+        return("{Master " + self.backend + ":" + self.prefix + self.name + "}")
 
     def __init__(self, name, parameters, template, family):
         self.prefix = "mi-"

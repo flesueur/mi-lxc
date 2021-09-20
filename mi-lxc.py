@@ -58,7 +58,7 @@ def developTopology(data):
                 container["group"] = gname
 
                 try:
-                    for iface in container["toto"]:
+                    for iface in container["interfaces"]:
                         if "$" not in iface["bridge"]:
                             iface["bridge"] = gname + sep + iface["bridge"]
                 except:
