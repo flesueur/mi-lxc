@@ -46,8 +46,8 @@ class LxcBackend:
 
         # filesdir = os.path.dirname(os.path.realpath(sys.modules['__main__'].__file__)) + "/" + path + scriptname
         # if os.path.isfile(filesdir):
-            ret = c.attach_wait(lxc.attach_run_command, ["env"]
-                                + ["MILXCGUARD=TRUE", "HOSTLANG=" + os.getenv("LANG")]
+            ret = c.attach_wait(lxc.attach_run_command,
+                                ["env"] + ["MILXCGUARD=TRUE", "HOSTLANG=" + os.getenv("LANG")]
                                 + [getInterpreter(filesdir), "/mnt/lxc/" + path + scriptname],
                                 env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
             if ret != 0:
@@ -78,8 +78,7 @@ class LxcBackend:
                 args = ["MILXCGUARD=TRUE", "HOSTLANG=" + os.getenv("LANG")]
                 for arg in template:
                     args.append(arg + "=" + template[arg])
-                ret = c.attach_wait(lxc.attach_run_command, ["env"] + args + [
-                                    getInterpreter(filesdir), "/mnt/lxc/" + path + scriptname], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+                ret = c.attach_wait(lxc.attach_run_command, ["env"] + args + [getInterpreter(filesdir), "/mnt/lxc/" + path + scriptname], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
                 if ret != 0:  # and ret != 127:
                     print("\033[31mProvisioning of " + miname + "/" + template["template"] + " failed (" + str(ret) + "), exiting...\033[0m")
                     c.stop()
@@ -346,8 +345,7 @@ class LxcMaster(LxcBackend, Master):
 
             ret = c.attach_wait(
                 lxc.attach_run_command,
-                ["env"] + ["MILXCGUARD=TRUE"] + [getInterpreter(filesdir),
-                "/mnt/lxc/" + path + "/update.sh"],
+                ["env"] + ["MILXCGUARD=TRUE"] + [getInterpreter(filesdir), "/mnt/lxc/" + path + "/update.sh"],
                 env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
             
             if ret != 0:
