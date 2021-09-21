@@ -171,12 +171,10 @@ class LxcHost(LxcBackend, Host):
             if 'ipv4' in v:
                 ipv4 = v['ipv4']
                 if not (ipv4 == 'dhcp'):
-                    try:
-                        c.network[i].ipv4_address = ipv4
-                    except:
-                        # c.append_config_item("lxc.network."+str(i)+".ipv4", v)
-                        c.append_config_item(
-                            "lxc.net." + str(i) + ".ipv4.address", ipv4)
+                    c.network[i].ipv4_address = ipv4
+                    # c.append_config_item("lxc.network."+str(i)+".ipv4", v)
+                    c.append_config_item(
+                        "lxc.net." + str(i) + ".ipv4.address", ipv4)
                     try:
                         if ipaddress.ip_address(gatewayv4) in ipaddress.ip_network(ipv4, strict=False):
                             c.network[i].ipv4_gateway = gatewayv4
@@ -192,7 +190,7 @@ class LxcHost(LxcBackend, Host):
                     ipv6 = str(ippart) + '/' + netmask
                     try:
                         c.network[i].ipv6_address = ipv6
-                    except:
+                    except Exception as e:
                         # c.append_config_item("lxc.network."+str(i)+".ipv4", v)
                         c.append_config_item(
                             "lxc.net." + str(i) + ".ipv6.address", ipv6)
@@ -374,12 +372,12 @@ class LxcMaster(LxcBackend, Master):
             c.get_config_item("lxc.apparmor.profile")
             # may be aa_profile sometimes ?
             c.append_config_item("lxc.apparmor.profile", "unconfined")
-        except:  # AppArmor is not installed and must not be configured
+        except Exception as e:  # AppArmor is not installed and must not be configured
             pass
         try:  # AppArmor is installed and must be configured
             c.get_config_item("lxc.aa_profile")   # may be aa_profile sometimes ?
             c.append_config_item("lxc.aa_profile", "unconfined")
-        except:  # AppArmor is not installed and must not be configured
+        except Exception as e:  # AppArmor is not installed and must not be configured
             pass
 
         c.save_config()
