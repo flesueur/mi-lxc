@@ -345,7 +345,7 @@ class LxcMaster(LxcBackend, Master):
                 lxc.attach_run_command,
                 ["env"] + ["MILXCGUARD=TRUE"] + [getInterpreter(filesdir), "/mnt/lxc/" + path + "/update.sh"],
                 env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
-            
+
             if ret != 0:
                 print("\033[31mUpdating of master failed (" + str(ret) + "), exiting...\033[0m", file=sys.stderr)
                 c.stop()
