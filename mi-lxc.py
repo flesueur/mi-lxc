@@ -414,8 +414,23 @@ def printgraph():
 
 def usage():
     print(
-        "No argument given, usage with: create, renet, destroy, destroymaster, updatemaster, start, stop, attach [user@]<name> [command], display [user@]<name>, print.\nNames are: ", end='')
-    print(listHosts())
+        """\nError: wrong or unsufficient arguments.
+
+./mi-lxc.py should be followed by:
+    create [name]                    creates the [name] container, defaults to create all containers
+    renet                            renets all the containers
+    destroy [name]                   destroys the [name] container, defaults to destroy all containers
+    destroymaster                    destroys all the master containers
+    updatemaster                     updates all the master containers
+    start                            starts the created infrastructure
+    stop                             stops the created infrastructure
+    attach [user@]<name> [command]   attaches a term on <name> as [user](defaults to root) and executes [command](defaults to interactive shell)
+    display [user@]<name>            displays a graphical desktop on <name> as [user](defaults to debian)
+    print                            graphically displays the defined architecture
+        (<arguments> are mandatory and [arguments] are optional)
+
+Container names are: """, end='')
+    print(listHosts()+".\n")
 
 
 def listHosts():
@@ -497,7 +512,11 @@ if __name__ == '__main__':
                 exit(1)
             host.destroy()
         else:
-            destroyInfra()
+            answer = input("Are you sure you want to destroy the whole infrastructure? [y/n] ")
+            if answer.lower() in ["y","yes"]:
+                destroyInfra()
+            else:
+                pass
     elif (command == "start"):
         startInfra()
     elif (command == "stop"):
@@ -560,3 +579,4 @@ if __name__ == '__main__':
         renetInfra()
     else:
         usage()
+        exit(1)

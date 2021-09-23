@@ -7,7 +7,7 @@ set -e
 # Copie de qques fichiers
 #cp /vagrant/files/sources.list /etc/apt/sources.list
 cp /vagrant/files/keyboard /etc/default/keyboard
-echo "USE_LXC_BRIDGE=\"true\"" > /etc/default/lxc-net
+# echo "USE_LXC_BRIDGE=\"true\"" > /etc/default/lxc-net
 
 # Lock grub (https://www.mail-archive.com/debian-bugs-dist@lists.debian.org/msg1758060.html)
 DEBIAN_FRONTEND=noninteractive apt-mark hold grub*
@@ -17,12 +17,15 @@ sed -i -e 's/main/main contrib non-free/' /etc/apt/sources.list
 apt-get --allow-releaseinfo-change update
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
-DEBIAN_FRONTEND=noninteractive apt-get install -y apt-cacher-ng
+DEBIAN_FRONTEND=noninteractive apt-get install -y apt-cacher # apt-cacher-ng does not work well on bullseye
+echo "allowed_hosts = *" >> /etc/apt-cacher/apt-cacher.conf
+service apt-cacher restart
 echo "Acquire::http::Proxy \"http://127.0.0.1:3142\";" > /etc/apt/apt.conf.d/01proxy;  # utilisation de apt-cacher-ng
 #data=`uname -r`
 #arch=${data##*-}
-DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-`dpkg --print-architecture` virtualbox-guest-additions-iso dynamips screen curl dkms apt-cacher-ng python3-pygraphviz python3-pil imagemagick linux-headers-amd64 git lxc python3-lxc vim xfce4 lightdm firefox-esr gnome-terminal tcpdump whois dkms net-tools mousepad # zerofree wireshark dsniff apache2 postgresql keyboard-configuration  wireshark
-apt-get clean
+DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-`dpkg --print-architecture` virtualbox-guest-additions-iso dynamips screen curl dkms python3-pygraphviz python3-pil imagemagick linux-headers-amd64 git lxc python3-lxc vim firefox-esr tcpdump whois net-tools mousepad wireshark swapspace # apt-cacher-ng zerofree wireshark dsniff apache2 postgresql keyboard-configuration  wireshark # could be with --no-install-recommends
+DEBIAN_FRONTEND=noninteractive apt-get install -y xfce4 lightdm xfce4-terminal xserver-xorg # apt-cacher-ng zerofree wireshark dsniff apache2 postgresql keyboard-configuration  wireshark
+# apt-get clean
 # linux-headers-4.9.0-7-amd64 firmware-atheros firmware-misc-nonfree
 
 # vbox guest utils
@@ -57,7 +60,7 @@ useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 debian` debian || true #
 #mount -o remount /run
 
 # Désactivation de la mise en veille de l'écran
-mkdir /etc/X11/xorg.conf.d/
+mkdir -p /etc/X11/xorg.conf.d/
 cp /vagrant/files/10-monitor.conf /etc/X11/xorg.conf.d/
 # mv /etc/xdg/autostart/light-locker.desktop /etc/xdg/autostart/light-locker.desktop.bak
 DEBIAN_FRONTEND=noninteractive apt-get remove --purge -y light-locker
@@ -122,5 +125,22 @@ fi" >> /etc/bash.bashrc
 # XFCE4 panel: use default config
 # source: https://forum.xfce.org/viewtopic.php?pid=36585#p36585
 cp /etc/xdg/xfce4/panel/default.xml /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
+
+# free swapspace at shutdown
+sed -i -e 's/ExecStart=\/usr\/sbin\/swapspace/ExecStart=\/usr\/sbin\/swapspace\nExecStop=\/usr\/sbin\/swapspace -e/' /lib/systemd/system/swapspace.service
+systemctl daemon-reload
+
+# limit journald log size
+mkdir -p /etc/systemd/journald.conf.d
+echo "[Journal]" > /etc/systemd/journald.conf.d/sizelimit.conf
+echo "SystemMaxUse=20M" >> /etc/systemd/journald.conf.d/sizelimit.conf
+echo "SystemMaxFileSize=2M" >> /etc/systemd/journald.conf.d/sizelimit.conf
+
+# clear apt caches
+service apt-cacher stop
+rm -rf /var/cache/apt-cacher/
+mkdir -p /var/cache/apt-cacher/{headers,import,packages,private,temp}
+service apt-cacher start
+DEBIAN_FRONTEND=noninteractive apt-get clean
 
 reboot
