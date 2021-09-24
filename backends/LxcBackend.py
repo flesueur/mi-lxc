@@ -8,12 +8,14 @@ import ipaddress
 import os
 import sys
 
+
 def getInterpreter(file):
     script = open(file)
     first = script.readline()
     interpreter = first[2:-1]
     script.close()
     return interpreter
+
 
 class LxcBackend:
     """
@@ -26,9 +28,9 @@ class LxcBackend:
         c = self.getContainer()
 
         if isRenet:
-            scriptname="/renet.sh"
+            scriptname = "/renet.sh"
         else:
-            scriptname="/provision.sh"
+            scriptname = "/provision.sh"
 
         if isMaster:
             path = "masters/" + self.name
@@ -42,10 +44,12 @@ class LxcBackend:
                 print("Container seems to have failed to start (no IP)")
                 sys.exit(1)
 
-        #filesdir = os.path.dirname(os.path.realpath(sys.modules['__main__'].__file__)) + "/" + path + scriptname
-        #if os.path.isfile(filesdir):
-            ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["MILXCGUARD=TRUE", "HOSTLANG="+os.getenv("LANG")] + [
-                            getInterpreter(filesdir), "/mnt/lxc/" + path + scriptname], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+        # filesdir = os.path.dirname(os.path.realpath(sys.modules['__main__'].__file__)) + "/" + path + scriptname
+        # if os.path.isfile(filesdir):
+            ret = c.attach_wait(lxc.attach_run_command,
+                                ["env"] + ["MILXCGUARD=TRUE", "HOSTLANG=" + os.getenv("LANG")]
+                                + [getInterpreter(filesdir), "/mnt/lxc/" + path + scriptname],
+                                env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
             if ret != 0:
                 print("\033[31mProvisioning of " + path + " failed (" + str(ret) + "), exiting...\033[0m")
                 c.stop()
@@ -54,7 +58,7 @@ class LxcBackend:
         else:
             print("No Provisioning script for " + path)
 
-        if isinstance(self,LxcMaster):
+        if isinstance(self, LxcMaster):
             c.stop()
             return
 
@@ -71,12 +75,11 @@ class LxcBackend:
                 if not isRenet and not c.get_ips(timeout=60):
                     print("Container seems to have failed to start (no IP)")
                     sys.exit(1)
-                args = ["MILXCGUARD=TRUE", "HOSTLANG="+os.getenv("LANG")]
+                args = ["MILXCGUARD=TRUE", "HOSTLANG=" + os.getenv("LANG")]
                 for arg in template:
                     args.append(arg + "=" + template[arg])
-                ret = c.attach_wait(lxc.attach_run_command, ["env"] + args + [
-                                    getInterpreter(filesdir), "/mnt/lxc/" + path + scriptname], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
-                if ret != 0: # and ret != 127:
+                ret = c.attach_wait(lxc.attach_run_command, ["env"] + args + [getInterpreter(filesdir), "/mnt/lxc/" + path + scriptname], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+                if ret != 0:  # and ret != 127:
                     print("\033[31mProvisioning of " + miname + "/" + template["template"] + " failed (" + str(ret) + "), exiting...\033[0m")
                     c.stop()
                     c.destroy()
@@ -103,18 +106,20 @@ class LxcBackend:
             return False
         return True
 
-class LxcHost(LxcBackend,Host):
+
+class LxcHost(LxcBackend, Host):
     """
     This class defines methods to manage LXC hosts
     """
     def __repr__(self):
-        return("{" + self.backend + ":" + self.prefix + self.name
-                + ", master: " + self.master.name
-                + ", nics: " + str(self.nics)
-                + ", templates: " + str(self.templates)
-                + ", folder: " + str(self.folder)
-                + ", id: " + str(self.id)
-                + "}")
+        return(
+            "{" + self.backend + ":" + self.prefix + self.name
+            + ", master: " + self.master.name
+            + ", nics: " + str(self.nics)
+            + ", templates: " + str(self.templates)
+            + ", folder: " + str(self.folder)
+            + ", id: " + str(self.id)
+            + "}")
 
     def __init__(self, name, nics, templates, master, folder):
         self.prefix = "mi-"
@@ -127,7 +132,7 @@ class LxcHost(LxcBackend,Host):
         self.folder = folder
         self.family = master.family
         self.id = LxcBackend.nextid
-        LxcBackend.nextid+=1
+        LxcBackend.nextid += 1
 
     def getContainer(self):
         return lxc.Container(self.prefix + self.name)
@@ -147,7 +152,6 @@ class LxcHost(LxcBackend,Host):
         else:
             print("Invalid master container \"" + self.master.name + "\" for container \"" + self.name + "\"", file=sys.stderr)
             exit(1)
-
 
     def configNet(self):
         interfaces = self.nics["interfaces"]
@@ -174,9 +178,9 @@ class LxcHost(LxcBackend,Host):
                         c.append_config_item(
                             "lxc.net." + str(i) + ".ipv4.address", ipv4)
                     try:
-                        if ipaddress.ip_address(gatewayv4) in ipaddress.ip_network(ipv4,strict=False):
+                        if ipaddress.ip_address(gatewayv4) in ipaddress.ip_network(ipv4, strict=False):
                             c.network[i].ipv4_gateway = gatewayv4
-                    except ValueError:  #gateway is not a valid address, no gateway to set
+                    except ValueError:  # gateway is not a valid address, no gateway to set
                         pass
 
             if 'ipv6' in v:
@@ -193,9 +197,9 @@ class LxcHost(LxcBackend,Host):
                         c.append_config_item(
                             "lxc.net." + str(i) + ".ipv6.address", ipv6)
                     try:
-                        if ipaddress.ip_address(gatewayv6) in ipaddress.ip_network(ipv6,strict=False):
-                            c.network[i].ipv6_gateway = str(ipaddress.ip_address(gatewayv6)) # recompress ipv6
-                    except ValueError:  #gateway is not a valid address, no gateway to set
+                        if ipaddress.ip_address(gatewayv6) in ipaddress.ip_network(ipv6, strict=False):
+                            c.network[i].ipv6_gateway = str(ipaddress.ip_address(gatewayv6))  # recompress ipv6
+                    except ValueError:  # gateway is not a valid address, no gateway to set
                         pass
 
             i += 1
@@ -224,7 +228,6 @@ class LxcHost(LxcBackend,Host):
         # restores json network config
         self.configNet()
 
-
     def isRunning(self):
         c = self.getContainer()
         return c.running
@@ -252,21 +255,23 @@ class LxcHost(LxcBackend,Host):
         cdisplay = ":" + str(self.id + 2)
         hostdisplay = os.getenv("DISPLAY")
         os.system("xhost local: >/dev/null 2>&1")
-        command="DISPLAY=" + hostdisplay + " Xephyr -title \"Xephyr " + self.name + "\" -br -ac -dpms -s 0 -no-host-grab -resizeable " + cdisplay + " 2>/dev/null & \
+        command = "DISPLAY=" + hostdisplay + " Xephyr -title \"Xephyr " + self.name + "\" -br -ac -dpms -s 0 -no-host-grab -resizeable " + cdisplay + " 2>/dev/null & \
             export DISPLAY=" + cdisplay + " ; \
             while ! setxkbmap -query 1>/dev/null 2>/dev/null ; do sleep 0.1s ; done ; \
             lxsession 2>/dev/null & \
             while ! pidof lxpanel 1>/dev/null ; do sleep 0.1s ; done ; \
             setxkbmap -display " + hostdisplay + " -print | xkbcomp - " + cdisplay + " 2>/dev/null"
-            #xkbcomp " + str(hostdisplay) + " :" + str(displaynum)
-            #setxkbmap " + getxkbmap()
-            # to set a cookie in xephyr : xauth list puis ajout -cookie
-            # https://unix.stackexchange.com/questions/313234/how-to-launch-xephyr-without-sleep-ing
-        #print(command)
-        #c.attach(lxc.attach_run_command, ["/usr/bin/pkill", "-f", "Xephyr", "-u", user], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
-        c.attach(lxc.attach_run_command, ["/bin/su", "-l", "-c",
-                                            command,
-                                          user], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+        # xkbcomp " + str(hostdisplay) + " :" + str(displaynum)
+        # setxkbmap " + getxkbmap()
+        # to set a cookie in xephyr : xauth list puis ajout -cookie
+        # https://unix.stackexchange.com/questions/313234/how-to-launch-xephyr-without-sleep-ing
+
+        # print(command)
+        # c.attach(lxc.attach_run_command, ["/usr/bin/pkill", "-f", "Xephyr", "-u", user], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+        c.attach(
+            lxc.attach_run_command,
+            ["/bin/su", "-l", "-c", command, user],
+            env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
 
     # Xnest and firefox seem incompatible with kernel.unprivileged_userns_clone=1 (need to disable the multiprocess)
     # Xephyr : can try -host-cursor
@@ -283,15 +288,14 @@ class LxcHost(LxcBackend,Host):
         lxccontainer.attach_wait(lxc.attach_run_command, run_command, env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
 
 
-class LxcMaster(LxcBackend,Master):
+class LxcMaster(LxcBackend, Master):
     """
     This class defines methods to manage LXC masters
     """
     def __repr__(self):
-        return("{Master " + self.backend + ":" + self.prefix + self.name
-                + "}")
+        return("{Master " + self.backend + ":" + self.prefix + self.name + "}")
 
-    def __init__(self,  name, parameters, template, family):
+    def __init__(self, name, parameters, template, family):
         self.prefix = "mi-"
         self.name = name
         self.backend = "lxc"
@@ -301,7 +305,7 @@ class LxcMaster(LxcBackend,Master):
         self.parameters = parameters
         self.family = family
         self.id = LxcBackend.nextid
-        LxcBackend.nextid+=1
+        LxcBackend.nextid += 1
 
     def getContainer(self):
         return lxc.Container(self.prefix + "masters-" + self.name)
@@ -314,7 +318,7 @@ class LxcMaster(LxcBackend,Master):
             return c
 
         # can add flags=LXC_CREATE_QUIET to reduce verbosity
-        if not c.create(template=self.template, args= self.parameters):
+        if not c.create(template=self.template, args=self.parameters):
             print("Failed to create the container rootfs", file=sys.stderr)
             sys.exit(1)
         self.configure()
@@ -339,8 +343,11 @@ class LxcMaster(LxcBackend,Master):
                 print("Container seems to have failed to start (no IP)", file=sys.stderr)
                 sys.exit(1)
 
-            ret = c.attach_wait(lxc.attach_run_command, ["env"] + ["MILXCGUARD=TRUE"] + [
-                            getInterpreter(filesdir), "/mnt/lxc/" + path + "/update.sh"], env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+            ret = c.attach_wait(
+                lxc.attach_run_command,
+                ["env"] + ["MILXCGUARD=TRUE"] + [getInterpreter(filesdir), "/mnt/lxc/" + path + "/update.sh"],
+                env_policy=lxc.LXC_ATTACH_CLEAR_ENV)
+
             if ret != 0:
                 print("\033[31mUpdating of master failed (" + str(ret) + "), exiting...\033[0m", file=sys.stderr)
                 c.stop()
