@@ -1,13 +1,27 @@
 {
-  "comment":"open DNS service AS",
+  "comment": "open DNS service AS",
   "containers": {
-          "resolver":{"container":"resolver",
-                            "interfaces":[
-                            {"bridge":"lan", "ipv4":"100.100.100.100/24", "ipv6":"2001:db8:a100::100/48"}
-                            ],
-                            "gatewayv4":"100.100.100.1",
-                            "gatewayv6":"2001:db8:a100::1",
-                            "templates":[{"template":"resolverns"},
-                                    {"template":"nodhcp", "domain":"opendns.milxc", "ns":"100.100.100.100"}]}
+    "resolver": {
+      "container": "resolver",
+      "interfaces": [
+        {
+          "bridge": "lan",
+          "ipv4": "100.100.100.100/24",
+          "ipv6": "2001:db8:a100::100/48"
+        }
+      ],
+      "gatewayv4": "100.100.100.1",
+      "gatewayv6": "2001:db8:a100::1",
+      "templates": [
+        {
+          "template": "resolverns"
+        },
+        {
+          "template": "nodhcp",
+          "domain": "opendns.milxc",
+          "ns": "100.100.100.100"
+        }
+      ]
+    }
   }
 }
