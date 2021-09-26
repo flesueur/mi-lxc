@@ -1,24 +1,12 @@
 {
-  "comment": ".milxc registry AS",
+  "comment":".milxc registry AS",
   "containers": {
-    "ns": {
-      "container": "ns",
-      "interfaces": [
-        {
-          "bridge": "lan",
-          "ipv4": "100.100.20.10/24",
-          "ipv6": "2001:db8:a020::10/48"
-        }
-      ],
-      "gatewayv4": "100.100.20.1",
-      "gatewayv6": "2001:db8:a020::1",
-      "templates": [
-        {
-          "template": "nodhcp",
-          "domain": "reg.milxc",
-          "ns": "100.100.100.100"
-        }
-      ]
-    }
+        "ns":{"container":"ns",
+                            "interfaces":[
+                            {"bridge":"lan", "ipv4":"100.100.20.10/24","ipv6":"2001:db8:a020::10/48"}
+                            ],
+                            "gatewayv4":"100.100.20.1",
+                            "gatewayv6":"2001:db8:a020::1",
+                            "templates":[{"template":"nodhcp", "domain":"reg.milxc", "ns":"100.100.100.100"}]}
   }
 }
