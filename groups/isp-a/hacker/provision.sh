@@ -12,7 +12,8 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y python3
 DEBIAN_FRONTEND=noninteractive apt-get install -y python3-requests
 
 cp -ar homedir/* /home/debian/
-ln -sf /home/debian/background.jpg /usr/share/images/desktop-base/default
+#ln -sf /home/debian/background.jpg /usr/share/images/desktop-base/default
+ln -sf /home/debian/background.jpg /etc/alternatives/desktop-background
 
 # allow anyone, including "debian" used by hacker, to write into web root
 chmod 777 /var/www/html

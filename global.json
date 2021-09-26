@@ -7,9 +7,17 @@
     {
     "backend":"lxc",
     "template":"download",
+    "parameters":{"dist": "debian", "release": "bullseye", "arch": "amd64", "no-validate": "true"},
+    "family":"debian",
+    "name":"bullseye"
+  },
+    {
+    "backend":"lxc",
+    "template":"download",
     "parameters":{"dist": "debian", "release": "buster", "arch": "amd64", "no-validate": "true"},
     "family":"debian",
-    "name":"buster"
+    "name":"buster",
+    "status":"disabled"
   },
   {
   "backend":"lxc",
