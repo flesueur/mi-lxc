@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-#import lxc
+# import lxc
 import sys
 import os
 import subprocess
@@ -10,6 +10,7 @@ import ipaddress
 import pprint
 from backends import LxcBackend, DynamipsBackend
 
+
 def flushArp():
     os.system("ip neigh flush dev " + lxcbr)
 
@@ -17,7 +18,10 @@ def flushArp():
 #     cmd = "setxkbmap -query | grep layout | cut -d':' -f2 | sed \"s/ //g\""
 #     result = subprocess.check_output(cmd, shell=True)
 #     return result.decode("utf-8")
-#     #return(os.system("setxkbmap -query | grep layout | cut -d':' -f2 | sed \"s/ //g\""))
+#
+#     #cmd2 = "setxkbmap -query | grep layout | cut -d':' -f2 | sed \"s/ //g\""
+#     #return(os.system(cmd2))
+
 
 def getGlobals(data):
     global lxcbr, prefixc, prefixbr
@@ -26,13 +30,15 @@ def getGlobals(data):
     prefixbr = data["prefix-bridges"]
     return
 
+
 def merge(c1, c2):
-    #print("merging")
+    # print("merging")
     if "master" in c2:
         c1["master"] = c2["master"]
     c1["folder"] = c2["folder"]
     c1["templates"] = c2["templates"] + c1["templates"]
     return c1
+
 
 def developTopology(data):
     global topology
@@ -42,20 +48,21 @@ def developTopology(data):
         group = data["groups"][gname]
 
         for template in group["templates"]:
-            json_data = open("templates/groups/"+template["template"]+"/local.json").read()
+            json_data = open("templates/groups/" + template["template"] + "/local.json").read()
             datatemplate = json.loads(json_data)
             tcontainers = datatemplate["containers"]
 
             for cname in tcontainers:
                 container = tcontainers[cname]
-                container["folder"]="groups/" + gname + "/" + cname
-                container["group"]= gname
+                container["folder"] = "groups/" + gname + "/" + cname
+                container["group"] = gname
 
                 try:
                     for iface in container["interfaces"]:
-                        if not "$" in iface["bridge"]:
+                        if "$" not in iface["bridge"]:
                             iface["bridge"] = gname + sep + iface["bridge"]
                 except:
+                    print("Unexpected error:", sys.exc_info()[0])
                     pass
 
                 for key in container.keys():
@@ -75,29 +82,29 @@ def developTopology(data):
                         targettemplate["folder"] = "templates/groups/" + template["template"] + "/" + targettemplate["template"]
                     for key in targettemplate.keys():
                         if targettemplate[key][0] == "$":
-                            #print("parameter " + targettemplate[key])
+                            # print("parameter " + targettemplate[key])
                             try:
                                 targettemplate[key] = template[key]
                             except KeyError:
                                 targettemplate[key] = ""
-                containers[gname+sep+cname]=container
+                containers[gname + sep + cname] = container
 
         try:
-            json_data = open("groups/"+gname+"/local.json").read()
+            json_data = open("groups/" + gname + "/local.json").read()
             localtopology = json.loads(json_data)
             for cname in localtopology["containers"]:
                 container = localtopology["containers"][cname]
-                container["folder"]="groups/" + gname + "/" + cname
-                container["group"]= gname
+                container["folder"] = "groups/" + gname + "/" + cname
+                container["group"] = gname
                 try:
                     for iface in container["interfaces"]:
                         iface["bridge"] = gname + sep + iface["bridge"]
                 except KeyError:
                     pass
-                if (gname+sep+cname) in containers:
-                    containers[gname+sep+cname]=merge(containers[gname+sep+cname], container)
+                if (gname + sep + cname) in containers:
+                    containers[gname + sep + cname] = merge(containers[gname + sep + cname], container)
                 else:
-                    containers[gname+sep+cname]=container
+                    containers[gname + sep + cname] = container
         except FileNotFoundError:
             pass
 
@@ -105,12 +112,14 @@ def developTopology(data):
     topology = containers
     return data
 
+
 def getContainers(data):
     global containers
     for container in data["containers"].keys():
         containers.append(container)
     containers.sort()
     return
+
 
 def getMasters(data):
     global masters
@@ -141,22 +150,21 @@ def getNics(data):
                 iface = prefixbr + iface
 
             ips = {}
-            #for ipv, address in interface["address"]:
-            #    ips[ipv]=address
+            # for ipv, address in interface["address"]:
+            #     ips[ipv]=address
             ips['ipv4'] = interface['ipv4']
             if 'ipv6' in interface:
                 ips['ipv6'] = interface['ipv6']
 
             interfaces.append((iface, ips))
 
-            if not 'gatewayv6' in container:
-                container["gatewayv6"]='None'
+            if 'gatewayv6' not in container:
+                container["gatewayv6"] = 'None'
 
             nics[cname] = {'gatewayv4': container["gatewayv4"],
-                            'gatewayv6': container["gatewayv6"],
-                            'interfaces': interfaces}
+                           'gatewayv6': container["gatewayv6"],
+                           'interfaces': interfaces}
     return
-
 
 
 def getMITemplates(data):
@@ -167,21 +175,22 @@ def getMITemplates(data):
     return
 
 
-
 def getMIMasters(data):
     global mimasters
     for cname, container in data["containers"].items():
         if "master" in container.keys():
             mimasters[cname] = container["master"]
-        #else:   # no entry in mimasters if default master
-        #    mimasters[cname] = "default"
+        # else:   # no entry in mimasters if default master
+        #     mimasters[cname] = "default"
     return
+
 
 def getFolders(data):
     global folders
     for cname, container in data["containers"].items():
         folders[cname] = container["folder"]
     return
+
 
 def getMasters2():
     global masters2
@@ -198,6 +207,7 @@ def getMasters2():
                 exit(1)
     return
 
+
 def getMaster(mastername):
     global masters2
     for master in masters2:
@@ -206,12 +216,13 @@ def getMaster(mastername):
     print("unknown master " + mastername)
     return None
 
+
 def getHosts():
     global hosts
     for container in containers:
         if container in mimasters.keys():
             mastername = mimasters[container]
-        else: # use default master
+        else:  # use default master
             mastername = masters[0]['name']
         master = getMaster(mastername)
         if master.backend == "lxc":
@@ -224,6 +235,7 @@ def getHosts():
             print("Backend " + master.backend + " not supported, exiting", file=sys.stderr)
             exit(1)
 
+
 def getHost(hostname):
     global hosts
     for host in hosts:
@@ -231,8 +243,6 @@ def getHost(hostname):
             return host
     print("unknown host " + hostname)
     return None
-
-
 
 
 def getInterpreter(file):
@@ -264,9 +274,10 @@ mitemplates = {}
 
 folders = {}
 
-masters = [] # list of Masters
+masters = []  # list of Masters
 masters2 = []
-mimasters = {} # dict of master used by containers
+mimasters = {}  # dict of master used by containers
+
 
 def createMasters():
     print("Creating masters")
@@ -296,6 +307,7 @@ def createInfra():
             print("Host " + host.name + " already exists", file=sys.stderr)
     print("Infrastructure created successfully !")
 
+
 def renetInfra():
     for host in hosts:
         if not host.exists():
@@ -311,6 +323,7 @@ def destroyInfra():
     for host in hosts:
         host.destroy()
 #    destroy(masterc)
+
 
 def destroyMasters():
     for master in masters2:
@@ -344,26 +357,21 @@ def stopInfra():
 
 def createBridges():
     print("Creating bridges")
-    #os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
+    # os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
     for bridge in bridges:
         os.system("brctl addbr " + bridge)
         os.system("ip link set " + bridge + " up")
-        os.system("iptables -A FORWARD -i " +
-                  bridge + " -o " + bridge + " -j ACCEPT")
-
+        os.system("iptables -A FORWARD -i " + bridge + " -o " + bridge + " -j ACCEPT")
 
 
 def deleteBridges():
     print("Deleting bridges")
-    #os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
+    # os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
     for bridge in bridges:
         os.system("ip link set " + bridge + " down")
         os.system("brctl delbr " + bridge)
-        os.system("iptables -D FORWARD -i " +
-                  bridge + " -o " + bridge + " -j ACCEPT")
+        os.system("iptables -D FORWARD -i " + bridge + " -o " + bridge + " -j ACCEPT")
 
-
-#
 
 def printgraph():
     import pygraphviz as pgv
@@ -374,12 +382,12 @@ def printgraph():
     G2.node_attr['style'] = "filled"
 
     for host in hosts:
-        G2.add_node("c"+host.name, colorscheme='brbg9', color='2', shape='box', label=host.name, fontsize=10, height=0.2)
+        G2.add_node("c" + host.name, colorscheme='brbg9', color='2', shape='box', label=host.name, fontsize=10, height=0.2)
 
     for bridge in bridges:
-        G2.add_node("b"+bridge, colorscheme='brbg9', color='4', label=bridge[len(prefixbr):], fontsize=10, height=0.1)
+        G2.add_node("b" + bridge, colorscheme='brbg9', color='4', label=bridge[len(prefixbr):], fontsize=10, height=0.1)
 
-    G2.add_node("b"+lxcbr, colorscheme='brbg9', color='6', label=lxcbr, fontsize=10, height=0.2)
+    G2.add_node("b" + lxcbr, colorscheme='brbg9', color='6', label=lxcbr, fontsize=10, height=0.2)
     # 69A2B0, A1C084, FFCAB1, 659157, E05263
 
     for host in hosts:
@@ -389,16 +397,16 @@ def printgraph():
             # else:
             #     nicname = nic[0]
 
-#            G2.add_edge(container[len(prefixc):],nicname)
+            # G2.add_edge(container[len(prefixc):],nicname)
             label = ""
             if 'ipv4' in nic[1]:
                 label += nic[1]['ipv4']
             if 'ipv6' in nic[1]:
                 label += "\n" + nic[1]['ipv6']
-            G2.add_edge("c"+host.name,"b"+nic[0], label = label, fontsize = 8)  # with IPs
+            G2.add_edge("c" + host.name, "b" + nic[0], label=label, fontsize=8)  # with IPs
 
-    #G2.write("test.dot")
-    #G2.draw("test.png", prog="neato")
+    # G2.write("test.dot")
+    # G2.draw("test.png", prog="neato")
     fout = tempfile.NamedTemporaryFile(suffix=".png", delete=True)
     G2.draw(fout.name, prog="sfdp", format="png")
     Image.open(fout.name).show()
@@ -406,26 +414,45 @@ def printgraph():
 
 def usage():
     print(
-        "No argument given, usage with: create, renet, destroy, destroymaster, updatemaster, start, stop, attach [user@]<name> [command], display [user@]<name>, print.\nNames are: ", end='')
-    print(listHosts())
+        """\nError: wrong or unsufficient arguments.
+
+./mi-lxc.py should be followed by:
+    create [name]                    creates the [name] container, defaults to create all containers
+    renet                            renets all the containers
+    destroy [name]                   destroys the [name] container, defaults to destroy all containers
+    destroymaster                    destroys all the master containers
+    updatemaster                     updates all the master containers
+    start                            starts the created infrastructure
+    stop                             stops the created infrastructure
+    attach [user@]<name> [command]   attaches a term on <name> as [user](defaults to root) and executes [command](defaults to interactive shell)
+    display [user@]<name>            displays a graphical desktop on <name> as [user](defaults to debian)
+    print                            graphically displays the defined architecture
+        (<arguments> are mandatory and [arguments] are optional)
+
+Container names are: """, end='')
+    print(listHosts()+".\n")
+
 
 def listHosts():
     return ", ".join(host.name for host in hosts)
 
+
 def terminal_size():
-    import fcntl, termios, struct
-    h, w, hp, wp = struct.unpack('HHHH',
-        fcntl.ioctl(0, termios.TIOCGWINSZ,
-        struct.pack('HHHH', 0, 0, 0, 0)))
+    import fcntl
+    import termios
+    import struct
+    h, w, hp, wp = struct.unpack('HHHH', fcntl.ioctl(0, termios.TIOCGWINSZ, struct.pack('HHHH', 0, 0, 0, 0)))
     return w, h
 
-def debugData(name,data):
+
+def debugData(name, data):
     return
-    w,h = terminal_size()
+    w, h = terminal_size()
     pp = pprint.PrettyPrinter(indent=2, width=w)
     print(name + ": ")
     pp.pprint(data)
     print("\n\n")
+
 
 if __name__ == '__main__':
     # parser = argparse.ArgumentParser(description='Launches mini-internet')
@@ -458,9 +485,6 @@ if __name__ == '__main__':
     getHosts()
     debugData("Hosts", hosts)
 
-
-
-
     if len(sys.argv) < 2:
         usage()
         sys.exit(1)
@@ -488,7 +512,11 @@ if __name__ == '__main__':
                 exit(1)
             host.destroy()
         else:
-            destroyInfra()
+            answer = input("Are you sure you want to destroy the whole infrastructure? [y/n] ")
+            if answer.lower() in ["y","yes"]:
+                destroyInfra()
+            else:
+                pass
     elif (command == "start"):
         startInfra()
     elif (command == "stop"):
@@ -551,3 +579,4 @@ if __name__ == '__main__':
         renetInfra()
     else:
         usage()
+        exit(1)

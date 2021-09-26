@@ -5,14 +5,14 @@
 TLDs : milxc, evil  # evil not yet deployed
 
 NS ROOT O : ASN 5, 100.100.0.0/24, 2001:db8:a000::/48                # An alternative root nameserver
-NS ROOT P : ASN 6, 100.100.1.0/24, 2001:db8:a001::/48               # An alternative root nameserver, not yet deployed
+NS ROOT P : ASN 6, 100.100.1.0/24, 2001:db8:a001::/48               # An alternative root nameserver
 OpenDNS : ASN 7, 100.100.100.0/24, 100.100.100.100, 2001:db8:a100::/48   # An open resolver
 TLD milxc : ASN 8, 100.100.20.0/24, 2001:db8:a020::/48              # A TLD operator for .milxc
 TLD evil : ASN 9, 100.100.21.0/24, 2001:db8:a021::/48               # A TLD operator for .evil, not yet deployed
 
 Target : ASN 10, 100.80.0.0/16, 2001:db8:80::/48, target.milxc  # A cool enterprise to attack
-Ecorp : ASN 11, 100.81.0.0/16, 2001:db8:81::/48, ecorp.milxc    # Some evil enterprise, not yet deployed
-MICA : ASN 12, 100.82.0.0/16, 2001:db8:82::/48, mica.milxc      # A CA doing its best, not yet deployed
+Ecorp : ASN 11, 100.81.0.0/16, 2001:db8:81::/48, ecorp.milxc    # Some evil enterprise
+MICA : ASN 12, 100.82.0.0/16, 2001:db8:82::/48, mica.milxc      # A CA doing its best
 Gozilla : ASN 13, 100.83.0.0/16, 2001:db8:83::/48, gozilla.milxc   # A web browser editor (ie, Mozilla), allowed to spread new root CA certificates
 
 ISP-A : ASN 20, 100.120.0.0/16, 2001:db8:120::/48, ispa.milxc     # An end-user ISP, .0.x for users, .1.x for infra

@@ -3,7 +3,6 @@
   "containers": {"router":
                   { "interfaces": "$interfaces",
                     "gatewayv4":"None",
-                    "master":"buster",
                     "templates":[{"template":"bgprouter", "asn":"$asn", "neighbors4":"$neighbors4", "neighbors6":"$neighbors6", "asdev":"$asdev"},
                                 {"template":"nodhcp", "domain":"milxc", "ns":"100.100.100.100"}]}
     }

@@ -8,7 +8,8 @@ cd `dirname $0`
 # systemctl set-default graphical.target
 
 apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pyasn1 python3-psutil sshpass python3-pycryptodome python-pyasn1 python-psutil python-crypto
+DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pyasn1 python3-psutil sshpass python3-pycryptodome
+# python-pyasn1 python-psutil python-crypto   # Not available in bullseye
 
 #cp -ar /mnt/lxc/commercial/homedir/* /home/debian/
 #ln -sf /home/debian/background.jpg /usr/share/images/desktop-base/default

@@ -11,7 +11,9 @@ cd `dirname $0`
 
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y mariadb-server
-DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -y prewikka prelude-manager prelude-correlator suricata
+DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -y prewikka prelude-correlator suricata
+DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -y prelude-manager
+
 
 #DEB_VERSION=`cat /etc/debian_version | cut -d'.' -f1`
 #if [ $DEB_VERSION -eq "10" ] # DEB 10 aka Buster stores password in /etc/dbconfig-common/prelude-manager.conf
