@@ -1,5 +1,5 @@
 #!/bin/bash
-# Dev
+# Target dev
 set -e
 if [ -z $MILXCGUARD ] ; then exit 1; fi
 DIR=`dirname $0`
