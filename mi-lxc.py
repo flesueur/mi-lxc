@@ -57,13 +57,9 @@ def developTopology(data):
                 container["folder"] = "groups/" + gname + "/" + cname
                 container["group"] = gname
 
-                try:
+                if container["interfaces"][0] != "$":
                     for iface in container["interfaces"]:
-                        if "$" not in iface["bridge"]:
-                            iface["bridge"] = gname + sep + iface["bridge"]
-                except:
-                    print("Unexpected error:", sys.exc_info()[0])
-                    pass
+                        iface["bridge"] = gname + sep + iface["bridge"]
 
                 for key in container.keys():
                     if container[key][0] == "$":
