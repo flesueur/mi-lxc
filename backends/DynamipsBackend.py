@@ -191,7 +191,7 @@ class DynamipsHost(DynamipsBackend, Host):
         cmdline += " | awk '{print $2}'"
         pid = subprocess.check_output(cmdline, shell=True).decode("UTF-8")
         # print("pid is " + str(pid))
-        if pid is not "":
+        if pid != "":
             os.system("kill " + str(pid))
         nbpids = 2
         cmdline += " | wc -l"
