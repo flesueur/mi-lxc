@@ -60,20 +60,23 @@ Vous pouvez soit :
 Utilisation
 -------------
 
-Le script `mi-lxc.py` génère et utilise les conteneurs (en tant que *root*, puisqu'il manipule les ponts et les commandes lxc, plus d'informations à ce sujet [ici](#qu-est-ce-qui-est-fait-avec-les-permissions-de-root-)).
+Le script `mi-lxc.py` génère et utilise les conteneurs (en tant que *root*, puisqu'il manipule les ponts et les commandes lxc, plus d'informations à ce sujet [ici](#qu-est-ce-qui-est-fait-avec-les-permissions-de-root-)). Il s'utilise sous la forme `./mi-lxc.py <commande>`, avec les commandes suivantes :
 
-* `./mi-lxc.py addbridges`                              # Crée les ponts réseau nécessaires sur l'hôte
-* `./mi-lxc.py print`                                   # Affiche la topologie configurée
-* `./mi-lxc.py create`                                  # Crée les conteneurs maîtres puis les clone pour créer tous les conteneurs
-* `./mi-lxc.py start`                                   # Démarre l'infrastructure générée (stop pour l'arrêter)
-* `./mi-lxc.py attach [user@]<name> [command]`          # Exécute [command] dans le conteneur <name> en tant qu'utilisateur [user]. [commande] et [utilisateur] sont
-                                                        facultatifs ; s'ils ne sont pas spécifiés, l'utilisateur est root et la commande est un shell interactif.
-* `./mi-lxc.py display [user@]<name>`                   # Accès X11 au conteneur <name>. L'utilisateur par défaut est debian`
-* `./mi-lxc.py renet`                                   # Mise à jour des interfaces réseau et des configurations des conteneurs pour refléter les changements de topologie
-                                                        (global.json/local.json)`
-* `./mi-lxc.py`                                         # Utilisation et liste des noms de conteneurs`
-* `./mi-lxc.py destroy && ./mi-lxc.py destroymaster`    # Détruit tout (conteneurs maîtres et tous les conteneurs liés)`
-* Il y a également un [tutoriel pas à pas](doc/TUTORIAL.fr.md).
+| Commande                         | Description |
+| -------------------------------- | ----------- |
+| `create [name]`                  | Crée le conteneur [name], par défaut crée tous les conteneurs
+| `renet`                          | Reconfigure le réseau de tous les conteneurs
+| `destroy [name]`                 | Détruit le conteneur [name], par défaut tous les conteneurs
+| `destroymaster`                  | Détruit tous les conteneurs masters
+| `updatemaster`                   | Met à jour tous les conteneurs masters
+| `start`                          | Démarre l'infrastructure générée
+| `stop`                           | Arrête l'infrastructure générée
+| `attach [user@]<name> [command]` | Attache un terminal sur \<name> en tant que [user](par défaut root) et exécute [command](par défaut un shell interactif)
+| `display [user@]<name>`          | Affiche un bureau graphique sur \<name> en tant que [user](par défaut debian)
+| `print`                          | Affiche la topologie configurée
+|                                  | (\<arguments> sont obligatoires et [arguments] sont optionnels)|
+
+Il y a également un [tutoriel pas à pas](doc/TUTORIAL.fr.md).
 
 
 ## Qu'est ce qui est fait avec les permissions de root ?

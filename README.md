@@ -60,18 +60,24 @@ You can either:
 Usage
 -----
 
-The `mi-lxc.py` script generates and uses containers (as *root*, since it manipulates bridges and lxc commands, more on this [here](#what-is-done-with-root-permissions-))
+The `mi-lxc.py` script generates and uses containers (as *root*, since it manipulates bridges and lxc commands, more on this [here](#what-is-done-with-root-permissions-)). It is used as `./mi-lxc.py <command>`, with the following commands:
 
-<!-- * `./mi-lxc.py addbridges     # Create required network bridges on the host` -->
-* `./mi-lxc.py print         # Displays the configured topology`
-* `./mi-lxc.py create         # Creates master containers and then clones it to create all the containers`
-* `./mi-lxc.py start          # Start the generated infrastructure  (stop to stop it)`
-* `./mi-lxc.py attach [user@]<name> [command]  # Executes [command] in the container <name> as user [user]. [command] and [user] are optional; if not specified, user is root and command is an interactive shell.`
-* `./mi-lxc.py display [user@]<name> # X11 access to the container <name>. Default user is debian`
-* `./mi-lxc.py renet         # Updates containers network interfaces and setups to reflect topology changes (global.json/local.json)`
-* `./mi-lxc.py                # Usage and list of container names`
-* `./mi-lxc.py destroy && ./mi-lxc.py destroymaster   # Destroys everything (master containers and all linked containers)`
-* There is also a [walkthrough tutorial](doc/TUTORIAL.md).
+| Command                          | Description |
+| -------------------------------- | ----------- |
+| `create [name]`                  | Creates the [name] container, defaults to create all containers
+| `renet`                          | Renets all the containers
+| `destroy [name]`                 | Destroys the [name] container, defaults to destroy all containers
+| `destroymaster`                  | Destroys all the master containers
+| `updatemaster`                   | Updates all the master containers
+| `start`                          | Starts the created infrastructure
+| `stop`                           | Stops the created infrastructure
+| `attach [user@]<name> [command]` | Attaches a term on \<name> as [user](defaults to root) and executes [command](defaults to interactive shell)
+| `display [user@]<name>`          | Displays a graphical desktop on \<name> as [user](defaults to debian)
+| `print`                          | Graphically displays the defined architecture
+|                                  | (\<arguments> are mandatory and [arguments] are optional)|
+
+
+There is also a [walkthrough tutorial](doc/TUTORIAL.md).
 
 
 ## What is done with root permissions ?
