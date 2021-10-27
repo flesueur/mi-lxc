@@ -8,10 +8,11 @@ Il est basé sur le principe de l'infrastructure en tant que code : ces scripts 
 
 Exemple de travaux pratiques utilisant cet environnement :
 
-* [Intrusion scenario](https://github.com/flesueur/srs/blob/master/tp1-intrusion.md) (adapté à MI-LXC v1.3.0)
+* [Intrusion scenario](https://git.kaz.bzh/francois.lesueur/LPCyber/src/branch/master/tp1-intrusion.md) (adapté à MI-LXC v1.4.0)
 * [Firewall](https://github.com/flesueur/srs/blob/master/tp2-firewall.md) (adapté à MI-LXC v1.3.0)
-* [IDS](https://github.com/flesueur/srs/blob/master/tp3-ids.md) (adapté à MI-LXC v1.3.0)
+* [IDS](https://git.kaz.bzh/francois.lesueur/LPCyber/src/branch/master/tp2-idps.md) (adapté à MI-LXC v1.4.0)
 * [CA](https://github.com/flesueur/csc/blob/master/tp1-https.md) (adapté à MI-LXC v1.3.0)
+* [Découverte MI-LXC](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td1.1-milxc.md) (adapté à MI-LXC v1.4.0)
 
 Il existe également un [tutoriel pas à pas](TUTORIAL.fr.md) et une [vidéo de présentation](https://www.sstic.org/2020/presentation/mi-lxc_une_plateforme_pedagogique_pour_la_securite_reseau/).
 
@@ -22,7 +23,7 @@ Il existe également un [tutoriel pas à pas](TUTORIAL.fr.md) et une [vidéo de 
 
 Fonctionnalités :
 
-* Les conteneurs fonctionnent avec les dernières versions de Debian Buster ou Alpine Linux.
+* Les conteneurs fonctionnent avec les dernières versions de Debian Bullseye ou Alpine Linux.
 * Le principe de l'infrastructure en tant que code permet une gestion, un déploiement et une évolution faciles dans le temps.
 * L'infrastructure est construite par les utilisateurs finaux sur leur propre PC.
 * Chaque conteneur a également accès à l'Internet réel (pour l'installation de logiciels).
@@ -35,7 +36,6 @@ Le réseau d'exemple est composé de :
 * quelques clients ISP résidentiels (le pirate et un PC aléatoire), utilisant les adresses de courrier \@isp-a.milxc
 * une organisation cible, possédant son propre numéro d'AS, exécutant des services classiques (HTTP, courrier, DNS, filer, NIS, clients, etc.) pour le domaine target.milxc.
 * Une autorité de certification (MICA) prête pour ACME (style Let's Encrypt).
-* Des instances MISP sur misp.target.milxc (sur target-dmz) et misp.gozilla.milxc (sur gozilla-infra).
 
 Quelques éléments que vous pouvez faire et observer :
 
@@ -103,6 +103,8 @@ Enfin, les hôtes sont décrits et fournis à travers :
 * des scripts spécifiques pour un hôte donné dans `groups/<groupname>/<hostname>/provision.sh`.
 
 Pour l'étendre, vous pouvez soit étendre un AS existant (typiquement, Target), soit créer un nouvel AS. Dans ce deuxième cas, vous pouvez dupliquer Target et le connecter à un opérateur de transit sous un nouveau numéro d'AS (toute la configuration relative à BGP est spécifiée dans `global.json`).
+
+Ce processus est décrit dans le [tutoriel pas à pas](doc/TUTORIAL.fr.md).
 
 
 # Licence

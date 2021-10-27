@@ -8,10 +8,11 @@ It is based on the infrastructure-as-code principle: these scripts programmatica
 
 Example practical work using this environment (in french) :
 
-* [Intrusion scenario](https://github.com/flesueur/srs/blob/master/tp1-intrusion.md) (adapted to MI-LXC v1.3.0)
+* [Intrusion scenario](https://git.kaz.bzh/francois.lesueur/LPCyber/src/branch/master/tp1-intrusion.md) (adapted to MI-LXC v1.4.0)
 * [Firewall](https://github.com/flesueur/srs/blob/master/tp2-firewall.md) (adapted to MI-LXC v1.3.0)
-* [IDS](https://github.com/flesueur/srs/blob/master/tp3-ids.md) (adapted to MI-LXC v1.3.0)
+* [IDS](https://git.kaz.bzh/francois.lesueur/LPCyber/src/branch/master/tp2-idps.md) (adapted to MI-LXC v1.4.0)
 * [CA](https://github.com/flesueur/csc/blob/master/tp1-https.md) (adapted to MI-LXC v1.3.0)
+* [MI-LXC walkthrough](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td1.1-milxc.md) (adapted to MI-LXC v1.4.0)
 
 There is also a [walkthrough tutorial](doc/TUTORIAL.md) and a [video](https://www.youtube.com/watch?v=waCsmE7BeZs).
 
@@ -22,7 +23,7 @@ There is also a [walkthrough tutorial](doc/TUTORIAL.md) and a [video](https://ww
 
 Features :
 
-* Containers run up-to-date Debian Buster or Alpine Linux
+* Containers run up-to-date Debian Bullseye or Alpine Linux
 * The infrastructure-as-code principle allows for easy management, deployment and evolution along time
 * The infrastructure is built by final users on their own PC
 * Every container also have access to the real internet (for software installation)
@@ -35,7 +36,6 @@ The example network is composed of :
 * some residential ISP clients (hacker and a random PC), using mail adresses \@isp-a.milxc
 * a target organization, owning its own AS number, running classical services (HTTP, mail, DNS, filer, NIS, clients, etc.) for target.milxc domain
 * a certification authority (MICA) ready for ACME (Let's Encrypt-style)
-* MISP instances on misp.target.milxc (on target-dmz) and misp.gozilla.milxc (on gozilla-infra)
 
 A few things you can do and observe :
 
@@ -100,7 +100,9 @@ Finally, hosts are described and provisonned through:
 * host templates in `templates/hosts/<family>/<template>/provision.sh`, which typically provide templates for BGP routers, mail servers, mail clients, ...
 * specific scripts for a given host in `groups/<groupname>/<hostname>/provision.sh`
 
-To extend it, you can either extend an existing AS (typically, Target) or create a new AS. In this second case, you can duplicate Target and then connect it to some transit operator under a new AS number (all BGP-related configuration is specified in `global.json`)
+To extend it, you can either extend an existing AS (typically, Target) or create a new AS. In this second case, you can duplicate Target and then connect it to some transit operator under a new AS number (all BGP-related configuration is specified in `global.json`).
+
+This process is described in the [walkthrough tutorial](doc/TUTORIAL.md).
 
 
 # License
