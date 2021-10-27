@@ -17,7 +17,7 @@
     "parameters":{"dist": "debian", "release": "buster", "arch": "amd64", "no-validate": "true"},
     "family":"debian",
     "name":"buster",
-    "status":"disabled"
+    "status":"enabled"
   },
   {
   "backend":"lxc",

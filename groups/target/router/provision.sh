@@ -1,8 +1,6 @@
 #!/bin/bash
 # Firewall
-##############################################
-# NOT FUNCTIONAL FOR DEBIAN 10 BUSTER !!!!!
-##############################################
+# Kept on Buster, prewikka not working on Bullseye
 
 set -e
 if [ -z $MILXCGUARD ] ; then exit 1; fi
