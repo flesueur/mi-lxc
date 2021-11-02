@@ -16,7 +16,7 @@ Exemple de travaux pratiques utilisant cet environnement :
 * [MitM / ARP spoofing](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP1-MitM.md) (Sébastien Mériot)
 * [Crypto](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP3-crypto.md) (Sébastien Mériot)
 * [HTTP Proxy](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP5-IDS.md) (Sébastien Mériot)
-* [DFIR 1](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/984b44c3c644dffe1c898fd6f5b3f5719e0c6e58/TP6-DFIR.md)[DFIR 2](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP6-DFIR.md) (Sébastien Mériot)
+* [DFIR 1](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/984b44c3c644dffe1c898fd6f5b3f5719e0c6e58/TP6-DFIR.md) / [DFIR 2](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP6-DFIR.md) (Sébastien Mériot)
 
 Il existe également un [tutoriel pas à pas](TUTORIAL.fr.md) et une [vidéo de présentation](https://www.sstic.org/2020/presentation/mi-lxc_une_plateforme_pedagogique_pour_la_securite_reseau/).
 
