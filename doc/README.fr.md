@@ -13,6 +13,7 @@ Exemple de travaux pratiques utilisant cet environnement :
 * [IDS](https://git.kaz.bzh/francois.lesueur/LPCyber/src/branch/master/tp2-idps.md) (adapté à MI-LXC v1.4.0)
 * [CA](https://github.com/flesueur/csc/blob/master/tp1-https.md) (adapté à MI-LXC v1.3.0)
 * [Découverte MI-LXC](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td1.1-milxc.md) (adapté à MI-LXC v1.4.0)
+* [DNS](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td3.1-dns.md) (adapté à MI-LXC v1.4.0)
 * [MitM / ARP spoofing](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP1-MitM.md) (par Sébastien Mériot)
 * [Crypto](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP3-crypto.md) (par Sébastien Mériot)
 * [HTTP Proxy](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP5-IDS.md) (par Sébastien Mériot)
