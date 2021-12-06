@@ -9,8 +9,11 @@ cd `dirname $0`
 
 #echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 apk update
-apk add bird
+apk add bird iptables nftables iproute2-ss openssh-server
 rc-update add bird
+rc-update add sshd
+
+
 
 echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 echo "net.ipv6.conf.all.forwarding=1" >> /etc/sysctl.conf
