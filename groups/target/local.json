@@ -2,7 +2,7 @@
   "comment":"AS of the Target organization",
   "containers": {"router":
     { "templates":[{"template":"resolverns"}],
-      "master":"buster"},
+      "master":"bullseye"},
                   "dmz":
     {"container":"dmz",
       "interfaces":[

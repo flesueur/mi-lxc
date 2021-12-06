@@ -9,7 +9,13 @@ cd `dirname $0`
 
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y mariadb-server
-DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -y prewikka prelude-correlator suricata
+# python3-prelude fixed in SID
+echo -e "Package: *\nPin: release a=unstable\nPin-Priority: 100" > /etc/apt/preferences.d/pinning
+echo "deb http://deb.debian.org/debian sid main" >> /etc/apt/sources.list
+DEBIAN_FRONTEND=noninteractive apt-get update
+DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -t sid -y prewikka
+
+DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -y prelude-correlator suricata
 DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -y prelude-manager
 
 
