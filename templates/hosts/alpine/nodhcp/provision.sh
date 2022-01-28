@@ -13,5 +13,6 @@ cd `dirname $0`
 if [ ! -f /etc/network/keepdhcp ]
 then
 sed -i "s/dhcp/manual/" /etc/network/interfaces
-echo "domain $domain\nsearch $domain\nnameserver $ns" > /etc/resolv.conf
 fi
+
+echo -e "domain $domain\nsearch $domain\nnameserver $ns" > /etc/resolv.conf
