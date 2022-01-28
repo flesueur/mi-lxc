@@ -254,6 +254,9 @@ class LxcHost(LxcBackend, Host):
         c = self.getContainer()
         cdisplay = ":" + str(self.id + 2)
         hostdisplay = os.getenv("DISPLAY")
+        if hostdisplay is None:
+            print("No $DISPLAY environment variable set, unable to diplay a container", file=sys.stderr)
+            exit(1)
         os.system("xhost local: >/dev/null 2>&1")
         command = "DISPLAY=" + hostdisplay + " Xephyr -title \"Xephyr " + self.name + "\" -br -ac -dpms -s 0 -no-host-grab -resizeable " + cdisplay + " 2>/dev/null & \
             export DISPLAY=" + cdisplay + " ; \
