@@ -15,6 +15,7 @@ Example practical work using this environment (in french) :
 * [MI-LXC walkthrough](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td1.1-milxc.md) (adapted to MI-LXC v1.4.0)
 * [DNS](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td3.1-dns.md) (adapted to MI-LXC v1.4.0)
 * [Mail](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td4.1-mail.md) (adapted to MI-LXC v1.4.0)
+* [LDAP](https://git.kaz.bzh/francois.lesueur/LPCyber/src/branch/master/tp7-ldap.md) (adapted to MI-LXC v1.4.1)
 * [MitM / ARP spoofing](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP1-MitM.md) (by Sébastien Mériot)
 * [Crypto](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP3-crypto.md) (by Sébastien Mériot)
 * [HTTP Proxy](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP5-IDS.md) (by Sébastien Mériot)
