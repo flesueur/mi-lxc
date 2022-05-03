@@ -6,8 +6,8 @@
   "masters": [
     {
     "backend":"lxc",
-    "template":"download",
-    "parameters":{"dist": "debian", "release": "bullseye", "arch": "amd64", "no-validate": "true"},
+    "template":"debian",
+    "parameters":{"release": "bullseye", "arch": "amd64"},
     "family":"debian",
     "name":"bullseye"
   },
