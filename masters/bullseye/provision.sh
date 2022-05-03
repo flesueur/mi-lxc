@@ -23,6 +23,11 @@ apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y netcat-traditional
 echo "Acquire::http::Proxy-Auto-Detect \"/usr/local/sbin/detect_proxy.sh\";" > /etc/apt/apt.conf.d/01proxy;
 
+# Preseed wireshark for non-root users
+echo -e "wireshark-common wireshark-common/install-setuid	boolean	true" | debconf-set-selections
+
+echo "Domains=milxc" >> /etc/systemd/resolved.conf
+
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
 DEBIAN_FRONTEND=noninteractive apt-get install -y man dnsutils traceroute nftables ftp syslog-ng openssh-server bash-completion less mousepad mupdf xnest xserver-xephyr apache2 vim lxde-core lxterminal firefox-esr tcpdump dsniff whois wireshark net-tools iptables iputils-ping netcat-traditional nmap socat curl wget unzip xscreensaver open-vm-tools-desktop # keyboard-configuration  wireshark firmware-atheros firmware-misc-nonfree xfce4  xfce4-terminal xscreensaver # could be with --no-install-recommends
@@ -56,6 +61,7 @@ sed -i "/mesg n/d" /root/.profile
 # Creation des utilisateurs
 usermod -p `mkpasswd --method=sha-512 root` root
 grep -q debian /etc/passwd || useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 debian` debian
+usermod -a -G wireshark debian
 
 #login ssh avec mot de passe
 echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
