@@ -2,6 +2,9 @@
 
 set -e
 
+# Remove vagrant shared folder
+VBoxManage sharedfolder remove milxc-debian-amd64 --name vagrant || true
+
 # Get HD filename
 FILENAME=`vboxmanage showvminfo milxc-debian-amd64 | grep SATA | grep UUID | cut -d':' -f2 | cut -d'(' -f1 | sed -e 's/^[ \t]*//' |  sed -e 's/[ \t]*$//'`
 
