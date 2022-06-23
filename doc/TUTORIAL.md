@@ -21,17 +21,17 @@ II --- Before getting started
 ===============================
 
 1. A [general presentation (in English)](https://www.youtube.com/watch?v=waCsmE7BeZs) at ETACS 2021 (video)
-2. A [video tutorial (in French)](https://mi-lxc.citi-lab.fr/data/media/tuto1.mp4) to get started
+2. A [video tutorial (in French)](https://flesueur.irisa.fr/mi-lxc/media/tuto.mp4) to get started
 3. A functional installation:
-  * A ready-to-use VirtualBox VM (about 5GB to download and then an 11GB VM): [here](https://mi-lxc.citi-lab.fr/data/milxc-debian-amd64-1.3.1.ova). You have to connect to it as root/root then, with a terminal:
+  * [**Recommended**] A ready-to-use VirtualBox/VMWare VM (about 2.5GB to download and then a 7.2GB VM): [here](https://flesueur.irisa.fr/mi-lxc/images/milxc-debian-amd64-1.4.2.ova). You have to connect to it as root/root then, with a terminal:
     * `cd mi-lxc`
     * `./mi-lxc.py start`
     * `./mi-lxc.py display isp-a-hacker`
-  * The creation of the VM via Vagrant (VM of about 11GO, 15-30 minutes for the creation): [here](INSTALL.md#installation-on-windowsmacoslinux-using-vagrant). LXC containers are automatically generated when the VM is created. Once Vagrant is finished, you have to connect to the VM as root/root and then, with a terminal :
+  * Or the creation of the VM via Vagrant (VM of about 7.2GB, 15-30 minutes for the creation, depending on the network speed): [here](INSTALL.md#installation-on-windowsmacoslinux-using-vagrant). LXC containers are automatically generated when the VM is created. Once Vagrant is finished, you have to connect to the VM as root/root and then, with a terminal :
     * `cd mi-lxc`
     * `./mi-lxc.py start`
     * `./mi-lxc.py display isp-a-hacker`
-  * The direct installation under Linux (15-30 minutes for the creation): [here](INSTALL.md#installation-on-linux). LXC containers will be installed on the host:
+  * Or the direct installation under Linux (15-30 minutes for the creation, depending on the network speed): [here](INSTALL.md#installation-on-linux). It requires root privileges and LXC containers will be installed on the host:
     * `git clone https://github.com/flesueur/mi-lxc.git`
     * `cd mi-lxc`
     * `./mi-lxc.py create`
@@ -47,7 +47,7 @@ III --- Learner - Learning how the internet works and security issues
 
 We will see 2 aspects on the learner side:
 * A BGP attack
-* A network segmentation (redistribution)
+* A network segmentation
 
 These 2 elements allow a first overview of the functionalities of MI-LXC and can be completed with the TP subjects quoted at the beginning of [README](https://github.com/flesueur/mi-lxc#readme).
 
@@ -67,7 +67,7 @@ All machines have the following two accounts: debian/debian and root/root (login
 
 From the isp-a-home machine, open a browser to connect to `http://www.target.milxc`. You get to a Dokuwiki page, which is the expected page hosted on target-dmz.
 
-We are now going to attack from the ecorp AS this unsecured communication between isp-a-home and target-dmz. The objective is that the browser, when it wants to connect to the URL `http://www.target.milxc`, actually arrives on the ecorp-infra machine. So this BGP attack consists in rerouting packets to the target AS to the ecorp AS (an [example of real BGP hijacking in 2020](https://radar.qrator.net/blog/as1221-hijacking-266asns)):
+We are now going to attack from the ecorp AS this unsecured communication between isp-a-home and target-dmz. The objective is that the browser, when it wants to connect to the URL `http://www.target.milxc`, actually arrives on the ecorp-infra machine. So this BGP attack consists in rerouting packets destined to the target AS to the ecorp AS (an [example of real BGP hijacking in 2020](https://radar.qrator.net/blog/as1221-hijacking-266asns)):
 * On the ecorp-router machine: take an IP from the target AS, which will automatically trigger the announcement of this network in BGP (`ifconfig eth1:0 100.80.1.1 netmask 255.255.255.0`)
 * On the ecorp-infra machine: take the IP of `www.target.milxc` (`ifconfig eth0:0 100.80.1.2 netmask 255.255.255.0`)
 
@@ -80,7 +80,7 @@ III.2 --- Network segmentation (redistribution)
 
 (Extract from [TP Firewall](https://github.com/flesueur/srs/blob/master/tp2-firewall.md), translated here in English)
 
-NoWe will segment the target network to deploy a firewall between distinct zones. The segmentation will take place around the `target-router` machine. Initially, the internal network is completely flat, connected to the target-lan bridge and in the 100.80.0.1/16 address space. We will simply add a DMZ on this flat network (a new network bridge and a redrawing of the address space). You will need to proceed in two steps:
+Now, we will segment the target network to deploy a firewall between distinct zones. The segmentation will take place around the `target-router` machine. Initially, the internal network is completely flat, connected to the target-lan bridge and in the 100.80.0.1/16 address space. We will simply add a DMZ on this flat network (a new network bridge and a redistribution of the address space). You will need to proceed in two steps:
 
 * Segment the "target" network (**Please take the time to watch the [video tuto](https://mi-lxc.citi-lab.fr/data/media/segmentation_milxc.mp4) !!! (in french)**) :
 	* Edit `global.json` (in the mi-lxc folder) to specify the interfaces on the router, in the "target" section. We need to add a target-dmz bridge (the name must start with "target-") and split the 100.80.0.0/16 space: 100.80.0.0/24 on the pre-existing target-lan bridge (so specify an IPv4 of 100.80.0.1/24), 100.80.1.0/24 on the new target-dmz bridge (so specify an IPv4 of 100.80.1.1/24). Finally, you have to add the eth2 interface to the `asdev` list defined above (with ';' separating interfaces, there are examples around)
@@ -99,7 +99,7 @@ NoWe will segment the target network to deploy a firewall between distinct zones
 IV --- Designer - Specification of an infrastructure
 ======================================================
 
-MI-LXC allows the rapid prototyping of an infrastructure. The idea is to enrich the existing core rather than to start from scratch. Typically, the backbone, the DNS infrastructure and a minimum of access services are intended to allow the rapid bootstrapping of a new AS (so at least the transit-a, transit-b, isp-a, root-o, root-p, opendns, milxc groups, described in DETAILS.md). In this tutorial we will add an AS to the existing infrastructure.
+MI-LXC allows the rapid prototyping of an infrastructure. The idea is to enrich the existing core rather than to start from scratch. Typically, the backbone, the DNS infrastructure and a minimum of services are intended to allow the rapid bootstrapping of a new AS (so at least the transit-a, transit-b, isp-a, root-o, root-p, opendns, milxc groups, described in DETAILS.md). In this tutorial we will add an AS to the existing infrastructure.
 
 The procedure will be as follows:
 * Declare an AS number, an IP address range and a domain name for this new organization
@@ -134,10 +134,10 @@ An AS is represented by a group of hosts. The first step is to declare this new 
 
 The _template_ field describes the template of the group, here it will also be an as-bgp. The _asn, asdev, neighbors4, neighbors6_ and _interfaces_ fields must be adjusted:
 * _asn_ is the AS number, as declared in `MI-IANA.en.txt`
-* _asdev_ is the network interface that will be connected to the organization's _internal_ network (the one that has the IPs linked to the AS, this will be eth1 in the example)
+* _asdev_ is the network interface that will be connected to the organization's _internal_ network (the one that has the IPs linked to the AS, this will be eth1 here)
 * _neighbors4_ are the BGP4 peers for IPv4 routing (in the format _IP\_du\_pair as ASN\_du\_pair_)
 * _neighbors6_ are the BGP6 peers for IPv6 routing (optional, in _IP\_du\_pair as ASN\_du\_pair_ format)
-* _interfaces_ describes the network interfaces of the router of this AS (despite the misleading indentation, it is indeed a parameter of the as-bgp template). For each interface, you must specify its bridge, ipv4 and ipv6 (optional) statically here. In this example:
+* _interfaces_ describes the network interfaces of the router of this AS (despite the misleading indentation, it is indeed a parameter of the as-bgp template). For each interface, you must statically specify its bridge, ipv4 and ipv6 (optional) here. In this example:
   * _transit-a_ is the bridge operated by the operator Transit-A, connecting to it allows to go to the other AS, it is necessary to use a free IP in its network 100.64.0.40/24 and this interface will be the external interface _eth0_
   * _milxc-lan_ is the internal bridge of this organization, it is associated with an IP of its AS. Its name must **imperatively** start with the name of the group + "-", here "milxc-", and not be too long (max 15 characters, kernel level network interface naming constraint)
 
@@ -145,13 +145,13 @@ To integrate your new AS, you will have to choose which transit point to connect
 
 Once this is defined, a `./mi-lxc.py print` to check the topology, then `./mi-lxc.py create` will create the router machine associated with this AS (it will be an Alpine Linux). The create operation is lazy, it only creates non-existent containers and will therefore be fast.
 
-> **DANGER ZONE** We will destroy one container and only one. If you make a wrong manipulation, you risk destroying the whole infrastructure and then taking 15 minutes to rebuild everything, that's not the goal. So specify well the name of the container to destroy and, if you are in a VM, it could be the moment to make a snapshot...
+> **DANGER ZONE** We will now destroy one container and only one. If you make a wrong manipulation, you risk destroying the whole infrastructure and then taking 15 minutes to rebuild everything, that's not the goal. So specify well the name of the container to destroy and, if you are in a VM, it could be the moment to make a snapshot...
 
 At this point, however, the BGP peer (the other end of the BGP tunnel updated in the JSON, e.g. the transit-a-router container) does not yet know about this new router. It needs to be destroyed and re-generated: `./mi-lxc.py destroy transit-a-router` (_only_ destroys the transit-a-router container) and then `./mi-lxc.py create` to re-generate it. (eventually, a renet could be enough, but it is not currently implemented for AlpineLinux BGP routers)
 
-Finally, we can do a `./mi-lxc.py start` and check the good start.
+Finally, we can do a `./mi-lxc.py start` and check the health of the new hosts.
 
-> Warning, for IP and route management reasons, surprisingly, there is no easy way for the router to initiate communications itself. That is, if everything works well it will be started, will have good routing tables, but still will not be able to ping outside the forwarder's subnet. This is the expected behavior and therefore checking the router's connectivity cannot be done like that. We will then see how to check this from an internal station and we will use, on the router or its BGP neighbors, the `birdc show route all` and `birdc show protocols` commands to inspect the routing tables and verify the establishment of BGP sessions.
+> On the new router and its BGP neighbors, the `birdc show route all` and `birdc show protocols` commands allow to inspect the routing tables and verify the establishment of BGP sessions.
 
 IV.3 --- Adding a host in the new AS
 --------------------------------------
@@ -194,26 +194,26 @@ cd `dirname $0`
 # do something visible
 ```
 * The shebang is mandatory at the beginning and will be used (and a python script, as long as it is called provision.sh, probably works)
-* The `set -e` is very strongly recommended (it allows to stop the script as soon as a command returns an error code, and to return an error code in its turn. Without this `set -e`, the execution continues and the result may surprise you...)
-* the _$MILXCGUARD_ variable is automatically set at runtime in MI-LXC, checking it prevents a script from running on its own machine by mistake (ouch!)
+* The `set -e` is very strongly recommended (it allows to stop the script as soon as a command returns an error code, and to return an error code in which case the container creation is canceled. Without this `set -e`, the execution continues and the result may surprise you...)
+* the _$MILXCGUARD_ variable is automatically set at runtime in MI-LXC, checking it prevents a script from running on your host machine by mistake (ouch!)
 * In general, setting the correct directory helps to avoid multiple mess-ups. This folder can contain files to be copied to the new container, etc.
 
-As a good practice in terms of maintenance, you should favour file modifications (at the cost of sed, >>, etc.) rather than pure and simple overwriting. Example of a kivabian sed: `sed -i -e 's/Allow from .*/Allow from All/' /etc/apache2/conf-available/dokuwiki.conf`. You can also find in groups/target/ldap/provision.sh the manipulations allowing to preconfigure (_preseed_) the Debian packages installations.
+As a good practice in terms of maintenance, you should favour file modifications (with sed, >>, etc.) rather than pure and simple overwriting. Example of a good sed: `sed -i -e 's/Allow from .*/Allow from All/' /etc/apache2/conf-available/dokuwiki.conf`. You can also find in groups/target/ldap/provision.sh the manipulations allowing to preconfigure (_preseed_) the Debian packages installations.
 
-Once all this is done, we can do `./mi-lxc.py print` to check that the JSON is well formed and that the topology is correct. A `./mi-lxc.py create` will create this container, then `./mi-lxc.py start` will run it (no need to have stopped the others first).
+Once all this is done, we can do `./mi-lxc.py print` to check that the JSON is well formatted and that the topology is correct. A `./mi-lxc.py create` will create this container, then `./mi-lxc.py start` will run it (no need to have stopped the others first).
 
 
 IV.4 --- Modification of this host
 ------------------------------------
 
 Now that this host is created, we will modify it. Let's add:
-* using another template, for example `mailclient` (it is defined in templates/hosts/debian/mailclient, just name it mailclient in the local.json). This template has 4 parameters, you can see a use of it in groups/target/local.json . Configure it with fictitious values (just put 'debian' as value for login, this is the name of the local Linux account that will be configured for mail and this account must already exist. The debian account exists and is the one used by default for the display command)
+* the usage of another template, for example `mailclient` (it is defined in templates/hosts/debian/mailclient, just name it mailclient in the local.json). This template has 4 parameters, you can see a usage in groups/target/local.json. Configure it with fictitious values (just put 'debian' as value for login, this is the name of the local Linux account that will be configured for mail and this account must already exist. The debian account exists and is the one used by default for the display command)
 * another action in the provision.sh
 
 
 To update this container with these changes without rebuilding everything, you need to:
-* `./mi-lxc.py destroy acme-moncontainer` # destroy _only_ the acme-moncontainer
-* `./mi-lxc.py create` # rebuild only this missing container
+* `./mi-lxc.py destroy acme-moncontainer` # destroys _only_ the acme-moncontainer
+* `./mi-lxc.py create` # rebuilds only this missing container
 * `./mi-lxc.py start` # restarts this new container
 * `./mi-lxc.py display acme-moncontainer` # see that claws-mail has been configured by your settings
 
@@ -234,7 +234,7 @@ MI-LXC provides two template mechanisms:
 * group templates, defined in `templates/groups/`. Here we used as-bgp for example, which creates an AS edge router with Alpine Linux. The as-bgp-debian template produces the same functionality but with a Debian router
 * host templates, defined in `templates/hosts/<family>/`. When deriving from a Debian master (which is the default, masters are defined in global.json), the templates are looked up in `templates/hosts/debian/`
 
-We'll add a host template for greeting in .bashrc, which is identical for many machines. Create a subfolder for this template, a provision.sh script similar to that of a host, and then call this template in the previously created host.
+We'll add a host template for greeting in .bashrc, which is identical for many machines. Create a subfolder for this template (`templates/hosts/debian/bashgreeting/`), a `provision.sh` script similar to that of a host, and then call this template in the previously created host.
 
 
 V --- Developer - The development of the MI-LXC engine

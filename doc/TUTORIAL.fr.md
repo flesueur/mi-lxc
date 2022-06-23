@@ -20,17 +20,17 @@ II-Avant de démarrer
 ===================
 
 1. Une [présentation générale](https://www.sstic.org/2020/presentation/mi-lxc_une_plateforme_pedagogique_pour_la_securite_reseau/) à SSTIC 2020 (slides + vidéo)
-2. Un [tutoriel vidéo](https://mi-lxc.citi-lab.fr/data/media/tuto1.mp4) de démarrage
+2. Un [tutoriel vidéo](https://flesueur.irisa.fr/mi-lxc/media/tuto.mp4) de démarrage
 3. Une installation fonctionnelle :
-  * Une VM VirtualBox prête à l'emploi (environ 5GO à télécharger puis une VM de 11GO) : [ici](https://mi-lxc.citi-lab.fr/data/milxc-debian-amd64-1.3.1.ova). Il faut s'y connecter en root/root puis, avec un terminal :
+  * [**Recommandé**] Une VM VirtualBox/VMWare prête à l'emploi (environ 2.5GO à télécharger puis une VM de 7.2GO) : [ici](https://flesueur.irisa.fr/mi-lxc/images/milxc-debian-amd64-1.4.2.ova). Il faut s'y connecter en root/root puis, avec un terminal :
     * `cd mi-lxc`
     * `./mi-lxc.py start`
     * `./mi-lxc.py display isp-a-hacker`
-  * La création de la VM via Vagrant (VM d'environ 11GO, 15-30 minutes pour la création) : [ici](INSTALL.md#installation-on-windowsmacoslinux-using-vagrant). Les conteneurs LXC sont automatiquement générés lors de la création de la VM. Une fois Vagrant fini, il faut ensuite se connecter à la VM en root/root puis, avec un terminal :
+  * Ou la création de la VM via Vagrant (VM d'environ 7.2GO, 15-30 minutes pour la création selon le réseau) : [ici](INSTALL.md#installation-on-windowsmacoslinux-using-vagrant). Les conteneurs LXC sont automatiquement générés lors de la création de la VM. Une fois Vagrant fini, il faut ensuite se connecter à la VM en root/root puis, avec un terminal :
     * `cd mi-lxc`
     * `./mi-lxc.py start`
     * `./mi-lxc.py display isp-a-hacker`
-  * L'installation directe sous Linux (15-30 minutes pour la création) : [ici](INSTALL.md#installation-on-linux). Les conteneurs LXC seront installés sur l'hôte :
+  * Ou l'installation directe sous Linux (15-30 minutes pour la création selon le réseau) : [ici](INSTALL.md#installation-on-linux). Cela requiert les privilèges root et les conteneurs LXC seront installés sur l'hôte :
     * `git clone https://github.com/flesueur/mi-lxc.git`
     * `cd mi-lxc`
     * `./mi-lxc.py create`
@@ -150,7 +150,7 @@ Une fois ceci défini, un `./mi-lxc.py print` pour vérifier la topologie, puis 
 
 On peut enfin faire un `./mi-lxc.py start` et vérifier le bon démarrage.
 
-> Attention, pour des raisons de gestion des IP et des routes, étonnamment, il n'y a pas de façon simple pour que le routeur puisse lui-même initier des communications. C'est-à-dire que si tout fonctionne bien il sera démarré, aura de bonnes tables de routage, mais pour autant ne pourra pas ping en dehors du subnet du transitaire. C'est le comportement attendu et donc vérifier la connectivité du routeur ne peut pas se faire comme ça. On verra ensuite comment vérifier cela depuis un poste interne et nous utiliserons, sur le routeur ou ses voisins BGP, les commandes `birdc show route all`et `birdc show protocols` pour inspecter les tables de routage et vérifier l'établissement des sessions BGP.
+> Sur le nouveau routeur et ses voisins BGP, les commandes `birdc show route all` et `birdc show protocols` permettent d'inspecter les tables de routage et vérifier l'établissement des sessions BGP.
 
 IV.3-Ajout d'un hôte dans le nouvel AS
 --------------------------------------
@@ -193,11 +193,11 @@ cd `dirname $0`
 # do something visible
 ```
 * Le shebang est obligatoire au début et sera utilisé (et un script python, tant qu'il s'appelle provision.sh, fonctionne probablement)
-* Le `set -e` est très fortement recommandé (il permet d'arrêter le script dès qu'une commande renvoie un code d'erreur, et de retourner à son tour un code d'erreur. Sans ce `set -e`, l'exécution continue et le résultat pourra vous étonner...)
-* la variable _$MILXCGUARD_ est automatiquement positionnée lors de l'exécution dans MI-LXC, la vérifier permet d'éviter qu'un script puisse s'exécuter sur sa propre machine par inadvertance (aïe !)
+* Le `set -e` est très fortement recommandé (il permet d'arrêter le script dès qu'une commande renvoie un code d'erreur, et de retourner à son tour un code d'erreur auquel cas la création du conteneur est annulée. Sans ce `set -e`, l'exécution continue et le résultat pourra vous étonner...)
+* la variable _$MILXCGUARD_ est automatiquement positionnée lors de l'exécution dans MI-LXC, la vérifier permet d'éviter qu'un script puisse s'exécuter sur votre machine hôte par inadvertance (aïe !)
 * En général, se positionner dans le bon répertoire aide pour la suite et évite de multiples cafouillages. Ce dossier peut contenir des fichiers à copier sur le nouveau conteneur, etc.
 
-Par bonne pratique en terme de maintenance, il faut privilégier les modifications de fichiers (à coût de sed, >>, etc.) plutôt que l'écrasement pur et simple. Exemple de sed kivabien : `sed -i -e 's/Allow from .*/Allow from All/' /etc/apache2/conf-available/dokuwiki.conf`. On trouve également dans groups/target/ldap/provision.sh les manipulations permettant de préconfigurer (_preseed_) les installations de packages Debian.
+Par bonne pratique en terme de maintenance, il faut privilégier les modifications de fichiers (à coup de sed, >>, etc.) plutôt que l'écrasement pur et simple. Exemple de sed kivabien : `sed -i -e 's/Allow from .*/Allow from All/' /etc/apache2/conf-available/dokuwiki.conf`. On trouve également dans groups/target/ldap/provision.sh les manipulations permettant de préconfigurer (_preseed_) les installations de packages Debian.
 
 Une fois tout ceci fait, on peut faire `./mi-lxc.py print` pour vérifier que le JSON est bien formé et que la topologie est conforme. Un `./mi-lxc.py create` créera ce conteneur, puis `./mi-lxc.py start` le lancera (inutile d'avoir stoppé les autres avant).
 
@@ -233,7 +233,7 @@ MI-LXC propose deux mécanismes de templates :
 * des templates de groupe, définis dans `templates/groups/`. Nous avons utilisé ici as-bgp par exemple, qui crée un routeur de bordure d'AS avec Alpine Linux. Le template as-bgp-debian produit la même fonctionnalité mais avec un routeur Debian.
 * des templates d'hôtes, définis dans `templates/hosts/<family>/`. Quand on dérive d'un master Debian (ce qui est le défaut, les masters sont définis dans global.json), les templates sont recherchés dans `templates/hosts/debian/`
 
-Nous allons ajouter un template d'hôte permettant de faire un greeting dans le .bashrc, identique pour de nombreuses machines. Créez un sous-dossier pour ce template, un script provision.sh similaire à celui d'un hôte, puis appelez ce template dans l'hôte précédemment créé.
+Nous allons ajouter un template d'hôte permettant de faire un greeting dans le .bashrc, identique pour de nombreuses machines. Créez un sous-dossier pour ce template (`templates/hosts/debian/bashgreeting/`), un script provision.sh similaire à celui d'un hôte, puis appelez ce template dans l'hôte précédemment créé.
 
 
 V-Développeur - Le développement du moteur de MI-LXC
