@@ -14,6 +14,7 @@ DEBIAN_FRONTEND=noninteractive apt-mark hold grub*
 
 # MAJ et install
 sed -i -e 's/main/main contrib non-free/' /etc/apt/sources.list
+sed -i -e 's/https:/http:/' /etc/apt/sources.list
 apt-get --allow-releaseinfo-change update
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
