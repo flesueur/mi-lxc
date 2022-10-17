@@ -53,3 +53,8 @@ iptables -A FORWARD -i eth0 -o eth1 -m state --state ESTABLISHED,RELATED -j ACCE
 iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
 exit 0' > /etc/rc.local
 chmod +x /etc/rc.local
+
+# SELKS part
+DEBIAN_FRONTEND=noninteractive apt-get install -y docker.io
+cd /root
+git clone https://github.com/StamusNetworks/SELKS.git

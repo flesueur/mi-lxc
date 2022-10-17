@@ -65,6 +65,9 @@ cp /vagrant/files/10-monitor.conf /etc/X11/xorg.conf.d/
 # mv /etc/xdg/autostart/light-locker.desktop /etc/xdg/autostart/light-locker.desktop.bak
 DEBIAN_FRONTEND=noninteractive apt-get remove --purge -y light-locker
 
+# SELKS part
+resize2fs /dev/sda1
+
 #login ssh avec mot de passe
 echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
 sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
