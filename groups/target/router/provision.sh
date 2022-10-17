@@ -15,8 +15,8 @@ echo "deb http://deb.debian.org/debian sid main" >> /etc/apt/sources.list
 DEBIAN_FRONTEND=noninteractive apt-get update
 DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -t sid -y prewikka
 
-DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -y prelude-correlator suricata
-DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -y prelude-manager
+DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -t sid -y prelude-correlator suricata
+DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -t sid -y prelude-manager
 
 
 #DEB_VERSION=`cat /etc/debian_version | cut -d'.' -f1`
