@@ -5,12 +5,7 @@ cd `dirname $0`
 set -e
 
 # Copie de qques fichiers
-#cp /vagrant/files/sources.list /etc/apt/sources.list
 cp /vagrant/files/keyboard /etc/default/keyboard
-# echo "USE_LXC_BRIDGE=\"true\"" > /etc/default/lxc-net
-
-# Lock grub (https://www.mail-archive.com/debian-bugs-dist@lists.debian.org/msg1758060.html)
-DEBIAN_FRONTEND=noninteractive apt-mark hold grub*
 
 # MAJ et install
 sed -i -e 's/main/main contrib non-free/' /etc/apt/sources.list
@@ -24,7 +19,7 @@ service apt-cacher restart
 echo "Acquire::http::Proxy \"http://127.0.0.1:3142\";" > /etc/apt/apt.conf.d/01proxy;  # utilisation de apt-cacher-ng
 #data=`uname -r`
 #arch=${data##*-}
-DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-`dpkg --print-architecture` virtualbox-guest-additions-iso dynamips screen curl dkms python3-pygraphviz python3-pil imagemagick linux-headers-amd64 git lxc python3-lxc vim firefox-esr tcpdump whois net-tools mousepad wireshark swapspace open-vm-tools-desktop # apt-cacher-ng zerofree wireshark dsniff apache2 postgresql keyboard-configuration  wireshark # could be with --no-install-recommends
+DEBIAN_FRONTEND=noninteractive apt-get install -y linux-headers-`dpkg --print-architecture` virtualbox-guest-additions-iso dynamips screen curl dkms python3-pygraphviz python3-pil python3-yaml imagemagick linux-headers-amd64 git lxc python3-lxc vim firefox-esr tcpdump whois net-tools mousepad wireshark swapspace open-vm-tools-desktop # apt-cacher-ng zerofree wireshark dsniff apache2 postgresql keyboard-configuration  wireshark # could be with --no-install-recommends
 DEBIAN_FRONTEND=noninteractive apt-get install -y xfce4 lightdm xfce4-terminal xserver-xorg # apt-cacher-ng zerofree wireshark dsniff apache2 postgresql keyboard-configuration  wireshark
 # apt-get clean
 # linux-headers-4.9.0-7-amd64 firmware-atheros firmware-misc-nonfree
@@ -96,20 +91,21 @@ sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_c
 
 # autorisation du routing
 echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
-# fs.inotify.max_queued_events = 16384
-# fs.inotify.max_user_instances = 128
-# fs.inotify.max_user_watches = 8192
 echo -e "fs.inotify.max_queued_events=1048576\nfs.inotify.max_user_instances=1048576\nfs.inotify.max_user_watches=1048576" >> /etc/sysctl.conf
 sysctl -p
 service lxc restart
 iptables -A INPUT -p tcp --dport 3142 -i lxcbr0 -j ACCEPT # pour le proxy APT
-cd /root
-#git clone https://github.com/flesueur/mi-lxc
-cd mi-lxc
-./mi-lxc.py create
 
-# updates PATH with su
-echo "ALWAYS_SET_PATH yes" >> /etc/login.defs
+# Install SNSTER
+cd /root
+git clone https://framagit.org/flesueur/snster.git
+cd snster
+./install.sh
+
+# Provision MI-LXC
+cd /root/mi-lxc/groups
+snster create
+
 
 # enable bash autocompletion
 cp milxc-completion.bash /etc/bash_completion.d/

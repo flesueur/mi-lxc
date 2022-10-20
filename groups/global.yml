@@ -1,0 +1,33 @@
+version: 1
+
+header:
+  name: MI-LXC
+  comment: A Mini-Internet
+
+config:
+  prefix: mi
+  nat-bridge: lxcbr0
+  default-master: bullseye
+
+masters:
+  bullseye:
+    backend: lxc
+    template: debian
+    parameters:
+      release: bullseye
+      arch: amd64
+    family: debian
+
+  alpine:
+    backend: lxc
+    template: download
+    parameters:
+      dist: alpine
+      release: 3.14
+      arch: amd64
+      no-validate: true
+    family: alpine
+
+disabled-groups:
+  #- target
+  #- root-o

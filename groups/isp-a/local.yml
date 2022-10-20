@@ -1,0 +1,77 @@
+version: 1
+
+header:
+  name: ISP-A AS
+  comment: An ISP
+
+hosts:
+  router:
+    master: alpine
+    network:
+      interfaces:
+        eth0:
+          bridge: transit-b
+          ipv4: 100.64.1.10/24
+          ipv6: 2001:db8:b001::10/48
+        eth1:
+          bridge: isp-a-cust
+          ipv4: 100.120.0.1/24
+        eth2:
+          bridge: isp-a-infra
+          ipv4: 100.120.1.1/24
+          ipv6: 2001:db8:120:1::1/64
+    templates:
+      - bgprouter:
+          asn: 20
+          asdev: eth1;eth2
+          neighbors4: 100.64.1.1 as 31
+          neighbors6: 2001:db8:b001::1 as 31
+      - resolv:
+          nameserver: 100.100.100.100
+          domain: isp-a.milxc
+
+  infra:
+    network:
+      interfaces:
+        eth0:
+          bridge: isp-a-infra
+          ipv4: 100.120.1.2/24
+          ipv6: 2001:db8:120:1::2/64
+      gatewayv4: 100.120.1.1
+      gatewayv6: 2001:db8:120:1::1
+    templates:
+      - mailserver:
+          domain: isp-a.milxc
+      - resolverns:
+      - resolv:
+          domain: isp-a.milxc
+          ns: 100.120.1.2
+
+  home:
+    network:
+      interfaces:
+        eth0:
+          bridge: isp-a-cust
+          ipv4: 100.120.0.3/24
+      gatewayv4: 100.120.0.1
+    templates:
+      - updatecaroots:
+      - resolv:
+          domain: isp-a.milxc
+          ns: 100.120.1.2
+
+  hacker:
+    network:
+      interfaces:
+        eth0:
+          bridge: isp-a-cust
+          ipv4: 100.120.0.4/24
+      gatewayv4: 100.120.0.1
+    templates:
+      - mailclient:
+          domain: isp-a.milxc
+          mailname: hacker
+          password: hacker
+      - resolv:
+          domain: isp-a.milxc
+          ns: 100.120.1.2

@@ -1,0 +1,41 @@
+version: 1
+
+header:
+  name: Gozilla AS
+
+hosts:
+  router:
+    master: alpine
+    network:
+      interfaces:
+        eth0:
+          bridge: transit-a
+          ipv4: 100.64.0.50/24
+          ipv6: 2001:db8:b000::50/48
+        eth1:
+          bridge: gozilla-lan
+          ipv4: 100.83.0.1/16
+          ipv6: 2001:db8:83::1/48
+    templates:
+      - bgprouter:
+          asn: 13
+          asdev: eth1
+          neighbors4: 100.64.0.1 as 30
+          neighbors6: 2001:db8:b000::1 as 30
+      - resolv:
+          nameserver: 100.100.100.100
+          domain: gozilla.milxc
+
+  infra:
+    network:
+      interfaces:
+        eth0:
+          bridge: gozilla-lan
+          ipv4: 100.83.0.2/16
+          ipv6: 2001:db8:83::2/48
+      gatewayv4: 100.83.0.1
+      gatewayv6: 2001:db8:83::1
+    templates:
+      - resolv:
+          domain: gozilla.milxc
+          ns: 100.100.100.100

@@ -1,0 +1,42 @@
+version: 1
+
+header:
+  name: MICA AS
+  comment: An ACME Certification Authority
+
+hosts:
+  router:
+    master: alpine
+    network:
+      interfaces:
+        eth0:
+          bridge: transit-b
+          ipv4: 100.64.1.40/24
+          ipv6: 2001:db8:b001::40/48
+        eth1:
+          bridge: mica-lan
+          ipv4: 100.82.0.1/16
+          ipv6: 2001:db8:82::1/48
+    templates:
+      - bgprouter:
+          asn: 12
+          asdev: eth1
+          neighbors4: 100.64.1.1 as 31
+          neighbors6: 2001:db8:b001::1 as 31
+      - resolv:
+          nameserver: 100.100.100.100
+          domain: mica.milxc
+
+  infra:
+    network:
+      interfaces:
+        eth0:
+          bridge: mica-lan
+          ipv4: 100.82.0.2/16
+          ipv6: 2001:db8:82::2/48
+      gatewayv4: 100.82.0.1
+      gatewayv6: 2001:db8:82::1
+    templates:
+      - resolv:
+          domain: mica.milxc
+          ns: 100.100.100.100

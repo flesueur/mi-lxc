@@ -75,10 +75,10 @@ memberUid: $user" |ldapadd -cxD cn=admin,dc=target,dc=milxc -w root
 
 addgroup employees 1001
 addgroup mail `getent group | grep mail | cut -d':' -f 3`
-adduser commercial commercial 1001 1001
+adduser sales sales 1001 1001
 adduser dev dev 1002 1001
 adduser admin admin 1003 1001
-addtogroup commercial mail
+addtogroup sales mail
 
 
 

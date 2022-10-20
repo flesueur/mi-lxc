@@ -1,0 +1,47 @@
+version: 1
+
+header:
+  name: open DNS service AS
+  comment: an open DNS resolver
+
+hosts:
+  router:
+    master: alpine
+    network:
+      interfaces:
+        eth0:
+          bridge: transit-a
+          ipv4: 100.64.0.30/24
+          ipv6: 2001:db8:b000::30/48
+        eth1:
+          bridge: transit-b
+          ipv4: 100.64.1.30/24
+          ipv6: 2001:db8:b001::30/48
+        eth2:
+          bridge: opendns-lan
+          ipv4: 100.100.100.1/24
+          ipv6: 2001:db8:a100::1/48
+    templates:
+      - bgprouter:
+          asn: 7
+          asdev: eth2
+          neighbors4: 100.64.0.1 as 30;100.64.1.1 as 31
+          neighbors6: 2001:db8:b000::1 as 30;2001:db8:b001::1 as 31
+      - resolv:
+          nameserver: 100.100.100.100
+          domain: opendns.milxc
+
+  resolver:
+    network:
+      interfaces:
+        eth0:
+          bridge: opendns-lan
+          ipv4: 100.100.100.100/24
+          ipv6: 2001:db8:a100::100/48
+      gatewayv4: 100.100.100.1
+      gatewayv6: 2001:db8:a100::1
+    templates:
+      - resolverns:
+      - resolv:
+          domain: opendns.milxc
+          ns: 100.100.100.100

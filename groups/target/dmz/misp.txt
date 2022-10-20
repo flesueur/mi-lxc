@@ -1,0 +1,6 @@
+
+# Login and passwords for the MISP image are the following:
+# Web interface (default network settings): http://127.0.0.1:5000
+# MISP admin:  admin@admin.test/admin
+# Shell/SSH: misp/Password1234
+# MySQL:  root/c65f0190d9f4d05efdb33cb76a992ec2f6d345ddf2c5d0a8411bbcd0a17aa397 - misp/1d5ead5712fb15f33106cf5f238d16154b446652f58e1639b773a27db87538f8

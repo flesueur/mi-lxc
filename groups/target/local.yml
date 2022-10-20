@@ -1,0 +1,165 @@
+version: 1
+
+header:
+  name: Target AS
+  comment: AS of the Target organization
+
+hosts:
+  router:
+    master: bullseye
+    network:
+      interfaces:
+        eth0:
+          bridge: transit-a
+          ipv4: 100.64.0.10/24
+          ipv6: 2001:db8:b000::10/48
+        eth1:
+          bridge: target-lan
+          ipv4: 100.80.0.1/16
+          ipv6: 2001:db8:80::0:1/48
+    templates:
+      - bgprouter:
+          asn: 10
+          asdev: eth1
+          neighbors4: 100.64.0.1 as 30
+          neighbors6: 2001:db8:b000::1 as 30
+      - resolverns:
+      - resolv:
+          nameserver: 100.100.100.100
+          domain: target.milxc
+
+  dmz:
+    network:
+      interfaces:
+        eth0:
+          bridge: target-lan
+          ipv4: 100.80.1.2/16
+          ipv6: 2001:db8:80::1:2/48
+      gatewayv4: 100.80.0.1
+      gatewayv6: 2001:db8:80::0:1
+    templates:
+      - ldapclient:
+          domain: target.milxc
+          server: ldap
+      - mailserver:
+          domain: target.milxc
+      - resolv:
+          domain: target.milxc
+          ns: 100.80.0.1
+      - updatecaroots:
+      - authns:
+          zonefile: dns.conf
+
+  ldap:
+    network:
+      interfaces:
+        eth0:
+          bridge: target-lan
+          ipv4: 100.80.0.10/16
+          ipv6: 2001:db8:80::0:10/48
+      gatewayv4: 100.80.0.1
+      gatewayv6: 2001:db8:80::0:1
+    templates:
+      - resolv:
+          domain: target.milxc
+          ns: 100.80.0.1
+
+  sales:
+    network:
+      interfaces:
+        eth0:
+          bridge: target-lan
+          ipv4: 100.80.0.2/16
+          ipv6: 2001:db8:80::0:2/48
+      gatewayv4: 100.80.0.1
+      gatewayv6: 2001:db8:80::0:1
+    templates:
+      - sshfs:
+          server: filer
+      - ldapclient:
+          domain: target.milxc
+          server: ldap
+      - mailclient:
+          domain: target.milxc
+          mailname: sales
+          password: sales
+          login: sales
+      - resolv:
+          domain: target.milxc
+          ns: 100.80.0.1
+
+  dev:
+    network:
+      interfaces:
+        eth0:
+          bridge: target-lan
+          ipv4: 100.80.0.3/16
+          ipv6: 2001:db8:80::0:3/48
+      gatewayv4: 100.80.0.1
+      gatewayv6: 2001:db8:80::0:1
+    templates:
+      - sshfs:
+          server: filer
+      - ldapclient:
+          domain: target.milxc
+          server: ldap
+      - resolv:
+          domain: target.milxc
+          ns: 100.80.0.1
+
+  admin:
+    network:
+      interfaces:
+        eth0:
+          bridge: target-lan
+          ipv4: 100.80.0.4/16
+          ipv6: 2001:db8:80::0:4/48
+      gatewayv4: 100.80.0.1
+      gatewayv6: 2001:db8:80::0:1
+    templates:
+      - sshfs:
+          server: filer
+      - ldapclient:
+          domain: target.milxc
+          server: ldap
+      - mailclient:
+          domain: target.milxc
+          mailname: admin
+          password: admin
+      - resolv:
+          domain: target.milxc
+          ns: 100.80.0.1
+
+  intranet:
+    network:
+      interfaces:
+        eth0:
+          bridge: target-lan
+          ipv4: 100.80.0.5/16
+          ipv6: 2001:db8:80::0:5/48
+      gatewayv4: 100.80.0.1
+      gatewayv6: 2001:db8:80::0:1
+    templates:
+      - ldapclient:
+          domain: target.milxc
+          server: ldap
+      - resolv:
+          domain: target.milxc
+          ns: 100.80.0.1
+
+  filer:
+    network:
+      interfaces:
+        eth0:
+          bridge: target-lan
+          ipv4: 100.80.0.6/16
+          ipv6: 2001:db8:80::0:6/48
+      gatewayv4: 100.80.0.1
+      gatewayv6: 2001:db8:80::0:1
+    templates:
+      - ldapclient:
+          domain: target.milxc
+          server: ldap
+      - resolv:
+          domain: target.milxc
+          ns: 100.80.0.1

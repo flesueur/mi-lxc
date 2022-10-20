@@ -13,8 +13,8 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pyasn1 python3-psutil 
 
 #cp -ar /mnt/lxc/commercial/homedir/* /home/debian/
 #ln -sf /home/debian/background.jpg /usr/share/images/desktop-base/default
-mkdir /home/commercial
-mkdir -p /home/commercial/.ssh
+mkdir /home/sales
+mkdir -p /home/sales/.ssh
 
 echo -e "-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA5gMaCpCamrAgfNy/P2g/Q++fNzStR6CLiSb+Bquq+h82iJIH
@@ -42,16 +42,16 @@ x2ArN1c+SquGsuf+k+Qoxvv94UYt+jm4vtOKbJouwsEMzYS/2BInZDRiqpqv8Vn1
 aIldAoGBAM+kE1WgnhgPN8tK/8TEFAfR6QH9p2dKRI+qAHjctDo4frQzpRzJs5zd
 CuWb/rpKmc5PEOlRH51izH25BUQjlei43O95ZFT6lrs4iOXPXRoXi+eV1RyUener
 VHFxVmACJ+LkGXkCA9AYMidtgb1Kti2z09rtV2Tvs1//g5kbMIQi
------END RSA PRIVATE KEY-----" > /home/commercial/.ssh/id_rsa
-chmod 600 /home/commercial/.ssh/id_rsa
+-----END RSA PRIVATE KEY-----" > /home/sales/.ssh/id_rsa
+chmod 600 /home/sales/.ssh/id_rsa
 
 # don't check server's SSH key so "sshpass" works the first time, even if
 # the commercial user never connected to "intranet" and haven't already
 # trusted its key (necessary for attack scenario)
-echo "Host *" > /home/commercial/.ssh/config
-echo -e "\tStrictHostKeyChecking no" >> /home/commercial/.ssh/config
+echo "Host *" > /home/sales/.ssh/config
+echo -e "\tStrictHostKeyChecking no" >> /home/sales/.ssh/config
 
-chown -R 1001:1001 /home/commercial
+chown -R 1001:1001 /home/sales
 
 # remove nmap binary
 rm /usr/bin/nmap

@@ -1,0 +1,28 @@
+version: 1
+
+header:
+  name: Transit-B
+  comment: Transit-B IXP
+
+hosts:
+  router:
+    master: alpine
+    network:
+      interfaces:
+        eth0:
+          bridge: transit-b
+          ipv4: 100.64.1.1/24
+          ipv6: 2001:db8:b001::1/48
+        eth1:
+          bridge: transit-a
+          ipv4: 100.64.0.2/24
+          ipv6: 2001:db8:b000::2/48
+    templates:
+      - bgprouter:
+          asn: 31
+          asdev: eth0
+          neighbors4: 100.64.0.1 as 30;100.64.1.20 as 5;100.64.1.10 as 20;100.64.1.30 as 7;100.64.1.40 as 12;100.64.1.50 as 11
+          neighbors6: 2001:db8:b000::1 as 30;2001:db8:b001::20 as 5;2001:db8:b001::10 as 20;2001:db8:b001::30 as 7;2001:db8:b001::40 as 12;2001:db8:b001::50 as 11
+      - resolv:
+          nameserver: 100.100.100.100
+          domain: transit-a.milxc

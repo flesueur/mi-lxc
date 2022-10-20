@@ -1,0 +1,43 @@
+version: 1
+
+header:
+  name: Root-P AS
+  comment: A DNS Root server
+
+hosts:
+  router:
+    master: alpine
+    network:
+      interfaces:
+        eth0:
+          bridge: transit-a
+          ipv4: 100.64.0.20/24
+          ipv6: 2001:db8:b000::20/48
+        eth1:
+          bridge: root-p-lan
+          ipv4: 100.100.1.1/16
+          ipv6: 2001:db8:a001::1/48
+    templates:
+      - bgprouter:
+          asn: 6
+          asdev: eth1
+          neighbors4: 100.64.0.1 as 30
+          neighbors6: 2001:db8:b000::1 as 30
+      - resolv:
+          nameserver: 100.100.100.100
+          domain: ns-root-p.milxc
+
+  rootns:
+    network:
+      interfaces:
+        eth0:
+          bridge: root-o-lan
+          ipv4: 100.100.1.10/24
+          ipv6: 2001:db8:a001::10/48
+      gatewayv4: 100.100.1.1
+      gatewayv6: 2001:db8:a001::1
+    templates:
+      - rootns:
+      - resolv:
+          domain: ns-root-p.milxc
+          ns: 100.100.100.100
