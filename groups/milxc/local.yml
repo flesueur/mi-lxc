@@ -11,11 +11,11 @@ hosts:
       interfaces:
         eth0:
           bridge: transit-a
-          ipv4: 100.64.0.50/24
-          ipv6: 2001:db8:b000::50/48
+          ipv4: 100.64.0.40/24
+          ipv6: 2001:db8:b000::40/48
         eth1:
           bridge: milxc-lan
-          ipv4: 100.100.20.1/16
+          ipv4: 100.100.20.1/24
           ipv6: 2001:db8:a020::1/48
     templates:
       - bgprouter:
