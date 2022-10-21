@@ -20,7 +20,7 @@
   * pare-feu pour Target
   * suricata, prelude et prewikka sont préinstallés
 * target-dmz :
-  * smtp, imap pour users admin@, commercial@
+  * smtp, imap pour users admin@, sales@
   * http sur www.target.milxc (mot de passe faible)
   * certbot préinstallé pour ACME avec MICA
   * OSSEC HIDS
@@ -30,15 +30,15 @@
   * tous les hôtes s’appuient simplement sur cette authentification centralisée (chaque utilisateur peut ainsi se connecter à n’importe quel hôte interne)
 * target-filer :
   * partage de fichiers sshfs de /home/shared/ (NFS ne fonctionne pas sur la configuration actuelle)
-  * les partages réseau sont montés dans ~/partagés sur target-admin, target-commercial et target-dev
+  * les partages réseau sont montés dans ~/partagés sur target-admin, target-sales et target-dev
 * target-intranet :
   * aun intranet web avec des injections SQL et quelques droits d’accès de mauvaise qualité dans /var/www
 * target-admin:
   * poste de travail administrateur
   * claws-mail (pour l’utilisateur debian) configuré pour admin@target.milxc
-* target-commercial:
+* target-sales:
   * poste de travail du vendeur
-  * claws-mail (pour l’utilisateur commercial) configuré pour commercial@target.milxc
+  * claws-mail (pour l’utilisateur sales) configuré pour sales@target.milxc
 * target-dev:
   * poste de travail du développeur
   * peut déployer du code sur target-intranet (dans ~/shared/dev/deploy.sh)

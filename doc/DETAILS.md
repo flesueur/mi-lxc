@@ -20,7 +20,7 @@
   * Firewall for Target
   * Suricata, prelude and prewikka preinstalled
 * target-dmz :
-  * smtp, imap for users admin@, commercial@
+  * smtp, imap for users admin@, sales@
   * http on www.target.milxc (weak password)
   * certbot pre-installed for ACME with MICA
   * OSSEC HIDS
@@ -30,15 +30,15 @@
   * All hosts simply rely on this centralized authentication (every user can thus connect to any internal host)
 * target-filer :
   * sshfs file sharing of /home/shared/ (NFS does not work on the current setup)
-  * network shares are mounted in ~/shared on target-admin, target-commercial and target-dev
+  * network shares are mounted in ~/shared on target-admin, target-sales and target-dev
 * target-intranet :
   * a web intranet with SQL injections and some bad access rights in /var/www
 * target-admin:
   * administrator workstation
   * claws-mail (for debian user) configured for admin@target.milxc
-* target-commercial:
+* target-sales:
   * salesman workstation
-  * claws-mail (for commercial user) configured for commercial@target.milxc
+  * claws-mail (for sales user) configured for sales@target.milxc
 * target-dev:
   * Developer workstation
   * Can deploy code on target-intranet (in ~/shared/dev/deploy.sh)
