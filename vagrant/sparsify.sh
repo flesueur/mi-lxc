@@ -3,17 +3,17 @@
 set -e
 
 # Remove vagrant shared folder
-VBoxManage sharedfolder remove milxc-debian-amd64 --name vagrant || true
+VBoxManage sharedfolder remove milxc-snster-vm --name vagrant || true
 
 # Get HD filename
-FILENAME=`vboxmanage showvminfo milxc-debian-amd64 | grep SATA | grep UUID | cut -d':' -f2 | cut -d'(' -f1 | sed -e 's/^[ \t]*//' |  sed -e 's/[ \t]*$//'`
+FILENAME=`vboxmanage showvminfo milxc-snster-vm | grep SATA | grep UUID | cut -d':' -f2 | cut -d'(' -f1 | sed -e 's/^[ \t]*//' |  sed -e 's/[ \t]*$//'`
 
 # Split the dir and filename
 DIR=`dirname "$FILENAME"`
 FILE=`basename "$FILENAME"`
 
 # Get HD UUID
-UUID=`vboxmanage showvminfo milxc-debian-amd64 | grep SATA | grep UUID | cut -d':' -f 3| cut -d')' -f1 | sed -e 's/^[ \t]*//' |  sed -e 's/[ \t]*$//'`
+UUID=`vboxmanage showvminfo milxc-snster-vm | grep SATA | grep UUID | cut -d':' -f 3| cut -d')' -f1 | sed -e 's/^[ \t]*//' |  sed -e 's/[ \t]*$//'`
 
 # echo -e $DIR
 # echo -e $FILE

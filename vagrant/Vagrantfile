@@ -33,7 +33,7 @@ Vagrant.configure("2") do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "data", "/vagrant_data"
-  config.vm.synced_folder "..", "/root/mi-lxc", create:true, type:"rsync",
+  config.vm.synced_folder "../topology", "/root/mi-lxc", create:true, type:"rsync",
     rsync__exclude: [".git/", "zzlocal/", "vagrant/"]
 
   # Provider-specific configuration so you can fine-tune various
