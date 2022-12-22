@@ -43,12 +43,12 @@ hosts:
           server: ldap
       - mailserver:
           domain: target.milxc
-      - resolv:
-          domain: target.milxc
-          ns: 100.80.0.1
       - updatecaroots:
       - authns:
           zonefile: dns.conf
+      - resolv:
+          domain: target.milxc
+          ns: 100.80.0.1
 
   ldap:
     network:
