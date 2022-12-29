@@ -11,14 +11,14 @@ Since version 2.0, MI-LXC uses [SNSTER](https://framagit.org/flesueur/snster) un
 Example practical work using this environment (in french) (note that commands and internals have changed between v1.4.x and v2.x) :
 
 * [Intrusion scenario](https://git.kaz.bzh/francois.lesueur/LPCyber/src/branch/master/tp1-intrusion.md) (adapted to MI-LXC v1.4.0)
-* [Firewall / Network segmentation](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td7-archi.md) (adapted to MI-LXC v1.4.2)
+* [Firewall / Network segmentation](https://git.kaz.bzh/francois.lesueur/R3.06/src/branch/master/td6-archi.md) (adapted to MI-LXC v2.0.0)
 * [IDS](https://git.kaz.bzh/francois.lesueur/LPCyber/src/branch/master/tp2-idps.md) (adapted to MI-LXC v1.4.0)
 * [CA / HTTPS](https://git.kaz.bzh/francois.lesueur/LPCyber/src/branch/master/tp4-https.md) (adapted to MI-LXC v1.4.0)
 * [DNS](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td5-dns.md) (adapted to MI-LXC v1.4.2)
 * [Mail](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td6-mail.md) (adapted to MI-LXC v1.4.2)
 * [LDAP](https://git.kaz.bzh/francois.lesueur/LPCyber/src/branch/master/tp7-ldap.md) (adapted to MI-LXC v1.4.1)
-* [HTTP / Apache](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td4-apache.md) (adapted to MI-LXC v1.4.2)
-* [MI-LXC walkthrough](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td1-milxc.md) (adapted to MI-LXC v1.4.2)
+* [HTTP / Apache](https://git.kaz.bzh/francois.lesueur/R3.06/src/branch/master/td3-apache.md) (adapted to MI-LXC v2.0.0)
+* [MI-LXC walkthrough](https://git.kaz.bzh/francois.lesueur/R3.06/src/branch/master/td1-milxc.md) (adapted to MI-LXC v2.0.0)
 * [MitM / ARP spoofing](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP1-MitM.md) (by Sébastien Mériot)
 * [Crypto](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP3-crypto.md) (by Sébastien Mériot)
 * [HTTP Proxy](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP5-IDS.md) (by Sébastien Mériot)
