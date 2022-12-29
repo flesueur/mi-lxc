@@ -9,14 +9,14 @@ Il est basé sur le principe de l'infrastructure en tant que code : ces scripts 
 Exemple de travaux pratiques utilisant cet environnement :
 
 * [Intrusion scenario](https://git.kaz.bzh/francois.lesueur/LPCyber/src/branch/master/tp1-intrusion.md) (adapté à MI-LXC v1.4.0)
-* [Firewall / Segmentation réseau](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td7-archi.md) (adapté à MI-LXC v1.4.2)
+* [Firewall / Segmentation réseau](https://git.kaz.bzh/francois.lesueur/R3.06/src/branch/master/td6-archi.md) (adapté à MI-LXC v2.0.0)
 * [IDS](https://git.kaz.bzh/francois.lesueur/LPCyber/src/branch/master/tp2-idps.md) (adapté à MI-LXC v1.4.0)
 * [CA / HTTPS](https://git.kaz.bzh/francois.lesueur/LPCyber/src/branch/master/tp4-https.md) (adapté à MI-LXC v1.4.0)
 * [DNS](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td5-dns.md) (adapté à MI-LXC v1.4.2)
 * [Mail](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td6-mail.md) (adapté à MI-LXC v1.4.2)
 * [LDAP](https://git.kaz.bzh/francois.lesueur/LPCyber/src/branch/master/tp7-ldap.md) (adapté à MI-LXC v1.4.1)
-* [HTTP / Apache](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td4-apache.md) (adapté à MI-LXC v1.4.2)
-* [Découverte MI-LXC](https://git.kaz.bzh/francois.lesueur/M3102/src/branch/master/td1-milxc.md) (adapté à MI-LXC v1.4.2)
+* [HTTP / Apache](https://git.kaz.bzh/francois.lesueur/R3.06/src/branch/master/td3-apache.md) (adapté à MI-LXC v2.0.0)
+* [Découverte MI-LXC](https://git.kaz.bzh/francois.lesueur/R3.06/src/branch/master/td1-milxc.md) (adapté à MI-LXC v2.0.0)
 * [MitM / ARP spoofing](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP1-MitM.md) (par Sébastien Mériot)
 * [Crypto](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP3-crypto.md) (par Sébastien Mériot)
 * [HTTP Proxy](https://github.com/PandiPanda69/edu-isen-tp-ap4/blob/main/TP5-IDS.md) (par Sébastien Mériot)
