@@ -10,7 +10,7 @@ OpenDNS : ASN 7, 100.100.100.0/24, 100.100.100.100, 2001:db8:a100::/48 # Un rés
 TLD milxc : ASN 8, 100.100.20.0/24, 2001:db8:a020::/48 # Un opérateur TLD pour .milxc
 TLD evil : ASN 9, 100.100.21.0/24, 2001:db8:a021::/48 # Un opérateur TLD pour .evil, pas encore déployé
 
-Cible : ASN 10, 100.80.0.0/16, 2001:db8:80::/48, target.milxc # Une entreprise cool à attaquer
+Target : ASN 10, 100.80.0.0/16, 2001:db8:80::/48, target.milxc # Une entreprise cool à attaquer
 Ecorp : ASN 11, 100.81.0.0/16, 2001:db8:81::/48, ecorp.milxc # Une entreprise maléfique
 MICA : ASN 12, 100.82.0.0/16, 2001:db8:82::/48, mica.milxc # Un CA faisant de son mieux
 Gozilla : ASN 13, 100.83.0.0/16, 2001:db8:83::/48, gozilla.milxc # Un éditeur de navigateur web (ie, Mozilla), autorisé à diffuser de nouveaux certificats racine de CA
