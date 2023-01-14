@@ -24,5 +24,5 @@ hosts:
           neighbors4: 100.64.0.1 as 30;100.64.1.20 as 5;100.64.1.10 as 20;100.64.1.30 as 7;100.64.1.40 as 12;100.64.1.50 as 11
           neighbors6: 2001:db8:b000::1 as 30;2001:db8:b001::20 as 5;2001:db8:b001::10 as 20;2001:db8:b001::30 as 7;2001:db8:b001::40 as 12;2001:db8:b001::50 as 11
       - resolv:
-          nameserver: 100.100.100.100
+          ns: 100.100.100.100
           domain: transit-a.milxc

@@ -24,7 +24,7 @@ hosts:
           neighbors4: 100.64.0.1 as 30
           neighbors6: 2001:db8:b000::1 as 30
       - resolv:
-          nameserver: 100.100.100.100
+          ns: 100.100.100.100
           domain: milxc.milxc
 
   ns:
