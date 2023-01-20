@@ -39,6 +39,8 @@ hosts:
     templates:
       - rootns:
           roots: o,100.100.0.10,2001:db8:a000::10;p,100.100.1.10,2001:db8:a001::10
+          tlds: milxc,100.100.20.10,2001:db8:a020::10
+          reverse: reverse.zone
       - resolv:
           domain: ns-root-o.milxc
           ns: 100.100.100.100
