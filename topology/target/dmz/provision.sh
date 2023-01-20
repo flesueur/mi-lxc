@@ -27,18 +27,14 @@ else
   exit 1
 fi
 
-# DNS server
-echo -e "zone:
-	name: \"target.milxc.\"
-	zonefile: \"target.milxc.zone\"
-" > /etc/nsd/nsd.conf
+# Reverse DNS server
 
+mkdir -p /etc/nsd
 echo -e "zone:
 	name: \"80.100.in-addr.arpa.\"
 	zonefile: \"80.100.zone\"
 " >> /etc/nsd/nsd.conf
 
-cp dns-forward.conf /etc/nsd/target.milxc.zone
 cp dns-reverse.conf /etc/nsd/80.100.zone
 
 # allow to create homedirs when ldap authentication succeeds in IMAP - pam_mkhomedir does not work with imap auth (no pam-session in imap), other solution would be to manually create needed directories
