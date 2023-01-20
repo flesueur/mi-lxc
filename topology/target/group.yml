@@ -24,6 +24,7 @@ hosts:
           neighbors4: 100.64.0.1 as 30
           neighbors6: 2001:db8:b000::1 as 30
       - resolverns:
+          roots: o,100.100.0.10,2001:db8:a000::10;p,100.100.1.10,2001:db8:a001::10
       - resolv:
           ns: 100.100.100.100
           domain: target.milxc

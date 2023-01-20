@@ -43,6 +43,7 @@ hosts:
       - mailserver:
           domain: isp-a.milxc
       - resolverns:
+          roots: o,100.100.0.10,2001:db8:a000::10;p,100.100.1.10,2001:db8:a001::10
       - resolv:
           domain: isp-a.milxc
           ns: 100.120.1.2
