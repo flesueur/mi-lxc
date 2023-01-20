@@ -33,12 +33,14 @@ echo -e "zone:
 	zonefile: \"target.milxc.zone\"
 " > /etc/nsd/nsd.conf
 
-cp dns.conf /etc/nsd/target.milxc.zone
+echo -e "zone:
+	name: \"80.100.in-addr.arpa.\"
+	zonefile: \"80.100.zone\"
+" >> /etc/nsd/nsd.conf
 
-#useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 commercial` commercial || true
-#addgroup commercial mail
-#mkdir /home/commercial/mail
-#touch /home/commercial/mail/Drafts /home/commercial/mail/Queue /home/commercial/mail/Sent /home/commercial/mail/Trash
+cp dns-forward.conf /etc/nsd/target.milxc.zone
+cp dns-reverse.conf /etc/nsd/80.100.zone
+
 # allow to create homedirs when ldap authentication succeeds in IMAP - pam_mkhomedir does not work with imap auth (no pam-session in imap), other solution would be to manually create needed directories
 echo -e '#!/bin/sh\nchmod 777 /home\nchmod o+t /home\nexit 0' > /etc/rc.local
 chmod +x /etc/rc.local

@@ -1,3 +1,8 @@
+; Target
 80.100.in-addr.arpa.		172800	IN	NS	ns.80.100.in-addr.arpa.
 ns.80.100.in-addr.arpa.              172800  IN      A       100.80.1.2
 ns.80.100.in-addr.arpa.              172800  IN      AAAA     2001:db8:80::1:2
+; ISP-A
+120.100.in-addr.arpa.		172800	IN	NS	ns.120.100.in-addr.arpa.
+ns.120.100.in-addr.arpa.              172800  IN      A       100.120.1.2
+ns.120.100.in-addr.arpa.              172800  IN      AAAA     2001:db8:120:1::2
