@@ -46,7 +46,9 @@ hosts:
           domain: target.milxc
       - updatecaroots:
       - authns:
-          zonefile: dns-forward.conf
+          forward: target.milxc.zone
+          reverse: 80.100.in-addr.arpa.zone
+          zonefiles: target.milxc.zone;80.100.in-addr.arpa.zone
       - resolv:
           domain: target.milxc
           ns: 100.80.0.1

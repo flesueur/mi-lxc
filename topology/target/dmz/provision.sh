@@ -27,16 +27,6 @@ else
   exit 1
 fi
 
-# Reverse DNS server
-
-mkdir -p /etc/nsd
-echo -e "zone:
-	name: \"80.100.in-addr.arpa.\"
-	zonefile: \"80.100.zone\"
-" >> /etc/nsd/nsd.conf
-
-cp dns-reverse.conf /etc/nsd/80.100.zone
-
 # allow to create homedirs when ldap authentication succeeds in IMAP - pam_mkhomedir does not work with imap auth (no pam-session in imap), other solution would be to manually create needed directories
 echo -e '#!/bin/sh\nchmod 777 /home\nchmod o+t /home\nexit 0' > /etc/rc.local
 chmod +x /etc/rc.local
