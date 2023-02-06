@@ -37,6 +37,8 @@ hosts:
       gatewayv4: 100.100.20.1
       gatewayv6: 2001:db8:a020::1
     templates:
+      - authns:
+          zonefiles: milxc.zone
       - resolv:
           domain: milxc.milxc
           ns: 100.100.100.100

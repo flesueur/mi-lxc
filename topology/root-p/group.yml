@@ -40,7 +40,7 @@ hosts:
       - rootns:
           roots: o,100.100.0.10,2001:db8:a000::10;p,100.100.1.10,2001:db8:a001::10
           tlds: milxc,100.100.20.10,2001:db8:a020::10
-          reverse: reverse.zone
+          reverses: 80,100.80.1.2,2001:db8:80::1:2;120,100.120.1.2,2001:db8:120:1::2
       - resolv:
           domain: ns-root-p.milxc
           ns: 100.100.100.100

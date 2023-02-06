@@ -1,25 +1,5 @@
-#!/bin/bash
-# .milxc registry
-
-set -e
-if [ -z $MILXCGUARD ] ; then exit 1; fi
-DIR=`dirname $0`
-cd `dirname $0`
-
-# disable systemd-resolved which conflicts with nsd
-echo "DNSStubListener=no" >> /etc/systemd/resolved.conf
-systemctl stop systemd-resolved
-
-apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y nsd
-
-echo -e "zone:
-	name: \"milxc.\"
-	zonefile: \"milxc.zone\"
-" > /etc/nsd/nsd.conf
-
-echo -e "\$TTL	86400
-\$ORIGIN milxc.
+$TTL	86400
+$ORIGIN milxc.
 @  1D  IN  SOA ns.milxc. hostmaster.milxc. (
 			      2002022401 ; serial
 			      3H ; refresh
@@ -45,4 +25,3 @@ ns.ecorp.milxc.	IN	AAAA 2001:db8:81::2
 gozilla.milxc.	IN	NS	ns.gozilla.milxc.
 ns.gozilla.milxc.	IN	A 100.83.0.2
 ns.gozilla.milxc.	IN	AAAA 2001:db8:83::2
-" >> /etc/nsd/milxc.zone
