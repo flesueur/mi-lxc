@@ -25,7 +25,6 @@ masters:
       dist: alpine
       release: 3.21
       arch: amd64
-      no-validate: true
     family: alpine
 
 disabled-groups:
