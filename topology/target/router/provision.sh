@@ -9,23 +9,13 @@ cd `dirname $0`
 
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y mariadb-server
-# python3-prelude fixed in SID
-echo -e "Package: *\nPin: release a=unstable\nPin-Priority: 100" > /etc/apt/preferences.d/pinning
-echo "deb http://deb.debian.org/debian sid main" >> /etc/apt/sources.list
-DEBIAN_FRONTEND=noninteractive apt-get update
-DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -t sid -y prewikka
 
-DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -t sid -y prelude-correlator suricata
-DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -t sid -y prelude-manager
+# Some problems appeared when not installed in this forced order
+DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -y prewikka
+DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -y prelude-correlator suricata
+DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -y prelude-manager
 
-
-#DEB_VERSION=`cat /etc/debian_version | cut -d'.' -f1`
-#if [ $DEB_VERSION -eq "10" ] # DEB 10 aka Buster stores password in /etc/dbconfig-common/prelude-manager.conf
-#then
-#  PASS=`grep -e "^dbc_dbpass=" /etc/dbconfig-common/prelude-manager.conf | cut -d'=' -f2`
-#else # DEB 9 aka stretch stores password in /etc/prelude-manager/prelude-manager.conf
-  PASS=`grep -e "^pass =" /etc/prelude-manager/prelude-manager.conf | cut -d'=' -f2`
-#fi
+PASS=`grep -e "^pass =" /etc/prelude-manager/prelude-manager.conf | cut -d'=' -f2`
 
 sed -i "s/pass: prelude/pass:$PASS/" /etc/prewikka/prewikka.conf
 

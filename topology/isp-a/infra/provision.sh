@@ -7,13 +7,17 @@ cd `dirname $0`
 
 # Hacker's mail account hacker@isp-a.milxc
 useradd -m -s "/bin/bash" -p `mkpasswd --method=sha-512 hacker` hacker || true
-addgroup hacker mail
+adduser hacker mail
 #mkdir /home/hacker/mail
 #touch /home/hacker/mail/Drafts /home/hacker/mail/Queue /home/hacker/mail/Sent /home/hacker/mail/Trash
 
-# disable systemd-resolved which conflicts with nsd
-echo "DNSStubListener=no" >> /etc/systemd/resolved.conf
-systemctl stop systemd-resolved
+DEB_VERSION=`cat /etc/debian_version | cut -d'.' -f1`
+if [ $DEB_VERSION -eq "11" ] # DEB 11 aka Bullseye
+then
+	# disable systemd-resolved which conflicts with nsd
+	echo "DNSStubListener=no" >> /etc/systemd/resolved.conf
+	systemctl stop systemd-resolved
+fi
 
 # manage isp-a.milxc zone
 apt-get update

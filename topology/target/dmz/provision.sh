@@ -7,13 +7,20 @@ cd `dirname $0`
 
 sed -i -e 's/127.0.1.1.*$/127.0.1.1\tlxc-infra-dmz/' /etc/hosts
 
-# disable systemd-resolved which conflicts with nsd
-echo "DNSStubListener=no" >> /etc/systemd/resolved.conf
-systemctl stop systemd-resolved
+DEB_VERSION=`cat /etc/debian_version | cut -d'.' -f1`
+if [ $DEB_VERSION -eq "11" ] # DEB 11 aka Bullseye
+then
+	# disable systemd-resolved which conflicts with nsd
+	echo "DNSStubListener=no" >> /etc/systemd/resolved.conf
+	systemctl stop systemd-resolved
+fi
 
 apt-get update
 DEB_VERSION=`cat /etc/debian_version | cut -d'.' -f1`
-if [ $DEB_VERSION -eq "11" ] # DEB 11 aka Bullseye
+if [ $DEB_VERSION -eq "12" ] # DEB 12 aka Bookworm
+then
+  DEBIAN_FRONTEND=noninteractive apt-get install -y dokuwiki certbot python3-certbot-apache nsd dovecot-imapd proftpd apt-transport-https wget prelude-utils libprelude-dev build-essential php-mbstring php libevent-dev libpcre2-dev zlib1g-dev libssl-dev libsystemd-dev
+elif [ $DEB_VERSION -eq "11" ] # DEB 11 aka Bullseye
 then
   DEBIAN_FRONTEND=noninteractive apt-get install -y dokuwiki certbot python3-certbot-apache nsd dovecot-imapd proftpd apt-transport-https wget prelude-utils libprelude-dev build-essential php-mbstring php libevent-dev libpcre2-dev zlib1g-dev libssl-dev libsystemd-dev
 elif [ $DEB_VERSION -eq "10" ] # DEB 10 aka Buster

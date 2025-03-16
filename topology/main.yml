@@ -7,14 +7,14 @@ header:
 config:
   prefix: mi
   nat-bridge: lxcbr0
-  default-master: bullseye
+  default-master: bookworm
 
 masters:
-  bullseye:
+  bookworm:
     backend: lxc
     template: debian
     parameters:
-      release: bullseye
+      release: bookworm
       arch: amd64
     family: debian
 
@@ -23,9 +23,8 @@ masters:
     template: download
     parameters:
       dist: alpine
-      release: 3.14
+      release: 3.21
       arch: amd64
-      no-validate: true
     family: alpine
 
 disabled-groups:

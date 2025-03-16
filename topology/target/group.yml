@@ -6,7 +6,6 @@ header:
 
 hosts:
   router:
-    master: bullseye
     network:
       interfaces:
         eth0:

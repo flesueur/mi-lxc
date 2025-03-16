@@ -5,9 +5,13 @@ if [ -z $MILXCGUARD ] ; then exit 1; fi
 DIR=`dirname $0`
 cd `dirname $0`
 
-# disable systemd-resolved which conflicts with nsd
-echo "DNSStubListener=no" >> /etc/systemd/resolved.conf
-systemctl stop systemd-resolved
+DEB_VERSION=`cat /etc/debian_version | cut -d'.' -f1`
+if [ $DEB_VERSION -eq "11" ] # DEB 11 aka Bullseye
+then
+	# disable systemd-resolved which conflicts with nsd
+	echo "DNSStubListener=no" >> /etc/systemd/resolved.conf
+	systemctl stop systemd-resolved
+fi
 
 # manage gozilla.milxc zone
 apt-get update
