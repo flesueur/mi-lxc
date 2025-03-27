@@ -100,7 +100,7 @@ iptables -A INPUT -p tcp --dport 3142 -i lxcbr0 -j ACCEPT # pour le proxy APT
 cd /root
 git clone https://framagit.org/flesueur/snster.git
 cd snster
-# git checkout tags/v1.1.0
+git checkout tags/v1.2.0
 ./install.sh
 
 # Provision MI-LXC
