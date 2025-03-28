@@ -6,14 +6,14 @@ set -e
 VBoxManage sharedfolder remove milxc-snster-vm --name vagrant || true
 
 # Get HD filename
-FILENAME=`vboxmanage showvminfo milxc-snster-vm | grep SATA | grep UUID | cut -d':' -f2 | cut -d'(' -f1 | sed -e 's/^[ \t]*//' |  sed -e 's/[ \t]*$//'`
+FILENAME=`vboxmanage showvminfo milxc-snster-vm | grep -A2 SATA | grep Location | cut -d':' -f2 | cut -d'(' -f1 | sed -e 's/^[ \t]*//' |  sed -e 's/[ \t]*$//' | sed -e 's/"//g'`
 
 # Split the dir and filename
 DIR=`dirname "$FILENAME"`
 FILE=`basename "$FILENAME"`
 
 # Get HD UUID
-UUID=`vboxmanage showvminfo milxc-snster-vm | grep SATA | grep UUID | cut -d':' -f 3| cut -d')' -f1 | sed -e 's/^[ \t]*//' |  sed -e 's/[ \t]*$//'`
+UUID=`vboxmanage showvminfo milxc-snster-vm | grep -A1 SATA | grep UUID | cut -d':' -f 3| cut -d')' -f1 | sed -e 's/^[ \t]*//' |  sed -e 's/[ \t]*$//'`
 
 # echo -e $DIR
 # echo -e $FILE

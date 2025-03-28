@@ -6,7 +6,7 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
-  config.vm.box = "debian/bullseye64"
+  config.vm.box = "debian/bookworm64"
   config.vm.hostname = 'milxc-snster-vm'
 
   # Disable automatic box update checking. If you disable this, then
