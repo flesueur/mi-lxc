@@ -7,12 +7,16 @@ if [ -z $MILXCGUARD ] ; then exit 1; fi
 DIR=`dirname $0`
 cd `dirname $0`
 
+# Ajout de debian bookworm-backports pour suricata
+echo "deb http://deb.debian.org/debian bookworm-backports main" > /etc/apt/sources.list.d/backports.list
+
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y mariadb-server
 
 # Some problems appeared when not installed in this forced order
 DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -y prewikka
-DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -y prelude-correlator suricata
+DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -y -t bookworm-backports suricata
+DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -y prelude-correlator
 DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFNEW=1 apt-get install -y prelude-manager
 
 PASS=`grep -e "^pass =" /etc/prelude-manager/prelude-manager.conf | cut -d'=' -f2`
